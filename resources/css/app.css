@@ -2,4 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/* CAMBIO DE SCROLLBAR */
+/*
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    scroll-behavior: smooth;
+  } */
+  
+  /* Track */
+  /*
+  ::-webkit-scrollbar-track {
+    background: #6b8d8d;
+    border-radius: 100vw;
+  }*/
+  
+  /* Handle */
+  /*::-webkit-scrollbar-thumb {
+   /* background: #888;*/ /*
+    border-radius: 100vw;
+    background: linear-gradient(gray, white);
+  }*/
+  
+  /* Handle on hover */
+  /*
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }*/
 
+  /* icono del calendario */
+  /*
+  ::-webkit-calendar-picker-indicator {
+    background: url(https://img.icons8.com/cotton/64/000000/calendar.png) no-repeat;
+    background-size: 24px 24px;
+  }
+  */

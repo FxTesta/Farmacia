@@ -49,7 +49,7 @@ watch(search, _.debounce(function (value) {
                             </div>
                             <div class="relative flex items-center  focus-within:text-gray-400">
                                 <SearchIcon class="w-5 h-5 absolute ml-3 pointer-events-none" />
-                                <input v-model="search" type="text" placeholder="Buscar Proveedores" autocomplete="off"
+                                <input id="searchproveedor" v-model="search" type="text" placeholder="Buscar Proveedores" autocomplete="off"
                                     aria-label="Buscar Proveedores"
                                     class="pr-3 pl-10 py-1 text-sm font-medium text-gray-700 bg-cyan-100 rounded-2xl border-none ring-2 ring-cyan-400 focus:ring-cyan-300 focus:ring-2" />
                             </div>
@@ -97,8 +97,7 @@ watch(search, _.debounce(function (value) {
                                     </td>
                                 </tr>
                                 <div v-if="proveedor.data.length <= 0" class="p-4">
-                                    <div class="absolute left-2/4 -translate-x-1/2"
-                                        >
+                                    <div class="absolute left-2/4 -translate-x-1/2">
                                         <span class="font-serif text-xl text-slate-500 uppercase">no hay proveedores</span>
                                     </div>
                                 </div>

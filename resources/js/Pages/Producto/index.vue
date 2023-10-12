@@ -73,6 +73,7 @@ export default {
                                     class="w-5 h-5 absolute ml-3 pointer-events-none"
                                 />
                                 <input
+                                    id="searchproducto"
                                     v-model="search"
                                     type="text"
                                     placeholder="Buscar Productos"
@@ -91,14 +92,15 @@ export default {
                         <table class="min-w-full">
                             <thead>
                                 <tr class="border-b border-slate-300 text-gray-700 text-left">
-                                    <th>ID</th>
+                                    <th class="px-2">ID</th>
+                                    <th class="px-2">Codigo de barras</th>
+                                    <th class="px-2">Marca</th>
+                                    <th class="px-2">Droga</th>
                                     <th class="px-2">Categoria</th>
                                     <th class="px-2">Descripcion</th>
-                                    <th class="px-2">Marca</th>
                                     <th class="px-2">Venta</th>
                                     <th class="px-2">Laboratorio</th>
                                     <th class="px-2">Vencimiento</th>
-                                    <th class="px-2">Codigo de barras</th>
                                     <th class="px-2">Precio Venta</th>
                                     <th class="px-2">Precio Compra</th>
                                     <th class="px-2">Stock</th>
@@ -109,13 +111,14 @@ export default {
                             <tbody class="divide-y divide-gray-400 divide-opacity-30">
                                 <tr v-for="productos in producto.data" :key="productos.id">
                                     <td class="text-gray-700 py-4 px-2">{{productos.id}}</td>
+                                    <td class="text-gray-700 py-4 px-2">{{productos.codigo}}</td>
+                                    <td class="text-gray-700 py-4 px-2">{{productos.marca}}</td>
+                                    <td class="text-gray-700 py-4 px-2">{{productos.droga}}</td>
                                     <td class="text-gray-700 py-4 px-2">{{productos.categoria}}</td>
                                     <td class="text-gray-700 py-4 px-2">{{productos.descripcion}}</td>
-                                    <td class="text-gray-700 py-4 px-2">{{productos.marca}}</td>
                                     <td class="text-gray-700 py-4 px-2">{{productos.venta}}</td>
                                     <td class="text-gray-700 py-4 px-2">{{productos.laboratorio}}</td>
                                     <td class="text-gray-700 py-4 px-2">{{productos.vencimiento}}</td>
-                                    <td class="text-gray-700 py-4 px-2">{{productos.codigo}}</td>
                                     <td class="text-gray-700 py-4 px-2">{{productos.precioventa}}</td>
                                     <td class="text-gray-700 py-4 px-2">{{productos.preciocompra}}</td>
                                     <td class="text-gray-700 py-4 px-2">{{productos.stock}}</td>

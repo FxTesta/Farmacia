@@ -34,7 +34,7 @@ class ProductoController extends Controller
         //hola
         $producto = Producto::when($request->search, function($query, $search){
             // filtra la busqueda por marca del producto o codigo de barras
-            $query->where('marca', 'LIKE', "%{$search}%" )->orWhere('codigo', 'LIKE', "{$search}%");;
+            $query->where('marca', 'LIKE', "%{$search}%" )->orWhere('codigo', 'LIKE', "{$search}%")->orWhere('droga', 'LIKE', "%{$search}%");
         })
         ->paginate(15)
         ->withQueryString();
@@ -76,6 +76,7 @@ class ProductoController extends Controller
             'categoria' => 'required',
             'descripcion' => 'required',
             'marca' => 'string|required',
+            'droga' => 'string|required',
             'venta' => 'required',
             'laboratorio' => 'string|nullable',
             'vencimiento' => 'nullable',
@@ -98,6 +99,7 @@ class ProductoController extends Controller
             'categoria' => $request->categoria,
             'descripcion' => $request->descripcion,
             'marca' => $request->marca,
+            'droga' => $request->droga,
             'venta' => $request->venta,
             'laboratorio' => $request->laboratorio,
             'vencimiento' => $request->vencimiento,
@@ -174,6 +176,7 @@ class ProductoController extends Controller
             'categoria' => ['required'],
             'descripcion' => ['required'],
             'marca' => ['required'],
+            'droga' => ['required'],
             'venta' => ['required'],
             'laboratorio' => ['nullable'],
             'vencimiento' => ['nullable'],
@@ -196,10 +199,10 @@ class ProductoController extends Controller
             'categoria' => request('categoria'),
             'descripcion' => request('descripcion'),
             'marca' => request('marca'),
+            'droga' => request('droga'),
             'venta' => request('venta'),
             'laboratorio' => request('laboratorio'),
             'vencimiento' => request('vencimiento'),
-            
             'codigo' => request('codigo'),
             'precioventa' => request('precioventa'),
             'preciocompra' => request('preciocompra'),

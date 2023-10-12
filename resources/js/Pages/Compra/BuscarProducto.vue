@@ -3,10 +3,11 @@ import { Head, useForm, Link } from '@inertiajs/vue3';
 import { Popover, PopoverButton, PopoverPanel, PopoverOverlay } from '@headlessui/vue';
 import {SearchIcon} from "@heroicons/vue/outline";
 import ComboboxProducto from "@/Pages/Compra/ComboboxProducto.vue";
-import { ref } from "vue";
+import { ref, onMounted  } from "vue";
 
 //variable que recibe los detalles del producto buscado
 let producto = ref();
+const primero = ref();
 
 //variable que envia los detalles del producto buscado
 const enviarProducto = (close) => {
@@ -20,7 +21,18 @@ const enviarProducto = (close) => {
 
 //reseteo cuadro de busqueda al seleccionar producto
   producto.value = null;
+
 };
+
+const recibirRef = (event1) => {
+   //finalmente enfoca al boton para buscarProducto
+   primero.value.focus()
+};
+
+onMounted(() => {
+    // Escucha el evento personalizado 'enviar-ref' de "RegistrarCompra"
+    window.addEventListener('enviar-ref', recibirRef);
+});
 
 //funcion, busca el producto y retorna en un objeto con los campos deseados
 function loadProducto(query, setOptions) {
@@ -46,13 +58,18 @@ function loadProducto(query, setOptions) {
 
 <template>
     <Popover v-slot="{ open }" class="">
+                                
                                 <PopoverButton
                                     
+                                    as="div"
                                     :class="open ? 'bg-blue-400 text-blue-600' : ''"
                                     class="w-8 h-8 hover:bg-blue-300 hover:text-blue-700 text-blue-400 ring-2 focus:ring-set-2 ring-gray-400 rounded-full grid place-content-center"
                                 >
+                                <button type="button" ref="primero">
                                     <SearchIcon  class="w-6 h-6"/>
+                                </button> 
                                 </PopoverButton>
+                                
                                 <PopoverOverlay class="z-10 fixed inset-0 bg-black opacity-60" />
 
                                 <transition
@@ -83,7 +100,7 @@ function loadProducto(query, setOptions) {
                                             />
                                             
                                             <div class="flex justify-end mt-5">
-                                                <button 
+                                                <button
                                                     @click="enviarProducto(close)"
                                                     class="px-4 py-2 font-medium shadow-sm text-black rounded-md text-sm bg-green-400 hover:bg-green-500 focus:ring-1 focus:ring-offset-1 focus:ring-gray-200 focus:outline-none "
                                                     >Seleccionar Producto

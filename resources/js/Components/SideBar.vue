@@ -67,7 +67,7 @@ export default {
         },
       
         {
-          href: '/detalle',
+          href: '#',
           title: 'Configuración',
           icon: 'fa-sharp fa-solid fa-gear',
         
@@ -90,5 +90,5 @@ export default {
 }
 </script>
 <template>
-  <sidebar-menu :menu="menu" :collapsed="true"/>
+  <sidebar-menu :link-component-name="'InertiaLink'" :menu="menu" :collapsed="true"/>
 </template>

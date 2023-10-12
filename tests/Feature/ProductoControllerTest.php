@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace tests\Feature;
 
 use App\Models\Producto;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,18 +13,14 @@ use Illuminate\Support\Facades\DB;
 
 class ProductoControllerTest extends TestCase
 {
-    use RefreshDatabase;  // Refrescar la base de datos después de cada prueba
+    //use RefreshDatabase;  // Refrescar la base de datos después de cada prueba
 
-    public function test_creando_usuario_de_prueba_luego_loguearse_y_probar_controlador_productos(): void
+    public function test_loguearse_y_probar_controlador_productos(): void
     {
-        $user = User::factory()->create([
-            'username' => 'creando',
-            'password' => Hash::make('otrapassword'),
-        ]);
 
         $response = $this->post('/login', [
-            'username' => 'creando',
-            'password' => ('otrapassword'),
+            'username' => 'admin',
+            'password' => ('password'),
         ]);
 
         $this->assertAuthenticated();
@@ -61,6 +57,7 @@ class ProductoControllerTest extends TestCase
             'categoria' => 'A - Tracto alimentario y metabolismo',
             'descripcion' => 'Descripción del producto',
             'marca' => 'Marca del producto',
+            'droga' => 'Droga del producto', 
             'venta' => 'Libre',
             'laboratorio' => 'Laboratorio del producto',
             'vencimiento' => '2023-12-01',
@@ -91,6 +88,7 @@ class ProductoControllerTest extends TestCase
             'categoria' => 'A - Tracto alimentario y metabolismo',
             'descripcion' => 'Descripción del producto',
             'marca' => 'Marca del producto',
+            'droga' => 'Droga del producto',
             'venta' => 'Libre',
             'laboratorio' => 'Laboratorio del producto',
             'vencimiento' => '2023-12-01',
@@ -115,6 +113,25 @@ class ProductoControllerTest extends TestCase
 
         
 
+    }
+
+    public function test_creando_multiples_productos(): void
+    {
+    //Loguearse
+
+    $response = $this->post('/login', [
+        'username' => 'admin',
+        'password' => 'password', // Password as string, not enclosed in parenthesis.
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(RouteServiceProvider::HOME);
+
+    // Crear 100 Productos
+    Producto::factory()->count(100)->create();
+
+    // Asegurarse que los productos se han creado correctamente
+    $this->assertCount(100, Producto::all());
     }
 
 }

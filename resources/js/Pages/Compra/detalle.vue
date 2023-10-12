@@ -43,7 +43,7 @@ const props = defineProps({
 
                                 <div class="flex space-x-2">
                                     <span class="block font-medium text-sm text-gray-700 mt-2">Proveedor</span>
-                                    <TextInput id="usuario" type="text" class="mt-1 w-40 h-8 bg-gray-200 text-gray-600"
+                                    <TextInput id="proveedor" type="text" class="mt-1 w-40 h-8 bg-gray-200 text-gray-600"
                                         v-model="props.detallefact.proveedor_nombre" disabled />
                                 </div>
 

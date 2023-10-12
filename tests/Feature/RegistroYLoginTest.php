@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace tests\Feature;
 
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
@@ -9,9 +9,9 @@ use Tests\TestCase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
-class Registro_y_Login extends TestCase
+class RegistroYLoginTest extends TestCase
 {
-    use RefreshDatabase;
+    //use RefreshDatabase;
 
     public function test_página_de_registro(): void
     {

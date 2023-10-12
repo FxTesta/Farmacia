@@ -50,7 +50,7 @@ watch(search, _.debounce(function (value) {
                             </div>
                             <div class="relative flex items-center  focus-within:text-gray-400">
                                 <SearchIcon class="w-5 h-5 absolute ml-3 pointer-events-none" />
-                                <input v-model="search" type="text" placeholder="Buscar Clientes" autocomplete="off"
+                                <input id="searchcliente" v-model="search" type="text" placeholder="Buscar Clientes" autocomplete="off"
                                     aria-label="Buscar Clientes"
                                     class="pr-3 pl-10 py-1 text-sm font-medium text-gray-700 bg-cyan-100 rounded-2xl border-none ring-2 ring-cyan-400 focus:ring-cyan-300 focus:ring-2" />
                             </div>

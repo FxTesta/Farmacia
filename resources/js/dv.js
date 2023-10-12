@@ -27,7 +27,7 @@ export function calcularDigitoVerificador(p_ruc, p_basemax) {
             v_numero_al += v_caracterAscii;
         }
     }
-    console.log("RUCN: " + v_numero_al);
+    //console.log("RUCN: " + v_numero_al);
     for (let i = v_numero_al.length; i > 0; i--) {
         if (k > p_basemax) {
             k = 2;
@@ -46,7 +46,7 @@ export function calcularDigitoVerificador(p_ruc, p_basemax) {
         v_digito = 0;
     }
 
-    console.log("DVN: " + v_digito);
+    //console.log("DVN: " + v_digito);
     return v_digito;
 }
 

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('categoria');
             $table->string('descripcion');
             $table->string('marca');
+            $table->string('droga');
             $table->string('venta');
             $table->string('laboratorio')->nullable();
             $table->date('vencimiento');

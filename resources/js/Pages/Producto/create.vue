@@ -19,6 +19,7 @@ const form = useForm({
     categoria: '',
     descripcion: '',
     marca: '',
+    droga: '',
     venta: '',
     laboratorio: '',
     vencimiento: '',
@@ -121,7 +122,7 @@ function mindate(){
 
                                 <div>
                                     <InputLabel for="venta" value="Tipo de venta" class="text-gray-600"/>
-                                <select type="text" v-model="form.venta"   class="mt-1  bg-gray-200 text-gray-600 sm:rounded-lg">
+                                <select id="venta" v-model="form.venta"   class="mt-1  bg-gray-200 text-gray-600 sm:rounded-lg">
                                     <option disabled value="">Seleccione el tipo</option>
                                     <option>Libre</option>
                                     <option>Bajo receta</option>
@@ -131,9 +132,25 @@ function mindate(){
                                     <InputError class="mt-2" :message="form.errors.venta" />
                                 </div>
                             </div>
+                            <div class="mt-4 ">
+                                <InputLabel  for="droga" value="Droga" class="text-gray-600"/>
+
+                                <TextInput
+                                    id="droga"
+                                   
+                                    type="text"
+                                    class="mt-1 w-full bg-gray-200 text-gray-600 rounded-lg"
+                                    v-model="form.droga"
+                                    required                                    
+                                    autocomplete="droga"
+                                />
+                                
+                                <InputError class="mt-2" :message="form.errors.descripcion" />
+
+                            </div>
                             <div class="mt-4">
                                 <InputLabel for="categoria" value="Categoría" class="text-gray-600"/>
-                                <select type="text" v-model="form.categoria"   class="mt-1 block w-full bg-gray-200 text-gray-600 rounded-lg">
+                                <select id="categoria" v-model="form.categoria"   class="mt-1 block w-full bg-gray-200 text-gray-600 rounded-lg">
                                     <option disabled value="">Seleccionar Categoría</option>    
                                     <option>A - Tracto alimentario y metabolismo</option>
                                     <option>B - Sangre y órganos hematopoyéticos</option>
@@ -226,7 +243,7 @@ function mindate(){
 
                             <div class="mt-4">
                                 <InputLabel for="presentacion" value="Presentación" class="text-gray-600"/>
-                                <select type="text" v-model="form.presentacion"   class=" w-full bg-gray-200 text-gray-600 sm:rounded-lg">
+                                <select id="presentacion" v-model="form.presentacion"   class=" w-full bg-gray-200 text-gray-600 sm:rounded-lg">
                                     <option disabled value="">Seleccione el tipo de presentación</option>
                                     <option>Polvos medicinales</option>
                                     <option>Comprimidos</option>
@@ -288,7 +305,7 @@ function mindate(){
                                     
                                 </div>
                                 <div>
-                                    <InputLabel for="Estante" value="Estante" class="text-gray-600 " />
+                                    <InputLabel for="estante" value="Estante" class="text-gray-600 " />
                                     <TextInput
                                         id="estante"
                                         type="text"

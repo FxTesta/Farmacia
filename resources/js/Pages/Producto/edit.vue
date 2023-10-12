@@ -93,7 +93,7 @@ const submit = () => {
                                 </div>
                                 <div>
                                     <InputLabel for="venta" value="Tipo de venta" class="text-gray-600"/>
-                                    <select type="text" v-model="form.venta"   class="mt-1  bg-gray-200 text-gray-600 sm:rounded-lg">
+                                    <select id="venta" v-model="form.venta"   class="mt-1  bg-gray-200 text-gray-600 sm:rounded-lg">
                                         <option disabled value="">Seleccione un elemento</option>
                                         <option>Libre</option>
                                         <option>Bajo receta</option>
@@ -104,7 +104,7 @@ const submit = () => {
 
                             <div class="mt-4">
                                 <InputLabel for="categoria" value="Categoría" class="text-gray-600"/>
-                                <select type="text" v-model="form.categoria"   class="mt-1 block w-full bg-gray-200 text-gray-600 rounded-lg">
+                                <select id="categoria" v-model="form.categoria"   class="mt-1 block w-full bg-gray-200 text-gray-600 rounded-lg">
                                     <option disabled value="">Seleccionar Categoría</option>    
                                     <option>A - Tracto alimentario y metabolismo</option>
                                     <option>B - Sangre y órganos hematopoyéticos</option>
@@ -127,7 +127,7 @@ const submit = () => {
                             </div>
 
                             <div class="mt-4 ">
-                                <InputLabel for="name" value="Descripcion" class="text-gray-600"/>
+                                <InputLabel for="descripcion" value="Descripcion" class="text-gray-600"/>
                                 <TextInput
                                     id="descripcion"
                                     type="text"
@@ -183,7 +183,7 @@ const submit = () => {
                             <p v-if="form.alerta==form.vencimiento" class="text-red-600">La alerta tiene que ser menor a la fecha de vencimiento</p>
                             <div class="mt-4">
                                 <InputLabel for="presentacion" value="Presentación" class="text-gray-600"/>
-                                <select type="text" v-model="form.presentacion"   class=" w-full bg-gray-200 text-gray-600 sm:rounded-lg">
+                                <select id="presentacion" v-model="form.presentacion"   class=" w-full bg-gray-200 text-gray-600 sm:rounded-lg">
                                     <option disabled value="">Seleccione el tipo de presentación</option>
                                     <option>Polvos medicinales</option>
                                     <option>Comprimidos</option>
@@ -244,7 +244,7 @@ const submit = () => {
                                     <InputError class="mt-2" :message="form.errors.descuento" />
                                 </div>
                                 <div>
-                                    <InputLabel for="Estante" value="Estante" class="text-gray-600 " />
+                                    <InputLabel for="estante" value="Estante" class="text-gray-600 " />
                                     <TextInput
                                         id="estante"
                                         type="text"

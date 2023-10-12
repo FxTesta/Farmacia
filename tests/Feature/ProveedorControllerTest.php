@@ -1,6 +1,7 @@
 <?php
 
-namespace Tests;
+
+namespace tests\Feature;
 
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
@@ -11,18 +12,14 @@ use Illuminate\Support\Facades\DB;
 
 class ProveedorControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    //use RefreshDatabase;
 
-    public function test_creando_usuario_de_prueba_luego_loguearse_y_probar_crud_proveedores(): void
+    public function test_loguearse_y_probar_crud_proveedores(): void
     {
-        $user = User::factory()->create([
-            'username' => 'creando',
-            'password' => Hash::make('otrapassword'),
-        ]);
 
         $response = $this->post('/login', [
-            'username' => 'creando',
-            'password' => ('otrapassword'),
+            'username' => 'admin',
+            'password' => ('password'),
         ]);
 
         $this->assertAuthenticated();
@@ -54,8 +51,8 @@ class ProveedorControllerTest extends TestCase
             'id' => $nextId, // Aquí se utiliza el ID incrementado
             'empresa' => 'empresa',
             'name' => 'name',
-            'ruc' => '123456789',
-            'dv' => '1',
+            'ruc' => '4331464',
+            'dv'=> '1',
             'direccion' => 'direccion',
             'barrio' => 'barrio',
             'callelateral' => 'callelateral',
@@ -69,11 +66,11 @@ class ProveedorControllerTest extends TestCase
         $response4->assertStatus(200);
         //editando proveedor
         $response5 = $this->put("/editar-proveedor/{$nextId}", [
-            'empresa' => 'empresa',
-            'name' => 'name',
-            'ruc' => '123456789',
+            'empresa' => 'empresa-editado',
+            'name' => 'name-editado',
+            'ruc' => '4331464',
             'dv' => '1',
-            'direccion' => 'direccion',
+            'direccion' => 'direccion-editado',
             'barrio' => 'barrio',
             'callelateral' => 'callelateral',
             'referencia' => 'referencia',
@@ -84,8 +81,28 @@ class ProveedorControllerTest extends TestCase
         //eliminando proveedor
         $response6 = $this->delete("/proveedor/delete/{$nextId}");
         $response6->assertStatus(302);
-
+        
     }
+
+    public function test_creando_multiples_proveedores(): void
+    {
+    //Loguearse
+
+    $response = $this->post('/login', [
+        'username' => 'admin',
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(RouteServiceProvider::HOME);
+
+    // Crear 100 Proveedores
+    \App\Models\Proveedor::factory()->count(100)->create();
+
+    // Asegurarse que los proveedores se han creado correctamente
+    $this->assertCount(100, \App\Models\Proveedor::all());
+    }
+
 
 
 }
