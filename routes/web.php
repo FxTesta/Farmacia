@@ -142,6 +142,6 @@ Route::get('/generar-pdf' , function () {
 //para qie funcione instalar composer require dompdf/dompdf
 
 
-
+//https://www.incanatoit.com/2016/11/codigo-sistema-compras-ventas-laravel-mysql-jquery-bootstrap.html
 
 //dominio:farmauno.rf.gd
