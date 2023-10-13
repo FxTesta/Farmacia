@@ -64,7 +64,6 @@ import { XIcon, PlusCircleIcon } from "@heroicons/vue/outline";
                     </div>
                 </div>
                 <!--div que contiene detalle factura-->
-                <!--PRUEBAAAAAAAAAAAA-->
                 <div
                     class="flex-1 row-start-4 row-end-7 col-end-5 col-start-1 bg-white overflow-hidden rounded-md border border-black">
                     <div class="h-full">
