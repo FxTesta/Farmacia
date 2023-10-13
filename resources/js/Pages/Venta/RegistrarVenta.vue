@@ -14,7 +14,7 @@ import { XIcon, PlusCircleIcon } from "@heroicons/vue/outline";
             <h2 class="flex uppercase font-bold text-xl text-gray-800 leading-tight">Ventas</h2>
         </template>
         <div class="max-h-full flex">
-            <div class="ml-16 grid grid-rows-6 grid-cols-5 gap-4 mt-4 px-3 pb-2">
+            <div class="ml-16 grid grid-rows-6 grid-cols-5 gap-4 mt-4 mb-3 px-3 pb-2">
                 <!--div que contiene cabecera factura-->
                 <div class="col-end-5 col-start-1 row-start-1 row-end-4 bg-white rounded-md border border-black">
                     <div class="flex flex-row w-full p-3 mt-4 space-x-5">
