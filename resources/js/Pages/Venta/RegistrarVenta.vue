@@ -4,7 +4,7 @@ import { Head, useForm } from '@inertiajs/vue3';
 import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import { XIcon, PlusCircleIcon } from "@heroicons/vue/outline";
+import { XIcon, PlusCircleIcon, SearchIcon } from "@heroicons/vue/outline";
 
 </script>
 <template>
@@ -16,7 +16,8 @@ import { XIcon, PlusCircleIcon } from "@heroicons/vue/outline";
         <div class="max-h-full flex">
             <div class="ml-16 grid grid-rows-6 grid-cols-5 gap-4 mt-4 mb-3 px-3 pb-2">
                 <!--div que contiene cabecera factura-->
-                <div class="col-end-5 col-start-1 row-start-1 row-end-4 bg-white rounded-md border border-black">
+                <div
+                    class="flex flex-col col-end-5 col-start-1 row-start-1 row-end-4 bg-white rounded-md border border-black">
                     <div class="flex flex-row w-full p-3 mt-4 space-x-5">
                         <div class="space-x-1">
                             <label for="usuario" class="font-medium text-sm">Usuario:</label>
@@ -60,6 +61,59 @@ import { XIcon, PlusCircleIcon } from "@heroicons/vue/outline";
                             <label for="nrofactura" class="font-medium text-sm">Numero Factura:</label>
                             <input disabled type="number" id="nrofactura" name="nrofactura"
                                 class="rounded-md w-[140px] h-[28px] bg-slate-200 text-slate-500">
+                        </div>
+                    </div>
+                    <span class="mt-0 ml-2 uppercase font-bold text-lg">Producto</span>
+                    <div
+                        class="border-2 bg-gradient-to-b from-[#938E8E] to-[#524F4F] border-[#000000] rounded-md h-full overflow-hidden items-center flex">
+                        <div class="flex flex-row text-left space-x-3 w-full justify-center mb-3">
+                            <div
+                                class=" mt-7 w-8 h-8 bg-white hover:bg-blue-300 hover:text-blue-700 text-blue-400 ring-1 focus:ring-set-2 ring-black rounded-full grid place-content-center">
+                                <button type="button">
+                                    <SearchIcon class="w-6 h-6" />
+                                </button>
+                            </div>
+                            <div class="flex flex-col space-y-1">
+                                <label for="codigobarra" class="font-inter font-bold text-white text-base font-shadow">Codigo
+                                    de
+                                    barras</label>
+                                <input id="codigodebarra" type="number"
+                                    class="font-inter text-base rounded-md border border-black bg-white w-[135px] p-1">
+                            </div>
+                            <div class="flex flex-col space-y-1">
+                                <label for="descripcion"
+                                    class="font-inter font-bold text-white text-base font-shadow">Descripcion</label>
+                                <input id="descripcion" type="text"
+                                    class="font-inter text-base rounded-md border border-black bg-white w-[270px] p-1">
+                            </div>
+                            <div class="flex flex-col space-y-1">
+                                <label for="stock" class="font-inter font-bold text-white text-base font-shadow">Stock</label>
+                                <input id="stock" type="number"
+                                    class="font-inter text-base rounded-md border border-black bg-white w-[70px] p-1">
+                            </div>
+                            <div class="flex flex-col space-y-1">
+                                <label for="precio"
+                                    class="font-inter font-bold text-white text-base font-shadow">Precio</label>
+                                <input id="precio" type="number"
+                                    class="font-inter text-base rounded-md border border-black bg-white w-[120px] p-1">
+                            </div>
+                            <div class="flex flex-col space-y-1">
+                                <label for="cantidad"
+                                    class="font-inter font-bold text-white text-base font-shadow">Cantidad</label>
+                                <input id="cantidad" type="number"
+                                    class="font-inter text-base rounded-md border border-black bg-white w-[70px] p-1">
+                            </div>
+                            <div class="flex flex-col space-y-1">
+                                <label for="total" class="font-inter font-bold text-white text-base font-shadow">Total</label>
+                                <input id="total" type="number"
+                                    class="font-inter text-base rounded-md border border-black bg-white w-[120px] p-1">
+                            </div>
+                            <div class="mt-7">
+                                <button
+                                    class="bg-white w-8 h-8 hover:bg-green-300  hover:text-green-700 text-green-500 ring-2 focus:ring-set-2 ring-blue-400 rounded-md grid place-content-center">
+                                    <PlusCircleIcon class="w-7 h-7" />
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -169,10 +223,6 @@ import { XIcon, PlusCircleIcon } from "@heroicons/vue/outline";
 </template>
 
 <style>
-.h-90 {
-    height: 85%;
-}
-
 thead {
     background-color: white;
     position: sticky;
