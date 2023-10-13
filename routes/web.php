@@ -104,20 +104,7 @@ Route::controller(CompraController::class)->middleware('auth')->group(function (
     Route::get('/compra/listar/detalle/{detallefact}', 'detalles')->name('detalle');
 });
 
-//VENTAS
-Route::controller(VentaController::class)->middleware('auth')->group(function () {
 
-    Route::get('/venta', 'registarVenta')->name('venta');
-
-    //Route::get('/proveedores', 'buscarProveedor')->name('buscarproveedor');
-    //Route::get('/buscarproducto', 'buscarProducto')->name('buscarproducto');
-    //Route::post('/guardarcompra', 'store')->name('compra.store');
-
-    //Listar compras
-    //Route::get('/compra/listar', 'listarCompras')->name('listarcompras');
-
-    //Route::get('/compra/listar/detalle/{detallefact}', 'detalles')->name('detalle');
-});
 
 
 
