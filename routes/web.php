@@ -13,6 +13,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\PruebacomboController;
 use App\Http\Controllers\StockAuditController;
 use App\Http\Controllers\ListaController;
+use App\Http\Controllers\PruebaController;
 use App\Http\Controllers\VentaController;
 
 //hola prueba
@@ -162,3 +163,21 @@ Route::get('/generar-pdf' , function () {
 
 
 //dominio:farmauno.rf.gd
+
+
+
+
+Route::controller(PruebaController::class)->middleware('auth')->group(function () {
+
+    Route::get('/prueba', 'index')->name('prueba');
+    Route::get('/buscarproductoventa', 'buscarProducto')->name('buscarproductoventa');
+
+    //Route::get('/proveedores', 'buscarProveedor')->name('buscarproveedor');
+    //Route::get('/buscarproducto', 'buscarProducto')->name('buscarproducto');
+    //Route::post('/guardarcompra', 'store')->name('compra.store');
+
+    //Listar compras
+    //Route::get('/compra/listar', 'listarCompras')->name('listarcompras');
+
+    //Route::get('/compra/listar/detalle/{detallefact}', 'detalles')->name('detalle');
+});
