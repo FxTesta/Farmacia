@@ -46,6 +46,22 @@ class ProductoController extends Controller
             'filters' => $filters,
         ]);
     }
+    public function stockmin(Request $request)
+    {        
+        $producto = Producto::when($request->search, function($query, $search){
+            // filtra la busqueda por marca del producto o codigo de barras
+            $query->where('marca', 'LIKE', "%{$search}%" )->orWhere('codigo', 'LIKE', "{$search}%")->orWhere('droga', 'LIKE', "%{$search}%");
+        })
+        ->paginate(15)
+        ->withQueryString();
+
+        $filters = $request->only('search');
+
+        return Inertia::render('Producto/stockminimo',[
+            'producto' => $producto,
+            'filters' => $filters,
+        ]);
+    }
  //   public function pdf(){
       /*  $auditoria=StockAudit::all();
         $pdf = Pdf::loadView('productos.pdf', compact('auditoria'));

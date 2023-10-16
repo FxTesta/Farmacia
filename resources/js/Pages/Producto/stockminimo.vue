@@ -7,8 +7,7 @@ import Delete from '@/Pages/Producto/delete.vue';
 import { ref, watch } from "vue"; 
 import Pagination from '@/Components/Pagination.vue';
 import _ from 'lodash';
-import venta from './venta.vue';
-import buscar from './buscar.vue';
+import CrearOrden from '@/Pages/ProductosFaltantes/crearordendecompra.vue';
 
 const props = defineProps({
 producto: Object,
@@ -19,7 +18,7 @@ let search = ref(props.filters.search);
 
 watch(search, _.debounce(function (value) {
     console.log('disparado');
-    router.get('/producto', { search: value}, {
+    router.get('/stockminimo', { search: value}, {
         preserveState: true,
         replace: true
     });
@@ -29,14 +28,14 @@ watch(search, _.debounce(function (value) {
 </script>
 <script>
 
-//export default {
- // methods: {
- //   generarPDF() {
- //       const url = '/auditoria';
-//        window.open(url, '_blank');
- //   },
- // },
-//};
+export default {
+ methods: {
+   generarPDF() {
+      const url = '/auditoria';
+        window.open(url, '_blank');
+  },
+ },
+};
 </script>
 <template>
     <Head title="Dashboard" />
@@ -45,7 +44,7 @@ watch(search, _.debounce(function (value) {
     <AuthenticatedLayout>
 
         <template #header>
-            <h2 class="flex uppercase font-bold text-xl text-gray-800 leading-tight">Producto por terminar</h2>
+            <h2 class="flex uppercase font-bold text-xl text-gray-800 leading-tight">Productos Faltantes</h2>
         </template>
 
         <div class="py-12">
@@ -54,18 +53,9 @@ watch(search, _.debounce(function (value) {
                 <div class="-mt-10">
                     <div class="flex justify-end">
                        <div class="inline-flex space-x-2 mb-2 mt-2 mr-2">
-                        <button @click="generarPDF">Reporte Auditoria</button>
-                        <buscar/>
-                            <div class="mt-1">
-                                <Link 
-                                    :href="`/crear-producto/`"
-                                    as="button"
-                                    class="hover:bg-gray-300 ring-2 focus:ring-set-2 ring-cyan-400 rounded-full">
-                                    <i class="h-6 w-6 inline mb-1 ml-2 rounded-full fa-sharp fa-solid fa-prescription-bottle-medical"/>
-                                    <a class="text-sm font-medium rounded-md mr-3 "> Crear Producto </a>
-                                    
-                                </Link>
-                            </div>
+                       <CrearOrden/>
+                     
+                            
                             <div
                                 class="relative flex items-center  focus-within:text-gray-400"
                                 >
@@ -91,52 +81,33 @@ watch(search, _.debounce(function (value) {
                         <table class="min-w-full">
                             <thead>
                                 <tr class="border-b border-slate-300 text-gray-700 text-left">
-                                    <th>ID</th>
+                                    <th class="px-2">ID</th>
                                     <th class="px-2">Categoria</th>
                                     <th class="px-2">Descripcion</th>
                                     <th class="px-2">Marca</th>
-                                    <th class="px-2">Venta</th>
                                     <th class="px-2">Laboratorio</th>
                                     <th class="px-2">Vencimiento</th>
                                     <th class="px-2">Codigo de barras</th>
-                                    <th class="px-2">Precio Venta</th>
-                                    <th class="px-2">Precio Compra</th>
-                                    <th class="px-2">Stock</th>
+                                    <th class="px-2">Stock Actual</th>
+                                    <th class="px-2">Stock Minimo</th>
+                                    <th class="px-2">Acción</th>
                                 
-                                    <th class="px-2">Acciones</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-400 divide-opacity-30">
-                                <tr v-for="productos in producto.data" :key="productos.id">
-                                    <td class="text-gray-700 py-4 px-2">{{productos.id}}</td>
-                                    <td class="text-gray-700 py-4 px-2">{{productos.categoria}}</td>
-                                    <td class="text-gray-700 py-4 px-2">{{productos.descripcion}}</td>
-                                    <td class="text-gray-700 py-4 px-2">{{productos.marca}}</td>
-                                    <td class="text-gray-700 py-4 px-2">{{productos.venta}}</td>
-                                    <td class="text-gray-700 py-4 px-2">{{productos.laboratorio}}</td>
-                                    <td class="text-gray-700 py-4 px-2">{{productos.vencimiento}}</td>
-                                    <td class="text-gray-700 py-4 px-2">{{productos.codigo}}</td>
-                                    <td class="text-gray-700 py-4 px-2">{{productos.precioventa}}</td>
-                                    <td class="text-gray-700 py-4 px-2">{{productos.preciocompra}}</td>
-                                    <td class="text-gray-700 py-4 px-2">{{productos.stock}}</td>
-                                    
-                                    <td class="py-4">
-                                        <div class="inline-flex">          
-                                            <Link 
-                                                :href="`/editar-producto/${productos.id}`"
-                                                as="button"
-                                                class="w-8 h-8 t hover:bg-black/30 rounded-md grid place-content-center">
-                                                <PencilIcon class="w-6 h-6"/>
-                                            </Link>                                        
-                                            <div>
-                                                <Delete :producto="productos" :key="productos.id"/>
-                                            </div>
-                                            <div>
-                                                <venta :productos="productos" :key="productos.id"/>                                                    
-                                            </div>
-                                        </div>
-                                                    
-                                    </td>
+                                <tr v-for="productos in producto.data" :key="productos.id" :class="{'bg-green-500 text-white':productos.marca==='illum'}" >                                   
+                    
+                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2 ">{{productos.id}}</td>
+                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.categoria}}</td>
+                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.descripcion}}</td>
+                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.marca}}</td>
+                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.laboratorio}}</td>
+                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.vencimiento}}</td>
+                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.codigo}}</td>
+                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.stock}}</td>
+                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.stockmin}}</td>
+                                     
                                 </tr>
                                 <div v-if="producto.data.length <= 0" class="p-4">
                                     <div class="absolute left-2/4 -translate-x-1/2"
