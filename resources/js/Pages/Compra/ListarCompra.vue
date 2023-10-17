@@ -25,7 +25,7 @@ watch(search, _.debounce(function (value) {
 
 </script>
 <template>
-    <Head title="Dashboard" />
+    <Head title="Lista Compras" />
 
     <SideBar />
     <AuthenticatedLayout>
