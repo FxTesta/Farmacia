@@ -59,29 +59,32 @@ let query = ref('')
 let filteredResults = ref([]);
 const isLoading = ref(false);
 
+//watch que analiza cambios de "query" ingresado en el buscador
 watch(query, (q) => {
-  if (props.loadOptions) {
-    isLoading.value = true;
-    props.loadOptions(q, (results) => {
-      options.value = results;
-      filterResults(q);
-      isLoading.value = false;
+  if (props.loadOptions) { //checkea que exista la función "loadOptions" que trae los datos de la BD
+    isLoading.value = true; //estado "Cargando..." verdadero, antes de que se ejecute la función
+    props.loadOptions(q, (results) => { //carga la función "loadOptions" recibiendo de parametro "q" que es el query y (results) es la salida
+      options.value = results; // se carga en options los resultados de la busqueda de la bd
+      filterResults(q);//se llama a la función enviando como parametro el query
+      isLoading.value = false; //pongo el estado "Cargando..." en falso luego de que se terminara la carga de datos
     });
   }
 });
 
+//función que filtra los resultados del "query" ingresado
 function filterResults(q) {
-  filteredResults.value = q === ''
-    ? []
-    : options.value.filter((option) =>
-        option.label
-          .toLowerCase()
-          .replace(/\s+/g, '')
-          .includes(q.toLowerCase().replace(/\s+/g, '')) ||
-        option.codigo || option.droga
+  filteredResults.value = q === '' //iguala la variable reactiva a los resultados del filtro que se van a obtener
+    ? [] //si el query esta vacio lo iguala a un empty array
+    : options.value.filter((option) => //en otro caso ":" carga lo contenido en "filteredResults" con los datos filtrados
+        option.marca
+          .toLowerCase() //pone en minusculas
+          .replace(/\s+/g, '') //quita espacios
+          .includes(q.toLowerCase().replace(/\s+/g, '')) || //incluye el valor del query para compararlo
+        option.codigo || option.droga //ayuda a que también filtre los resultados por marca, codigo de barra o droga
       );
 }
 
+//valor computed que ayuda a desplegar los datos filtrados una vez que esten listos.
 let filteredOptions = computed(() => filteredResults.value);
 
 const isOpen = ref(false)
@@ -192,9 +195,9 @@ const seleccionProducto = () => {
                            </thead>
                            <tbody v-if="query" class="divide-y divide-gray-400 divide-opacity-30">
                               <tr v-for="productos in filteredOptions" :key="productos.id" @click="selectProduct(productos)" @keyup.enter="seleccionProducto(productos)" tabindex="0" class="cursor-pointer" :class="{ 'bg-blue-500 text-white': productos === selectedProduct }">
-                                  <td class="px-2 py-2">{{productos.value}}</td>
+                                  <td class="px-2 py-2">{{productos.id}}</td>
                                   <td class="px-2 py-2">{{productos.codigo}}</td>
-                                  <td class="px-2 py-2">{{productos.label}}</td>
+                                  <td class="px-2 py-2">{{productos.marca}}</td>
                                   <td class="px-2 py-2">{{productos.droga}}</td>
                                   <td class="px-2 py-2">{{productos.descripcion}}</td>
                                   <td class="px-2 py-2">{{productos.venta}}</td>

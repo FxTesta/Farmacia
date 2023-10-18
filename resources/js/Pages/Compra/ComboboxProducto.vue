@@ -57,8 +57,6 @@ watch(query, (q) => {
   }
 },
 
-{immediate: true}
-
 );
 
 let filteredOptions = computed(() =>

@@ -20,8 +20,8 @@ function loadProducto(query, setOptions) {
             setOptions(
                 results.map(producto => {
                     return {
-                        value: producto.id,
-                        label: producto.marca,
+                        id: producto.id,
+                        marca: producto.marca,
                         codigo: producto.codigo,
                         stock: producto.stock,
                         droga: producto.droga,
@@ -48,7 +48,7 @@ function loadProducto(query, setOptions) {
                                 </button>
                             </div>-->
             <BuscarProducto :load-options="loadProducto"  @send-product="productoEncontrado"/>
-            <span v-if="producto" class="text-white">{{producto.label}}</span>
+            <span v-if="producto" class="text-white">{{producto.marca}}</span>
             <div>
                 <label class="text-white block" for="codigodebarra">Codigo de barra</label>
                 <input class="bg-gray-800 text-white" type="text" id="codigodebarra">
