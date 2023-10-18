@@ -8,7 +8,6 @@ import {
   DialogTitle,
 } from '@headlessui/vue'
 import {SearchIcon} from "@heroicons/vue/outline";
-//import { Head, Link, router } from '@inertiajs/vue3';
 import _ from 'lodash';
 
 const emit = defineEmits(["sendProduct"]);
@@ -27,14 +26,16 @@ loadOptions: Function,
 
 const options = ref(props.options);
 
-let query = ref('');
-watch(query, _.debounce(function (q) {
-  console.log('buscando')
-  if(props.loadOptions){
+//Con el "throttle" para evitar muchas peticiones al servidor
 
+/* let query = ref('');
+let isLoading = ref(false); //throttle
+watch(query, _.debounce(function (q) {
+  
+  if(props.loadOptions){
+    
     props.loadOptions(q, (results) => {
       options.value = results;
-
       if(props.modelValue && !options.value.some(o => {
         return o.value === props.modelValue?.value;
       })
@@ -43,50 +44,45 @@ watch(query, _.debounce(function (q) {
 
         options.value.unshift(props.modelValue)
       }
-
+      
     })
+
   }
 },
 
 300
-));
+)); */
 
-/* let query = ref('')
+
+// watch sin el 'throttle', directo, ocasiona muchas peticiones al servidor
+let query = ref('')
+let filteredResults = ref([]);
+const isLoading = ref(false);
+
 watch(query, (q) => {
-  if(props.loadOptions){
-
+  if (props.loadOptions) {
+    isLoading.value = true;
     props.loadOptions(q, (results) => {
       options.value = results;
-
-      if(props.modelValue && !options.value.some(o => {
-        return o.value === props.modelValue?.value;
-      })
-      
-      ) {
-
-        options.value.unshift(props.modelValue)
-      }
-
-    })
+      filterResults(q);
+      isLoading.value = false;
+    });
   }
-},
+});
 
-{immediate: true}
-
-); */
-
-let filteredOptions = computed(() =>
-  query.value === ''
-    ? options.value
+function filterResults(q) {
+  filteredResults.value = q === ''
+    ? []
     : options.value.filter((option) =>
         option.label
           .toLowerCase()
           .replace(/\s+/g, '')
-          .includes(query.value.toLowerCase().replace(/\s+/g, '')) ||
-        option.codigo
-        
-      )
-)
+          .includes(q.toLowerCase().replace(/\s+/g, '')) ||
+        option.codigo || option.droga
+      );
+}
+
+let filteredOptions = computed(() => filteredResults.value);
 
 const isOpen = ref(false)
 
@@ -106,7 +102,7 @@ const selectedProduct = ref();
 //envia el producto al componente padre cuando se presiona "Enter"
 const seleccionProducto = () => {
 
-  //search.value = null;
+  query.value = null; //resetea el campo de busqueda al seleccionar el producto
   isOpen.value = false; //cierra el buscador jeje
   emit("sendProduct", selectedProduct.value); // envia el "emit" al componente padre "@send-product"
 
@@ -176,7 +172,7 @@ const seleccionProducto = () => {
                   <div class="p-2 ">
                     <span class="text-xl uppercase underline font-bold font-inter italic">Listado de Productos</span>
                   </div>
-                  <span>{{ selectedProduct?.marca }}</span>
+<!--                <span>{{  }}</span> -->
                 </div>
                    <div class="px-2 mb-6">
                        <table class="min-w-full">
@@ -194,43 +190,47 @@ const seleccionProducto = () => {
                                    <th class="px-2">Stock</th>
                                </tr>
                            </thead>
-                           <tbody  class="divide-y divide-gray-400 divide-opacity-30">
-                               <tr v-for="productos in filteredOptions" :key="productos.id" @click="selectProduct(productos)" @keyup.enter="seleccionProducto(productos)" tabindex="0" class="cursor-pointer" :class="{ 'bg-blue-500 text-white': productos === selectedProduct }">
-                                   <td class="px-2 py-2">{{productos.value}}</td>
-                                   <td class="px-2 py-2">{{productos.codigo}}</td>
-                                   <td class="px-2 py-2">{{productos.label}}</td>
-                                   <td class="px-2 py-2">{{productos.droga}}</td>
-                                   <td class="px-2 py-2">{{productos.descripcion}}</td>
-                                   <td class="px-2 py-2">{{productos.venta}}</td>
-                                   <td class="px-2 py-2">{{productos.laboratorio}}</td>
-                                   <td class="px-2 py-2">{{productos.vencimiento}}</td>
-                                   <td class="px-2 py-2">{{productos.precioventa}}</td>
-                                   <td class="px-2 py-2">{{productos.stock}}</td>
-                               </tr>
-<!--                                <div v-if="producto.data.length <= 0" class="p-4 py-16">
-                                   <div class="absolute left-2/4 -translate-x-1/2"
-                                       >
-                                       <span class="font-serif text-xl text-slate-500 uppercase">no hay productos</span>
-                                   </div>
-                               </div> -->
+                           <tbody v-if="query" class="divide-y divide-gray-400 divide-opacity-30">
+                              <tr v-for="productos in filteredOptions" :key="productos.id" @click="selectProduct(productos)" @keyup.enter="seleccionProducto(productos)" tabindex="0" class="cursor-pointer" :class="{ 'bg-blue-500 text-white': productos === selectedProduct }">
+                                  <td class="px-2 py-2">{{productos.value}}</td>
+                                  <td class="px-2 py-2">{{productos.codigo}}</td>
+                                  <td class="px-2 py-2">{{productos.label}}</td>
+                                  <td class="px-2 py-2">{{productos.droga}}</td>
+                                  <td class="px-2 py-2">{{productos.descripcion}}</td>
+                                  <td class="px-2 py-2">{{productos.venta}}</td>
+                                  <td class="px-2 py-2">{{productos.laboratorio}}</td>
+                                  <td class="px-2 py-2">{{productos.vencimiento}}</td>
+                                  <td class="px-2 py-2">{{productos.precioventa}}</td>
+                                  <td class="px-2 py-2">{{productos.stock}}</td>
+                              </tr>
+                              <div v-if="filteredOptions.length === 0 && !isLoading" class="p-4 py-16">
+                                  <div class="absolute left-2/4 -translate-x-1/2"
+                                      >
+                                      <span class="font-serif text-xl text-slate-500 uppercase">no hay productos</span>
+                                  </div>
+                              </div>
+                              <div v-if="isLoading && filteredOptions.length === 0" class="p-4 py-16">
+                                  <div class="absolute left-2/4 -translate-x-1/2"
+                                      >
+                                      <span class=" text-xl text-black font-blod uppercase italic">Cargando...</span>
+                                  </div>
+                              </div>
                            </tbody>
-<!--                            <tbody v-else>
-                            <div class="p-4 py-16">
-                                   <div class="absolute left-2/4 -translate-x-1/2"
-                                       >
-                                      <span class="font-inter text-xl text-gray-700 uppercase">Realiza una Busqueda por 
-                                        <span class="font-bold text-black">nombre</span>, 
-                                        <span class="font-bold text-black">marca</span> o 
-                                        <span class="font-bold text-black">droga</span> 
-                                      </span>
-                                   </div>
-                               </div>
-                           </tbody> -->
+                           <tbody v-else>
+                                <div class="p-4 py-16">
+                                    <div class="absolute left-2/4 -translate-x-1/2"
+                                        >
+                                        <span class="font-inter text-xl text-gray-700 uppercase">Realiza una Busqueda por 
+                                          <span class="font-bold text-black">nombre</span>, 
+                                          <span class="font-bold text-black">marca</span> o 
+                                          <span class="font-bold text-black">droga</span> 
+                                        </span>
+                                    </div>
+                                </div>
+                            </tbody>
+
                            
-                       </table>
-                       
-                       <!--PAGINACION-->
-                    
+                       </table>                    
                    </div>
                    
                </div>
