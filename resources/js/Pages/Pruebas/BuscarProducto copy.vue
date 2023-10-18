@@ -1,14 +1,14 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch} from 'vue'
 import {
   TransitionRoot,
   TransitionChild,
   Dialog,
   DialogPanel,
-  DialogTitle,
 } from '@headlessui/vue'
 import {SearchIcon} from "@heroicons/vue/outline";
 import _ from 'lodash';
+import ClickLogo from "@/Components/ClickLogo.vue";
 
 const emit = defineEmits(["sendProduct"]);
 
@@ -54,7 +54,7 @@ watch(query, _.debounce(function (q) {
 )); */
 
 
-// watch sin el 'throttle', directo, ocasiona muchas peticiones al servidor
+// watch sin el 'throttle' o 'debounce', directo, ocasiona muchas peticiones al servidor
 let query = ref('')
 let filteredResults = ref([]);
 const isLoading = ref(false);
@@ -96,20 +96,32 @@ function openModal() {
   isOpen.value = true
 }
 
+const selectedIndex = ref();
+
 //guarda en una variable el producto seleccionado de la tabla
 const selectedProduct = ref();
-  const selectProduct = (productos) => {
-    selectedProduct.value = productos;
-  };
 
-//envia el producto al componente padre cuando se presiona "Enter"
-const seleccionProducto = () => {
-
-  query.value = null; //resetea el campo de busqueda al seleccionar el producto
+const selectProduct = (index) => {
+  selectedIndex.value = index;
+  selectedProduct.value = filteredOptions.value[index];
+   
+  emit("sendProduct", selectedProduct.value);//envia el producto al componente padre al hacer click al producto
   isOpen.value = false; //cierra el buscador jeje
-  emit("sendProduct", selectedProduct.value); // envia el "emit" al componente padre "@send-product"
+  query.value = null; //resetea el campo de busqueda al seleccionar el producto
+  selectedProduct.value = null; //resetea la variable donde se guardo el producto enviado
+  selectedIndex.value = null; //resetea el index
+};
 
-}
+
+const highlightRow = (index) => {
+  selectedIndex.value = index;
+};
+
+const unhighlightRow = () => {
+  selectedIndex.value = null;
+};
+
+
 </script>
 
 <template>
@@ -175,7 +187,7 @@ const seleccionProducto = () => {
                   <div class="p-2 ">
                     <span class="text-xl uppercase underline font-bold font-inter italic">Listado de Productos</span>
                   </div>
-<!--                <span>{{  }}</span> -->
+               <span>{{ selectedProduct?.marca  }}</span>
                 </div>
                    <div class="px-2 mb-6">
                        <table class="min-w-full">
@@ -194,7 +206,13 @@ const seleccionProducto = () => {
                                </tr>
                            </thead>
                            <tbody v-if="query" class="divide-y divide-gray-400 divide-opacity-30">
-                              <tr v-for="productos in filteredOptions" :key="productos.id" @click="selectProduct(productos)" @keyup.enter="seleccionProducto(productos)" tabindex="0" class="cursor-pointer" :class="{ 'bg-blue-500 text-white': productos === selectedProduct }">
+                              <tr 
+                                v-for="(productos, index) in filteredOptions" :key="productos.id" 
+                                @mouseenter="highlightRow(index)"
+                                @mouseleave="unhighlightRow(index)"
+                                @click = "selectProduct(index)"
+                                class="cursor-pointer" 
+                                :class="{ 'bg-blue-500 text-white': index === selectedIndex }">
                                   <td class="px-2 py-2">{{productos.id}}</td>
                                   <td class="px-2 py-2">{{productos.codigo}}</td>
                                   <td class="px-2 py-2">{{productos.marca}}</td>
@@ -235,7 +253,12 @@ const seleccionProducto = () => {
                            
                        </table>                    
                    </div>
-                   
+                   <div class="sticky bottom-0 flex flex-row justify-center bg-gray-400 py-1 items-center border-t-2 border-black/20">
+                      <ClickLogo class="w-10 h-10 fill-current text-blue-500" />
+                    <div class="-ml-1 mt-2">
+                      <span class="font-inter text-white font-shadow"><span class="text-blue-300">Click izquierdo</span> para seleccionar</span>
+                    </div>
+                   </div>
                </div>
                
               </DialogPanel>
@@ -272,5 +295,4 @@ th::before {
     background-color: #6b7280;
     /* Color del borde */
 }
-
 </style>
