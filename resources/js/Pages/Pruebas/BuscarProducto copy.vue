@@ -215,11 +215,11 @@ const unhighlightRow = () => {
                                 :class="{ 'bg-blue-500 text-white': index === selectedIndex }">
                                   <td class="px-2 py-2">{{productos.id}}</td>
                                   <td class="px-2 py-2">{{productos.codigo}}</td>
-                                  <td class="px-2 py-2">{{productos.marca}}</td>
-                                  <td class="px-2 py-2">{{productos.droga}}</td>
-                                  <td class="px-2 py-2">{{productos.descripcion}}</td>
-                                  <td class="px-2 py-2">{{productos.venta}}</td>
-                                  <td class="px-2 py-2">{{productos.laboratorio}}</td>
+                                  <td class="px-2 py-2 uppercase">{{productos.marca}}</td>
+                                  <td class="px-2 py-2 uppercase">{{productos.droga}}</td>
+                                  <td class="px-2 py-2 uppercase">{{productos.descripcion}}</td>
+                                  <td class="px-2 py-2 uppercase">{{productos.venta}}</td>
+                                  <td class="px-2 py-2 uppercase">{{productos.laboratorio}}</td>
                                   <td class="px-2 py-2">{{productos.vencimiento}}</td>
                                   <td class="px-2 py-2">{{productos.precioventa}}</td>
                                   <td class="px-2 py-2">{{productos.stock}}</td>
