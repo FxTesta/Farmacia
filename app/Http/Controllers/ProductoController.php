@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Inertia\Inertia;
 use App\Models\Producto;
 use App\Models\Categoria;
 use App\Models\StockAudit;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ProductoController extends Controller
 {
@@ -46,28 +47,29 @@ class ProductoController extends Controller
             'filters' => $filters,
         ]);
     }
-    public function stockmin(Request $request)
-    {        
+    public function faltantes(Request $request)
+    {   
+         Producto::whereNull('stock') // si hay algun producto con stock nulo actualiza a cero
+        ->update(['stock' => 0]);
+
         $producto = Producto::when($request->search, function($query, $search){
             // filtra la busqueda por marca del producto o codigo de barras
-            $query->where('marca', 'LIKE', "%{$search}%" )->orWhere('codigo', 'LIKE', "{$search}%")->orWhere('droga', 'LIKE', "%{$search}%");
+            $query->where('marca', 'LIKE', "%{$search}%" )->orWhere('codigo', 'LIKE', "{$search}%")->orWhere('laboratorio', 'LIKE', "%{$search}%");
+        })
+        ->where(function($query) {
+            $query->where('stock', '<=', DB::raw('COALESCE(stockmin, 0)'));
+            $query->orWhereNull('stockmin');
         })
         ->paginate(15)
         ->withQueryString();
 
         $filters = $request->only('search');
 
-        return Inertia::render('Producto/stockminimo',[
+        return Inertia::render('Producto/ProductosFaltantes',[
             'producto' => $producto,
             'filters' => $filters,
         ]);
     }
- //   public function pdf(){
-      /*  $auditoria=StockAudit::all();
-        $pdf = Pdf::loadView('productos.pdf', compact('auditoria'));
-        return $pdf->stream();*/
-  //      return view('productos.pdf');
-  //  }
 
     public function create()
     {    

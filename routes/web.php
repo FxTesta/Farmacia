@@ -63,7 +63,7 @@ Route::controller(ClienteController::class)->middleware('auth')->group(function 
 Route::controller(ProductoController::class)->middleware('auth')->group(function () {
    
     Route::get('/producto', 'index')->name('producto');
-    Route::get('/stockminimo', 'stockmin')->name('stockminimo');
+    Route::get('/productosfaltantes', 'faltantes')->name('faltantes');
   //  Route::get('/producto/pdf', 'pdf')->name('producto.pdf');
     Route::get('/crear-producto', 'create')->name('producto.create');
     Route::post('/producto', 'store')->name('producto.store');

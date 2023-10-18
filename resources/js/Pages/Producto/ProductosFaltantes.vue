@@ -18,7 +18,7 @@ let search = ref(props.filters.search);
 
 watch(search, _.debounce(function (value) {
     console.log('disparado');
-    router.get('/stockminimo', { search: value}, {
+    router.get('/productosfaltantes', { search: value}, {
         preserveState: true,
         replace: true
     });
@@ -36,6 +36,7 @@ export default {
   },
  },
 };
+
 </script>
 <template>
     <Head title="Dashboard" />
@@ -81,16 +82,15 @@ export default {
                         <table class="min-w-full">
                             <thead>
                                 <tr class="border-b border-slate-300 text-gray-700 text-left">
-                                    <th class="px-2">ID</th>
+                                    <th class="px-2">ID</th>                                    
+                                    <th class="px-2">Codigo de barras</th>
                                     <th class="px-2">Categoria</th>
-                                    <th class="px-2">Descripcion</th>
                                     <th class="px-2">Marca</th>
                                     <th class="px-2">Laboratorio</th>
                                     <th class="px-2">Vencimiento</th>
-                                    <th class="px-2">Codigo de barras</th>
                                     <th class="px-2">Stock Actual</th>
                                     <th class="px-2">Stock Minimo</th>
-                                    <th class="px-2">Acción</th>
+                                    <th class="px-2">Seleccionar</th>
                                 
                                     
                                 </tr>
@@ -98,15 +98,17 @@ export default {
                             <tbody class="divide-y divide-gray-400 divide-opacity-30">
                                 <tr v-for="productos in producto.data" :key="productos.id" :class="{'bg-green-500 text-white':productos.marca==='illum'}" >                                   
                     
-                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2 ">{{productos.id}}</td>
-                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.categoria}}</td>
-                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.descripcion}}</td>
-                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.marca}}</td>
-                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.laboratorio}}</td>
-                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.vencimiento}}</td>
-                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.codigo}}</td>
-                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.stock}}</td>
-                                        <td v-if="productos.stock <= productos.stockmin" class="text-gray-700 py-4 px-2">{{productos.stockmin}}</td>
+                                        <td  class="text-gray-700 py-4 px-2 ">{{productos.id}}</td>                                        
+                                        <td  class="text-gray-700 py-4 px-2">{{productos.codigo}}</td>
+                                        <td  class="text-gray-700 py-4 px-2">{{productos.categoria}}</td>
+                                        <td  class="text-gray-700 py-4 px-2">{{productos.marca}}</td>
+                                        <td  class="text-gray-700 py-4 px-2">{{productos.laboratorio}}</td>
+                                        <td  class="text-gray-700 py-4 px-2">{{productos.vencimiento}}</td>
+                                        <td  class="text-gray-700 py-4 px-2">{{productos.stock}}</td>
+                                        <td  class="text-gray-700 py-4 px-2">{{productos.stockmin}}</td>
+                                        <td >
+                                            <input type="checkbox" v-model="productos.selected" />
+                                        </td>
                                      
                                 </tr>
                                 <div v-if="producto.data.length <= 0" class="p-4">

@@ -67,7 +67,7 @@ export default {
         },
       
         {
-          href: '/stockminimo',
+          href: '/productosfaltantes',
           title: 'Configuración',
           icon: 'fa-sharp fa-solid fa-gear',
         
