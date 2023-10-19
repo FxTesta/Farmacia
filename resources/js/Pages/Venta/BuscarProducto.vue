@@ -125,15 +125,12 @@ const unhighlightRow = () => {
 </script>
 
 <template>
-    <div class="">
-      <button
-        type="button"
-        @click="openModal"
-        class="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-      >
-        Buscar Producto
+  <div
+      class=" mt-7 w-8 h-8 bg-white hover:bg-blue-300 hover:text-blue-700 text-blue-400 ring-1 focus:ring-set-2 ring-black rounded-full grid place-content-center">
+      <button type="button" @click="openModal">
+          <SearchIcon class="w-6 h-6" />
       </button>
-    </div>
+  </div>
     <TransitionRoot appear :show="isOpen" as="template">
       <Dialog as="div" @close="closeModal" class="relative z-10">
         <TransitionChild
@@ -145,7 +142,7 @@ const unhighlightRow = () => {
           leave-from="opacity-100"
           leave-to="opacity-0"
         >
-          <div class="fixed inset-0 bg-black bg-opacity-25" />
+          <div class="fixed inset-0 bg-black bg-opacity-90" />
         </TransitionChild>
   
         <div class="fixed inset-0">
@@ -162,11 +159,11 @@ const unhighlightRow = () => {
               leave-to="opacity-0 scale-95"
             >
               <DialogPanel
-                class="w-full max-w-7xl transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all"
+                class="w-full ml-16 max-w-7xl transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all"
               >
           
               <div class="bg-gray-300 shadow-sm sm:rounded-lg overflow-y-auto h-full">
-                <div class="flex flex-row sticky top-0 bg-gray-300">
+                <div class="flex flex-row sticky top-0 z-10 bg-gray-300">
                   <div
                     class="flex items-center p-2 focus-within:text-gray-400"
                     >
@@ -188,7 +185,7 @@ const unhighlightRow = () => {
                     <span class="text-xl uppercase underline font-bold font-inter italic">Listado de Productos</span>
                   </div>
                 </div>
-                   <div class="px-2 mb-6">
+                   <div class="px-2">
                        <table class="min-w-full">
                            <thead>
                                <tr class="sticky top-10 text-left bg-gray-300">
@@ -212,16 +209,16 @@ const unhighlightRow = () => {
                                 @click = "selectProduct(index)"
                                 class="cursor-pointer" 
                                 :class="{ 'bg-blue-500 text-white': index === selectedIndex }">
-                                  <td class="px-2 py-2">{{productos.id}}</td>
-                                  <td class="px-2 py-2">{{productos.codigo}}</td>
-                                  <td class="px-2 py-2 uppercase">{{productos.marca}}</td>
-                                  <td class="px-2 py-2 uppercase">{{productos.droga}}</td>
-                                  <td class="px-2 py-2 uppercase">{{productos.descripcion}}</td>
-                                  <td class="px-2 py-2 uppercase">{{productos.venta}}</td>
-                                  <td class="px-2 py-2 uppercase">{{productos.laboratorio}}</td>
-                                  <td class="px-2 py-2">{{productos.vencimiento}}</td>
-                                  <td class="px-2 py-2">{{productos.precioventa}}</td>
-                                  <td class="px-2 py-2">{{productos.stock}}</td>
+                                  <td class="px-2 py-3">{{productos.id}}</td>
+                                  <td class="px-2 py-3">{{productos.codigo}}</td>
+                                  <td class="px-2 py-3 uppercase">{{productos.marca}}</td>
+                                  <td class="px-2 py-3 uppercase">{{productos.droga}}</td>
+                                  <td class="px-2 py-3 uppercase">{{productos.descripcion}}</td>
+                                  <td class="px-2 py-3 uppercase">{{productos.venta}}</td>
+                                  <td class="px-2 py-3 uppercase">{{productos.laboratorio}}</td>
+                                  <td class="px-2 py-3">{{productos.vencimiento}}</td>
+                                  <td class="px-2 py-3">{{productos.precioventa}}</td>
+                                  <td class="px-2 py-3">{{productos.stock}}</td>
                               </tr>
                               <div v-if="filteredOptions.length === 0 && !isLoading" class="p-4 py-16">
                                   <div class="absolute left-2/4 -translate-x-1/2"

@@ -109,6 +109,8 @@ Route::controller(CompraController::class)->middleware('auth')->group(function (
 Route::controller(VentaController::class)->middleware('auth')->group(function () {
 
     Route::get('/venta', 'registarVenta')->name('venta');
+    Route::get('/buscarproductoventa', 'buscarProducto')->name('buscarproductoventa');
+    Route::get('/buscarcliente', 'buscarCliente')->name('buscarcliente');
 
     //Route::get('/proveedores', 'buscarProveedor')->name('buscarproveedor');
     //Route::get('/buscarproducto', 'buscarProducto')->name('buscarproducto');
@@ -170,7 +172,7 @@ Route::get('/generar-pdf' , function () {
 Route::controller(PruebaController::class)->middleware('auth')->group(function () {
 
     Route::get('/prueba', 'index')->name('prueba');
-    Route::get('/buscarproductoventa', 'buscarProducto')->name('buscarproductoventa');
+    //Route::get('/buscarproductoventa', 'buscarProducto')->name('buscarproductoventa');
 
     //Route::get('/proveedores', 'buscarProveedor')->name('buscarproveedor');
     //Route::get('/buscarproducto', 'buscarProducto')->name('buscarproducto');

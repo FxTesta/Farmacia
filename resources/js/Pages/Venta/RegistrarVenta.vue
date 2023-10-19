@@ -5,6 +5,121 @@ import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import { XIcon, PlusCircleIcon, SearchIcon } from "@heroicons/vue/outline";
+import {ref, computed, watch} from 'vue';
+import BuscarProducto from '@/Pages/Venta/BuscarProducto.vue';
+import BuscarCliente from '@/Pages/Venta/BuscarCliente.vue'
+
+const props = defineProps({
+    user: Object,
+});
+
+//variable reactiva donde se recibe el producto
+let producto = ref();
+
+//variable retorna codigo de barra que extrae de "producto"
+let codigobarra = computed(() =>  producto.value?.codigo);  
+
+//variable retorna marca que extrae de "producto"
+let marca = computed(() =>  producto.value?.marca);  
+
+//variable retorna stock que extrae de "producto"
+let stock = computed(() =>  producto.value?.stock);  
+
+//variable retorna precioventa que extrae de "producto"
+let precioventa = ref();
+
+//utilizo watch para la variable "precioventa" en vez de computed por que necesito que sea editable
+watch(
+    producto, // variable que quiero observar los cambios
+    (nuevoProducto) => {
+      if (nuevoProducto) {
+        precioventa.value = nuevoProducto.precioventa;
+      }
+    }
+  );
+
+let cantidad = ref();
+
+const total = computed(() => {
+  
+    const precioNumerico = parseFloat(precioventa.value);
+    const cantidadNumerica = parseFloat(cantidad.value);
+
+    // Verificar si los valores son numéricos antes de calcular el producto
+    if (!isNaN(precioNumerico) && !isNaN(cantidadNumerica)) {
+        return precioNumerico * cantidadNumerica;
+    } else {
+        return 0; // Otra opción sería retornar null o un mensaje de error
+    }
+});
+
+//recibe el producto seleccionado en el buscado
+const productoEncontrado = (event) => {
+
+    producto.value = event;
+}
+
+//variable reactiva donde se recibe el cliente
+let cliente = ref();
+
+let clienteid = computed(() => cliente.value?.value);
+
+let clientenombre = computed(() => cliente.value?.label);
+
+//función para buscar de la bd, recibe el query de busqueda y setOptions devuelve el resultado
+function loadProducto(query, setOptions) {
+    fetch("http://127.0.0.1:8000/buscarproductoventa?query=" + query)
+        .then(response => response.json())
+        .then(results => {
+            setOptions(
+                results.map(producto => {
+                    return {
+                        id: producto.id,
+                        marca: producto.marca,
+                        codigo: producto.codigo,
+                        stock: producto.stock,
+                        droga: producto.droga,
+                        descripcion: producto.descripcion,
+                        precioventa: producto.precioventa,
+                        venta: producto.venta,
+                        vencimiento: producto.vencimiento,
+                        laboratorio: producto.laboratorio,
+                    };
+                })
+            );
+        });
+}
+
+function loadCliente(query, setOptions) {
+    fetch("http://127.0.0.1:8000/buscarcliente?query=" + query)
+        .then(response => response.json())
+        .then(results => {
+            setOptions(
+                results.map(cliente => {
+                    return {
+                        value: cliente.id,
+                        label: cliente.name,
+                        cedula: cliente.cedula,
+                    };
+                })
+            );
+        });
+}
+
+function mindate() {
+    return new Date().toISOString().split('T')[0]
+}
+
+
+let form = useForm({
+    usuario: props.user.name,
+    codigo: props.user.id,
+    //nrofactura: '',
+    fechafactura: mindate(),
+    //total: preciototal,
+    //arrayProductos: arrayProductos.value, //array con la lista de productos comprados
+
+});
 
 </script>
 <template>
@@ -21,12 +136,12 @@ import { XIcon, PlusCircleIcon, SearchIcon } from "@heroicons/vue/outline";
                     <div class="flex flex-row w-full p-3 mt-4 space-x-5">
                         <div class="space-x-1">
                             <label for="usuario" class="font-medium text-sm">Usuario:</label>
-                            <input disabled type="text" id="usuario" name="usuario"
+                            <input disabled type="text" id="usuario" name="usuario" v-model="form.usuario"
                                 class="rounded-md w-[130px] h-[28px] bg-slate-200 text-slate-500">
                         </div>
                         <div class="space-x-1">
                             <label for="codigo" class="font-medium text-sm">Codigo:</label>
-                            <input disabled type="text" id="codigo" name="codigo"
+                            <input disabled type="text" id="codigo" name="codigo" v-model="form.codigo"
                                 class="rounded-md w-[80px] h-[28px] bg-slate-200 text-slate-500">
                         </div>
                         <div class="space-x-1 -mt-1">
@@ -40,14 +155,15 @@ import { XIcon, PlusCircleIcon, SearchIcon } from "@heroicons/vue/outline";
                         </div>
                         <div class="space-x-1">
                             <label for="fechafactura" class="font-medium text-sm">Fecha Factura:</label>
-                            <input type="date" id="fechafactura" name="fechafactura"
+                            <input type="date" id="fechafactura" name="fechafactura" v-model="form.fechafactura"
                                 class="rounded-md w-[130px] h-[28px] p-1">
                         </div>
                     </div>
-                    <div class="flex flex-row w-full p-3 space-x-5 mt-2">
-                        <div class="space-x-1">
+                    <div class="flex flex-row w-full p-3 space-x-5 mt-2 items-center">
+                        <div class="space-x-1 inline-flex">
                             <label for="cliente" class="font-medium text-sm">Cliente:</label>
-                            <input type="text" id="cliente" name="cliente" class="rounded-md w-[130px] h-[28px]">
+                            <BuscarCliente id="cliente" class="-mt-[0.60rem]" placeholder="Buscar Cliente..." :load-options="loadCliente"
+                                            v-model="cliente"/>
                         </div>
                         <div class="space-x-1 -mt-1">
                             <label for="comprobante" class="font-medium text-sm">Comprobante:</label>
@@ -67,46 +183,42 @@ import { XIcon, PlusCircleIcon, SearchIcon } from "@heroicons/vue/outline";
                     <div
                         class="border-2 bg-gradient-to-b from-[#938E8E] to-[#524F4F] border-[#000000] rounded-md h-full overflow-hidden items-center flex">
                         <div class="flex flex-row text-left space-x-3 w-full justify-center mb-3">
-                            <div
-                                class=" mt-7 w-8 h-8 bg-white hover:bg-blue-300 hover:text-blue-700 text-blue-400 ring-1 focus:ring-set-2 ring-black rounded-full grid place-content-center">
-                                <button type="button">
-                                    <SearchIcon class="w-6 h-6" />
-                                </button>
-                            </div>
+
+                            <BuscarProducto :load-options="loadProducto"  @send-product="productoEncontrado"/>
                             <div class="flex flex-col space-y-1">
-                                <label for="codigobarra" class="font-inter font-bold text-white text-base font-shadow">Codigo
+                                <label for="codigodebarra" class="font-inter font-bold text-white text-base font-shadow">Codigo
                                     de
                                     barras</label>
-                                <input id="codigodebarra" type="number"
-                                    class="font-inter text-base rounded-md border border-black bg-white w-[135px] p-1">
+                                <input id="codigodebarra" type="number" v-model="codigobarra" disabled
+                                    class="font-inter text-base rounded-md border border-black bg-gray-300 w-[135px] p-1">
                             </div>
                             <div class="flex flex-col space-y-1">
                                 <label for="descripcion"
                                     class="font-inter font-bold text-white text-base font-shadow">Descripcion</label>
-                                <input id="descripcion" type="text"
-                                    class="font-inter text-base rounded-md border border-black bg-white w-[270px] p-1">
+                                <input id="descripcion" type="text" v-model="marca" disabled
+                                    class="font-inter text-base rounded-md border border-black bg-gray-300 w-[270px] p-1">
                             </div>
                             <div class="flex flex-col space-y-1">
                                 <label for="stock" class="font-inter font-bold text-white text-base font-shadow">Stock</label>
-                                <input id="stock" type="number"
-                                    class="font-inter text-base rounded-md border border-black bg-white w-[70px] p-1">
+                                <input id="stock" type="number" v-model="stock" disabled
+                                    class="font-inter text-base rounded-md border border-black bg-gray-300 w-[70px] p-1">
                             </div>
                             <div class="flex flex-col space-y-1">
                                 <label for="precio"
-                                    class="font-inter font-bold text-white text-base font-shadow">Precio</label>
-                                <input id="precio" type="number"
+                                    class="font-inter font-bold text-white text-base font-shadow">Precio Venta</label>
+                                <input id="precio" type="number" v-model="precioventa"
                                     class="font-inter text-base rounded-md border border-black bg-white w-[120px] p-1">
                             </div>
                             <div class="flex flex-col space-y-1">
                                 <label for="cantidad"
                                     class="font-inter font-bold text-white text-base font-shadow">Cantidad</label>
-                                <input id="cantidad" type="number"
+                                <input id="cantidad" type="number" v-model="cantidad"
                                     class="font-inter text-base rounded-md border border-black bg-white w-[70px] p-1">
                             </div>
                             <div class="flex flex-col space-y-1">
                                 <label for="total" class="font-inter font-bold text-white text-base font-shadow">Total</label>
-                                <input id="total" type="number"
-                                    class="font-inter text-base rounded-md border border-black bg-white w-[120px] p-1">
+                                <input id="total" type="number" v-model="total" disabled
+                                    class="font-inter text-base rounded-md border border-black w-[120px] bg-gray-300 p-1">
                             </div>
                             <div class="mt-7">
                                 <button
