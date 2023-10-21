@@ -141,7 +141,6 @@ function mindate(){
                                     type="text"
                                     class="mt-1 w-full bg-gray-200 text-gray-600 rounded-lg"
                                     v-model="form.droga"
-                                    required                                    
                                     autocomplete="droga"
                                 />
                                 
