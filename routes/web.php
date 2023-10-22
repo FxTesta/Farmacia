@@ -14,6 +14,7 @@ use App\Http\Controllers\PruebacomboController;
 use App\Http\Controllers\StockAuditController;
 use App\Http\Controllers\ListaController;
 use App\Http\Controllers\PruebaController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\VentaController;
 
 //hola prueba
@@ -111,6 +112,8 @@ Route::controller(VentaController::class)->middleware('auth')->group(function ()
     Route::get('/venta', 'registarVenta')->name('venta');
     Route::get('/buscarproductoventa', 'buscarProducto')->name('buscarproductoventa');
     Route::get('/buscarcliente', 'buscarCliente')->name('buscarcliente');
+    Route::get('/obtenerfactura', 'obtenerFactura')->name('obtenerfactura'); //obtiene el valor maximo de la factura
+
 
     //Route::get('/proveedores', 'buscarProveedor')->name('buscarproveedor');
     //Route::get('/buscarproducto', 'buscarProducto')->name('buscarproducto');
@@ -122,6 +125,16 @@ Route::controller(VentaController::class)->middleware('auth')->group(function ()
     //Route::get('/compra/listar/detalle/{detallefact}', 'detalles')->name('detalle');
 });
 
+
+//CONFIGURACIONES (PARA PREFIJO DE FACTURA Y TIMBRADO)
+Route::controller(SettingController::class)->middleware('auth')->group(function () {
+
+    Route::get('/configuracion', 'index')->name('configuracion');
+    Route::get('/crear-configuracion', 'create')->name('configuracion.create');
+    Route::post('/configuracion', 'store')->name('configuracion.store');
+    Route::get('/editar-configuracion/{configuracion_id}', 'edit')->name('configuracion.edit');
+    Route::put('/editar-configuracion/{configuracion}', 'update')->name('configuracion.update');
+});
 
 
 //AUDITORIA

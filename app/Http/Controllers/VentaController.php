@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cliente;
 use Inertia\Inertia;
+use App\Models\Cliente;
+use App\Models\Setting;
 use App\Models\Producto;
+use Brick\Math\BigInteger;
+use App\Models\FacturaVenta;
 use Illuminate\Http\Request;
 
 class VentaController extends Controller
@@ -13,8 +16,11 @@ class VentaController extends Controller
     {
         $user = auth()->user();
 
+        $configuracion = Setting::all();
+
         return Inertia::render('Venta/RegistrarVenta', [
             'user' => $user,
+            'configuracion' => $configuracion,
         ]);
     }
 
@@ -36,5 +42,22 @@ class VentaController extends Controller
         $cliente = Cliente::where('name', 'LIKE', "%$query%")->orWhere('cedula', 'LIKE', "{$query}%")->get();
 
         return response()->json($cliente);
+    }
+
+
+    public function obtenerFactura()
+    {
+
+        $ultimafactura = FacturaVenta::select('nrofactura') //select de nrofactura en factura_ventas
+        ->get() //obtiene los registros
+        ->map(function ($item) { //recorre el objeto
+            return str_replace('-', '', $item->nrofactura); //quita los "-" de la factura
+        })
+        ->map(function ($item) {
+            return BigInteger::of($item)->toBigInteger(); //convierte a un biginteger ej: 10010000001
+        })
+        ->max(); //obtiene el mayor número de factura
+
+        return response()->json($ultimafactura); //retorna el maximo o la última factura
     }
 }

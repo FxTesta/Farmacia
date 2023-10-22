@@ -90,6 +90,7 @@ class ProductoController extends Controller
             'descuento' => 'nullable',
             'presentacion' => 'nullable',
             'estante' => 'nullable',
+            'iva' => 'required',
         ]);
 
         // para crear un campo con el nombre de la cateogría
@@ -112,6 +113,7 @@ class ProductoController extends Controller
             'descuento' => $request->descuento,
             'presentacion' => $request->presentacion,
             'estante' => $request->estante,
+            'iva' => $request->iva,
             //'categorianombre' => $categorianombre->name,
         ]);
         

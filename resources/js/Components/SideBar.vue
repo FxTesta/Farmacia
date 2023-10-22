@@ -80,7 +80,7 @@ export default {
         },
       
         {
-          href: '#',
+          href: '/configuracion',
           title: 'Configuración',
           icon: 'fa-sharp fa-solid fa-gear',
         

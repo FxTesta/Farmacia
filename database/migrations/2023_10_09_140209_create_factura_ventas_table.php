@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('cliente_nombre');
             $table->foreignId('users_id')->constrained('users')->onDelete('cascade');
             $table->string('username');
-            $table->bigInteger('nrofactura')->unique();
+            $table->string('nrofactura')->unique();
+            $table->bigInteger('timbrado')->unique(); // ? 
             $table->date('fechafactura');
             $table->string('comprobante');
             $table->string('formadepago');

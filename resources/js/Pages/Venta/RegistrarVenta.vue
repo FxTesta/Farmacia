@@ -5,7 +5,7 @@ import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import { XIcon, PlusCircleIcon, SearchIcon } from "@heroicons/vue/outline";
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import BuscarProducto from "@/Pages/Venta/BuscarProducto.vue";
 import BuscarCliente from "@/Pages/Venta/BuscarCliente.vue";
 
@@ -28,6 +28,7 @@ function loadProducto(query, setOptions) {
             vencimiento: producto.vencimiento,
             laboratorio: producto.laboratorio,
             descuento: producto.descuento,
+            iva: producto.iva,
           };
         })
       );
@@ -52,6 +53,7 @@ function loadCliente(query, setOptions) {
 
 const props = defineProps({
   user: Object,
+  configuracion: Object,
 });
 
 //variable reactiva donde se recibe el producto
@@ -68,6 +70,9 @@ let marca = computed(() => producto.value?.marca);
 
 //variable retorna stock que extrae de "producto"
 let stock = computed(() => producto.value?.stock);
+
+//variable retorna iva que extrae de "producto"
+let iva = computed(() => producto.value?.iva);
 
 //variable retorna descuento que extrae de "producto"
 let descuento = ref();
@@ -132,9 +137,73 @@ const productoEncontrado = (event) => {
 //variable reactiva donde se recibe el cliente
 let cliente = ref();
 
-let clienteid = computed(() => cliente.value?.value);
+let clienteid = computed(() => cliente.value?.value);  //variable contiene cliente id para guardar en la bd
 
-let clientenombre = computed(() => cliente.value?.label);
+let clientenombre = computed(() => cliente.value?.label); //variable contiene cliente nombre para guardar en la bd
+
+//variable contiene el prefijo de factura guardado en "Configuración"
+let prefijofactura = computed(()=> {
+  if(props.configuracion.length > 0){
+    return props.configuracion[0].nrofactura;
+  }else{
+    return 'asignar';
+  }
+}) 
+
+//variable contiene el timbrado guardado en "Configuración"
+let timbrado = computed(()=> {
+  if(props.configuracion.length > 0){
+    return props.configuracion[0].timbrado;
+  }else{
+    return null;
+  }
+})
+
+let valorMaximo = ref(); //tiene los últimos 7 digitos de la última factura
+
+onMounted(async () => {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/obtenerfactura'); //obtengo el valor "max" de factura
+    if (response.ok) {
+      const data = await response.json();
+      let longuitud = Object.keys(data).length; //longuitud de valor recibido para checkear
+        if(longuitud > 0) //si longuitud es > 0 quiere decir que "data" no es null entonces asigna el valor
+        {
+          valorMaximo.value = data.slice(-7); // extrae los últimos 7 digitos de la última factura
+        }
+        
+    } else {
+      console.error('Error al obtener el valor máximo');
+    }
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+});
+
+const asignarFacturaContinuacion = () =>{
+
+  if(valorMaximo.value) //si existe esta wea entonces suma +1 para la siguiente factura
+  {
+    const numero = parseInt(valorMaximo.value, 10); //el "10" es para indicar que es base decimal
+    const valorMaximoMasUno = ref((numero + 1).toString().padStart(valorMaximo.value.length, '0'));
+    return valorMaximoMasUno.value;
+//basicamente convertí en un entero para sumarle +1, después convierto en string again y relleno con el caracter "0" para poder concatenar con prefijofactura
+  }else{
+    return '0000001'; //si no existe "valorMaximo" quiere decir que es la primera factura entonces asigna eso.
+  }
+
+}
+
+
+
+//variable que contiene el resto de la factura, osea lo que se concatena con el prefijo
+let facturacontinuacion = computed(() => {
+  return asignarFacturaContinuacion();
+}); 
+
+
+
+let nrofactura = computed(() => `${prefijofactura.value}-${facturacontinuacion.value}`) //variable concatena prefijofactura + facturacontinuacion
 
 //array que va a contener el listado de los productos a ser vendidos
 const arrayProductos = ref([]);
@@ -169,6 +238,7 @@ const agregarProducto = () => {
     arrayProductos.value.push({
       productoid: productoid.value,
       codigobarra: codigobarra.value,
+      iva: iva.value,
       marca: marca.value,
       preciopublico: precioventa.value,
       descuento: descuento.value,
@@ -208,6 +278,65 @@ const calcularSumaTotal = () => {
   );
 };
 
+//calcula sumatoria de gravadas 5%
+const calcularExenta = () => {
+  return arrayProductos.value
+    .filter((producto) => producto.iva === 0)
+    .reduce((total, producto) => total + producto.total, 0);
+};
+
+let exenta = computed(() => {
+  return calcularExenta();
+});
+//calcula sumatoria de gravadas 5%
+const calcularCinco = () => {
+  return arrayProductos.value
+    .filter((producto) => producto.iva === 5)
+    .reduce((total, producto) => total + producto.total, 0);
+};
+
+let gravadascinco = computed(() => {
+  return calcularCinco();
+});
+
+//calcula sumatoria de gravadas 10%
+const calcularDiez = () => {
+  return arrayProductos.value
+    .filter((producto) => producto.iva === 10)
+    .reduce((total, producto) => total + producto.total, 0);
+};
+
+let gravadasdiez = computed(() => {
+  return calcularDiez();
+});
+
+let ivacinco = computed(() => {
+  let gravadascinconumerico = parseFloat(gravadascinco.value);
+  if (!isNaN(gravadascinconumerico)) {
+    return Math.round(gravadascinconumerico / 21);
+  } else {
+    return 0;
+  }
+});
+
+let ivadiez = computed(() => {
+  let gravadasdieznumerico = parseFloat(gravadasdiez.value);
+  if (!isNaN(gravadasdieznumerico)) {
+    return Math.round(gravadasdieznumerico / 11);
+  } else {
+    return 0;
+  }
+});
+
+let ivatotal = computed(() => {
+  let ivatotalnumerico = parseFloat(ivadiez.value + ivacinco.value);
+  if (!isNaN(ivatotalnumerico)) {
+    return ivatotalnumerico;
+  } else {
+    return 0;
+  }
+});
+
 //variable retorna suma del campo total para obtener "P. TOTAL"
 let preciototal = computed(() => {
   return calcularSumaTotal();
@@ -243,7 +372,7 @@ const cambio = computed(() => {
 });
 
 const formatearNumero = (numero) => {
-  return numero.toLocaleString('es',{ useGrouping: true });
+  return numero.toLocaleString("es", { useGrouping: true });
 };
 
 function mindate() {
@@ -253,6 +382,7 @@ function mindate() {
 let form = useForm({
   usuario: props.user.name,
   codigo: props.user.id,
+  timbrado: timbrado,
   //nrofactura: '',
   fechafactura: mindate(),
   //total: preciototal,
@@ -316,11 +446,12 @@ let form = useForm({
                 >Fecha Factura:</label
               >
               <input
+                disabled
                 type="date"
                 id="fechafactura"
                 name="fechafactura"
                 v-model="form.fechafactura"
-                class="rounded-md w-[130px] h-[28px] p-1"
+                class="bg-slate-200 text-slate-500 rounded-md w-[130px] h-[28px] p-1"
               />
             </div>
           </div>
@@ -353,10 +484,24 @@ let form = useForm({
               >
               <input
                 disabled
-                type="number"
+                type="text"
                 id="nrofactura"
+                v-model="nrofactura"
                 name="nrofactura"
-                class="rounded-md w-[140px] h-[28px] bg-slate-200 text-slate-500"
+                class="rounded-md p-1 w-[140px] h-[28px] bg-slate-200 text-slate-500"
+              />
+            </div>
+            <div class="space-x-1">
+              <label for="nrofactura" class="font-medium text-sm"
+                >Timbrado:</label
+              >
+              <input
+                disabled
+                type="number"
+                id="timbrado"
+                name="timbrado"
+                v-model="form.timbrado"
+                class="rounded-md w-[100px] h-[28px] bg-slate-200 text-slate-500"
               />
             </div>
           </div>
@@ -494,6 +639,7 @@ let form = useForm({
                     <tr class="text-left uppercase">
                       <th>ID</th>
                       <th>C. Barras</th>
+                      <th>IVA</th>
                       <th>Producto</th>
                       <th>Precio Pub.</th>
                       <th>Dto.</th>
@@ -515,6 +661,7 @@ let form = useForm({
                       <td class="text-gray-700 py-4">
                         {{ producto.codigobarra }}
                       </td>
+                      <td class="text-gray-700 py-4">{{ producto.iva }}%</td>
                       <td class="text-gray-700 py-4 uppercase">
                         {{ producto.marca }}
                       </td>
@@ -567,18 +714,18 @@ let form = useForm({
                   >
                 </button>
               </div>
-              <div class="space-y-5">
+              <div class="space-y-5 flex flex-col">
                 <div class="ml-2 inline-flex space-x-2">
                   <span
                     class="block text-xl font-medium text-gray-700 uppercase"
                   >
                     p. total:
                   </span>
-                  <span class="text-xl font-bold text-red-500 uppercase">{{
-                    formatearNumero(preciototal)
-                  }} GS</span>
+                  <span class="text-xl font-bold text-red-500 uppercase"
+                    >{{ formatearNumero(preciototal) }} GS</span
+                  >
                 </div>
-                <div class="ml-2 inline-flex space-x-2">
+                <!--                 <div class="ml-2 inline-flex space-x-2">
                   <label
                     for="desc"
                     class="block text-xl font-medium text-gray-700 uppercase"
@@ -590,28 +737,80 @@ let form = useForm({
                     placeholder="..."
                     class="w-[30%] h-8 rounded-md placeholder-slate-400 bg-white text-gray-600 border border-black"
                   />
+                </div> -->
+                <div class="ml-2 inline-flex space-x-2">
+                  <span
+                    for="exenta"
+                    class="block text-base font-medium text-gray-700 uppercase"
+                    >Exentas:</span
+                  >
+                  <span
+                    class="text-base text-slate-500 uppercase"
+                    >{{ formatearNumero(exenta) }}
+                  </span>
                 </div>
                 <div class="ml-2 inline-flex space-x-2">
-                  <label
-                    for="iva"
-                    class="block text-xl font-medium text-gray-700 uppercase"
-                    >iva:</label
+                  <span
+                    for="gravadascinco"
+                    class="block text-base font-medium text-gray-700 uppercase"
+                    >gravadas 5%:</span
                   >
-                  <input
-                    id="iva"
-                    type="number"
-                    placeholder="..."
-                    class="w-[30%] h-8 rounded-md placeholder-slate-400 bg-white text-gray-600 border border-black"
-                  />
+                  <span
+                    class="text-base text-slate-500 uppercase"
+                    >{{ formatearNumero(gravadascinco) }}
+                  </span>
                 </div>
-                <div class="ml-2 pt-4 inline-flex space-x-2">
+                <div class="ml-2 inline-flex space-x-2">
+                  <span
+                    for="gravadasdiez"
+                    class="block text-base font-medium text-gray-700 uppercase"
+                    >gravadas 10%:</span
+                  >
+                  <span
+                    class="text-base text-slate-500 uppercase"
+                    >{{ formatearNumero(gravadasdiez) }}
+                  </span>
+                </div>
+                <div class="ml-2 inline-flex space-x-2">
+                  <span
+                    for="ivacinco"
+                    class="block text-base font-medium text-gray-700 uppercase"
+                    >iva 5%:</span
+                  >
+                  <span
+                    class="text-base text-slate-500 uppercase"
+                    >{{ formatearNumero(ivacinco) }}</span
+                  >
+                </div>
+                <div class="ml-2 inline-flex space-x-2">
+                  <span
+                    for="ivadiez"
+                    class="block text-base font-medium text-gray-700 uppercase"
+                    >iva 10%:</span
+                  >
+                  <span class="text-base text-slate-500 uppercase">{{
+                    formatearNumero(ivadiez)
+                  }}</span>
+                </div>
+                <div class="ml-2 inline-flex space-x-2">
+                  <span
+                    for="ivatotal"
+                    class="block text-base font-medium text-gray-700 uppercase"
+                    >iva total:</span
+                  >
+                  <span
+                    class="text-base text-slate-500 uppercase"
+                    >{{ formatearNumero(ivatotal) }}</span
+                  >
+                </div>
+<!--                 <div class="ml-2 pt-4 inline-flex space-x-2">
                   <input id="tarjeta" type="checkbox" />
                   <label
                     for="tarjeta"
                     class="block text-sm font-bold text-black"
                     >Paga con tarjeta +5%
                   </label>
-                </div>
+                </div> -->
               </div>
             </div>
             <div class="py-2 space-y-4">
