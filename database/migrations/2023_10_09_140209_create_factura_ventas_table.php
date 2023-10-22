@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('comprobante');
             $table->string('formadepago');
             $table->integer('preciototal');
+            $table->timestamp('hora_venta')->useCurrent();//campo se crea automaticamente con la fecha y hora al momento de que se guardan los datos 'timestamp'
             $table->timestamps();
         });
     }
