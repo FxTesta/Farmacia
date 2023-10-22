@@ -47,16 +47,23 @@ class VentaController extends Controller
 
     public function obtenerFactura()
     {
+        // Obtiene el valor de "nrofactura" de la tabla "settings" que sería el prefijo de la factura
+        $nrofactura = Setting::first()->nrofactura;
 
-        $ultimafactura = FacturaVenta::select('nrofactura') //select de nrofactura en factura_ventas
-        ->get() //obtiene los registros
-        ->map(function ($item) { //recorre el objeto
-            return str_replace('-', '', $item->nrofactura); //quita los "-" de la factura
-        })
-        ->map(function ($item) {
-            return BigInteger::of($item)->toBigInteger(); //convierte a un biginteger ej: 10010000001
-        })
-        ->max(); //obtiene el mayor número de factura
+        // Filtra solo que obtenga las facturas con el prefijo de factura configurado
+        $filteredData = FacturaVenta::where('nrofactura', 'LIKE', "{$nrofactura}%")
+            ->orderBy('fechafactura', 'desc') // Ordena por fecha de forma descendente para obtener el más reciente
+            ->get();
+
+        // Obtiene el valor máximo del numero de factura
+        $ultimafactura = $filteredData
+            ->map(function ($item) { //recorre el objeto
+                return str_replace('-', '', $item->nrofactura); //quita los "-" de la factura
+            })
+            ->map(function ($item) {
+                return BigInteger::of($item)->toBigInteger(); //convierte a un biginteger ej: 10010000001
+            })
+            ->max(); //obtiene el mayor número de factura 
 
         return response()->json($ultimafactura); //retorna el maximo o la última factura
     }
