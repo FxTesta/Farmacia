@@ -16,11 +16,12 @@ return new class extends Migration
             $table->foreignId('factura_venta_id')->constrained('factura_ventas')->onDelete('cascade');
             $table->foreignId('producto_id')->constrained('productos')->onDelete('cascade');
             $table->bigInteger('codigo');
+            $table->integer('iva');
             $table->string('marca');
-            $table->string('laboratorio');
-            $table->integer('precioventa');
+            $table->integer('preciopublico');
+            $table->integer('descuento')->nullable();
+            $table->integer('preciodescuento');
             $table->integer('cantidad');
-            $table->integer('descuento');
             $table->integer('total');
             $table->timestamps();
         });

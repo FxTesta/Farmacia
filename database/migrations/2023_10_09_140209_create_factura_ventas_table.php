@@ -22,6 +22,14 @@ return new class extends Migration
             $table->date('fechafactura');
             $table->string('comprobante');
             $table->string('formadepago');
+            $table->integer('exenta');
+            $table->integer('gravadascinco');
+            $table->integer('gravadasdiez');
+            $table->integer('ivacinco');
+            $table->integer('ivadiez');
+            $table->integer('ivatotal');
+            $table->integer('pagacon');
+            $table->integer('cambio');
             $table->integer('preciototal');
             $table->timestamp('hora_venta')->useCurrent();//campo se crea automaticamente con la fecha y hora al momento de que se guardan los datos 'timestamp'
             $table->timestamps();

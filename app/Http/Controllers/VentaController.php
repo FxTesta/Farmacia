@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\Cliente;
+use App\Models\DetalleFacturaVenta;
 use App\Models\Setting;
 use App\Models\Producto;
 use Brick\Math\BigInteger;
@@ -66,5 +67,90 @@ class VentaController extends Controller
             ->max(); //obtiene el mayor número de factura 
 
         return response()->json($ultimafactura); //retorna el maximo o la última factura
+    }
+
+    public function store(Request $request)
+    {
+
+        // se obtiene el array donde se cargo la lista de productos vendidos
+        $data = $request->input('arrayProductos');
+
+        //en caso de que "arrayProductos" sea nulo o vacio no se guarda nada en la BD
+        if (empty($data)) {
+            // El array está vacío o nulo o contiene un valor considerado vacío por empty()
+        } else {
+
+            //validación
+            $request->validate([
+                'usuario' => 'string|required',
+                'codigo' => 'required',
+                'formadepago' => 'required',
+                'fechafactura' => 'required',
+                'clienteid' => 'required',
+                'clientenombre' => 'string|required',
+                'comprobante' => 'required',
+                'nrofactura' => 'required|unique:' . FacturaVenta::class,
+                'timbrado' => 'required',
+                'exenta' => 'required',
+                'gravadascinco' => 'required',
+                'gravadasdiez' => 'required',
+                'ivacinco' => 'required',
+                'ivadiez' => 'required',
+                'ivatotal' => 'required',
+                'pagacon' => 'required',
+                'cambio' => 'required',
+                'preciototal' => 'required',
+            ]);
+
+            //Se realiza carga de cabecera factura
+            FacturaVenta::create([
+
+                'cliente_id' => $request->clienteid,
+                'cliente_nombre' => $request->clientenombre,
+                'users_id' => $request->codigo,
+                'username' => $request->usuario,
+                'nrofactura' => $request->nrofactura,
+                'timbrado' => $request->timbrado,
+                'fechafactura' => $request->fechafactura,
+                'comprobante' => $request->comprobante,
+                'formadepago' => $request->formadepago,
+                'exenta' => $request->exenta,
+                'gravadascinco' => $request->gravadascinco,
+                'gravadasdiez' => $request->gravadasdiez,
+                'ivacinco' => $request->ivacinco,
+                'ivadiez' => $request->ivadiez,
+                'ivatotal' => $request->ivatotal,
+                'pagacon' => $request->pagacon,
+                'cambio' => $request->cambio,
+                'preciototal' => $request->preciototal,
+            ]);
+
+            //OBTENER EL ID DE FACTURA VENTA CREADO ARRIBA, PARA EL CREATE DE ABAJO
+            $factura = FacturaVenta::where('nrofactura', $request->input('nrofactura'))->first();
+
+            // Itera a través de los datos del array y crea un nuevo registro para cada producto
+            foreach ($data as $producto) {
+                DetalleFacturaVenta::create([
+                    'factura_venta_id' => $factura->id, //envia el id de cabecera factura para asociar con detallefacturaventa
+                    'producto_id' => $producto['productoid'],
+                    'codigo' => $producto['codigobarra'],
+                    'iva' => $producto['iva'],
+                    'marca' => $producto['marca'],
+                    'preciopublico' => $producto['preciopublico'],
+                    'descuento' => $producto['descuento'],
+                    'preciodescuento' => $producto['preciodescuento'],
+                    'cantidad' => $producto['cantidad'],
+                    'total' => $producto['total'],
+                ]);
+
+                
+                $productos = Producto::where('id', $producto['productoid'])->first();
+                $productos->update([
+                    'stock' => $productos->stock - $producto['cantidad'],
+                ]);
+            }
+
+            return redirect('/venta')->with('toast', 'Venta Realizada');
+        }
     }
 }

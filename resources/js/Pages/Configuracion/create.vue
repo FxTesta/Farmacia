@@ -14,14 +14,13 @@ const form = useForm({
 });
 
 const validarNumeroFactura = () => {
-  // Expresión regular para validar el formato xxx-xxx-xxxxxx
+  // Expresión regular para validar el formato xxx-xxx
   const regex = /^[0-9]{3}-[0-9]{3}$/;
 
   if (!regex.test(form.nrofactura)) {
-    // El formato no es válido, puedes mostrar un mensaje de error o tomar otra acción.
-    console.log('No es valido el formato')
+    //
   }else{
-    console.log('Es valido')
+    //
   }
 };
 

@@ -113,6 +113,7 @@ Route::controller(VentaController::class)->middleware('auth')->group(function ()
     Route::get('/buscarproductoventa', 'buscarProducto')->name('buscarproductoventa');
     Route::get('/buscarcliente', 'buscarCliente')->name('buscarcliente');
     Route::get('/obtenerfactura', 'obtenerFactura')->name('obtenerfactura'); //obtiene el valor maximo de la factura
+    Route::post('/guardarventa', 'store')->name('venta.store');
 
 
     //Route::get('/proveedores', 'buscarProveedor')->name('buscarproveedor');

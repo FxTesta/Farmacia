@@ -8,6 +8,7 @@ import { XIcon, PlusCircleIcon, SearchIcon } from "@heroicons/vue/outline";
 import { ref, computed, watch, onMounted } from "vue";
 import BuscarProducto from "@/Pages/Venta/BuscarProducto.vue";
 import BuscarCliente from "@/Pages/Venta/BuscarCliente.vue";
+import error from "@/Stores/error";
 
 //función para buscar de la bd, recibe el query de busqueda y setOptions devuelve el resultado
 function loadProducto(query, setOptions) {
@@ -161,7 +162,7 @@ let timbrado = computed(()=> {
 
 let valorMaximo = ref(); //tiene los últimos 7 digitos de la última factura
 
-onMounted(async () => {
+/* onMounted(async () => {
   try {
     const response = await fetch('http://127.0.0.1:8000/obtenerfactura'); //obtengo el valor "max" de factura
     if (response.ok) {
@@ -178,7 +179,26 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error de red:', error);
   }
-});
+}); */
+
+const fetchData = async () => {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/obtenerfactura');
+    if (response.ok) {
+      const data = await response.json();
+      let longuitud = Object.keys(data).length;
+      if (longuitud > 0) {
+        valorMaximo.value = data.slice(-7);
+      }
+    } else {
+      console.error('Error al obtener el valor máximo');
+    }
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+};
+
+onMounted(fetchData);
 
 const asignarFacturaContinuacion = () =>{
 
@@ -350,7 +370,7 @@ const validarCantidad = () => {
 };
 
 //variable que guarda el monto con que paga el cliente
-const pagacon = ref();
+let pagacon = ref();
 
 //valida que "PAGA CON" no sea un valor negativo
 const validarPagacon = () => {
@@ -359,7 +379,7 @@ const validarPagacon = () => {
   }
 };
 
-const cambio = computed(() => {
+let cambio = computed(() => {
   const pagaconNumerico = parseFloat(pagacon.value);
   const totalNumerica = parseFloat(preciototal.value);
 
@@ -379,15 +399,76 @@ function mindate() {
   return new Date().toISOString().split("T")[0];
 }
 
+function addError(message) {
+  error.add1({
+    message1: message,
+  });
+}
+
 let form = useForm({
   usuario: props.user.name,
   codigo: props.user.id,
-  timbrado: timbrado,
-  //nrofactura: '',
+  formadepago: '',
   fechafactura: mindate(),
-  //total: preciototal,
-  //arrayProductos: arrayProductos.value, //array con la lista de productos comprados
+  clienteid: clienteid,
+  clientenombre: clientenombre,
+  comprobante: '',
+  nrofactura: nrofactura,
+  timbrado: timbrado,
+  exenta: exenta,
+  gravadascinco: gravadascinco,
+  gravadasdiez: gravadasdiez,
+  ivacinco: ivacinco,
+  ivadiez: ivadiez,
+  ivatotal: ivatotal,
+  pagacon: pagacon,
+  cambio: cambio,
+  preciototal: preciototal,
+  arrayProductos: arrayProductos.value, //array con la lista de productos comprados
 });
+
+
+//función que guarda la venta realizada en la base de datos
+function onSubmit() {
+  // Verificar si arrayProductos es nulo o vacío
+
+  if(form.formadepago === ""){
+    addError("Seleccionar Forma de Pago");
+  }
+
+  if(!pagacon.value){
+    addError("Ingresar 'PAGA CON'");
+  }
+
+  if( form.comprobante === "" ){
+    addError("Seleccionar Comprobante");
+  }
+
+  if (!cliente.value) {
+    addError("Seleccionar Cliente");
+  }
+
+  if (!arrayProductos.value || arrayProductos.value.length === 0) {
+    // Realizar alguna acción en caso de que arrayProductos sea nulo o vacío
+    addError("No hay productos");
+    return; // Salir de la función onSubmit sin hacer la solicitud POST
+  }
+
+  form.post(route("venta.store"), {
+    onSuccess: () => {
+      arrayProductos.value.splice(0); //resetea el array después de guardar en la BD
+      producto.value = null; //resetea la variable reactiva (let producto = ref();) después de guardar los campos en la bd
+      cliente.value = null; //resetea la variable reactiva (let cliente = ref();) después de guardar los campos en la bd
+      descuento.value = null;
+      cantidad.value = null;
+      form.formadepago = "";
+      form.comprobante = "";
+      pagacon.value = null;
+      fetchData();
+    },
+  });
+}
+
 </script>
 <template>
   <Head title="Ventas" />
@@ -432,7 +513,7 @@ let form = useForm({
               >
               <select
                 id="formadepago"
-                value=""
+                v-model="form.formadepago"
                 class="rounded-md w-[150px] h-[35px] p-1"
               >
                 <option disabled value="">Seleccione</option>
@@ -470,7 +551,7 @@ let form = useForm({
               >
               <select
                 id="comprobante"
-                value=""
+                v-model="form.comprobante"
                 class="rounded-md w-[150px] h-[35px] p-1"
               >
                 <option disabled value="">Seleccione</option>
@@ -492,7 +573,7 @@ let form = useForm({
               />
             </div>
             <div class="space-x-1">
-              <label for="nrofactura" class="font-medium text-sm"
+              <label for="timbrado" class="font-medium text-sm"
                 >Timbrado:</label
               >
               <input
@@ -705,6 +786,7 @@ let form = useForm({
             <div class="space-y-5">
               <div class="flex justify-center mt-5">
                 <button
+                  @click="onSubmit"
                   class="px-2 py-2 bg-gradient-to-t from-[#2eff1b] to-[#3bca2f] rounded-md border border-black"
                 >
                   <span
