@@ -437,7 +437,7 @@ function onSubmit() {
   }
 
 
-  if(form.formadepago === 'Efectivo' && (pagacon.value < preciototal.value)){
+  if(form.formadepago === 'Efectivo' && (pagacon.value < preciototal.value) && pagacon.value !==''){
     addError("El pago no cubre la cuenta");
     return;
   }
