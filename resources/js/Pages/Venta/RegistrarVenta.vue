@@ -436,8 +436,15 @@ function onSubmit() {
     addError("Seleccionar Forma de Pago");
   }
 
-  if(!pagacon.value){
+
+  if(form.formadepago === 'Efectivo' && (pagacon.value < preciototal.value)){
+    addError("El pago no cubre la cuenta");
+    return;
+  }
+
+  if(form.formadepago === 'Efectivo' && !pagacon.value){
     addError("Ingresar 'PAGA CON'");
+    return;
   }
 
   if( form.comprobante === "" ){
@@ -895,7 +902,7 @@ function onSubmit() {
                 </div> -->
               </div>
             </div>
-            <div class="py-2 space-y-4">
+            <div v-if="form.formadepago === 'Efectivo'" class="py-2 space-y-4">
               <div class="ml-2 inline-flex space-x-2">
                 <label
                   for="pagacon"

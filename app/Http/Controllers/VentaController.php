@@ -97,8 +97,8 @@ class VentaController extends Controller
                 'ivacinco' => 'required',
                 'ivadiez' => 'required',
                 'ivatotal' => 'required',
-                'pagacon' => 'required',
-                'cambio' => 'required',
+                'pagacon' => 'nullable',
+                'cambio' => 'nullable',
                 'preciototal' => 'required',
             ]);
 

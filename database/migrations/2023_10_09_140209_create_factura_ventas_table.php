@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('users_id')->constrained('users')->onDelete('cascade');
             $table->string('username');
             $table->string('nrofactura')->unique();
-            $table->bigInteger('timbrado')->unique(); // ? 
+            $table->bigInteger('timbrado'); // ? 
             $table->date('fechafactura');
             $table->string('comprobante');
             $table->string('formadepago');
@@ -28,8 +28,8 @@ return new class extends Migration
             $table->integer('ivacinco');
             $table->integer('ivadiez');
             $table->integer('ivatotal');
-            $table->integer('pagacon');
-            $table->integer('cambio');
+            $table->integer('pagacon')->nullable();
+            $table->integer('cambio')->nullable();
             $table->integer('preciototal');
             $table->timestamp('hora_venta')->useCurrent();//campo se crea automaticamente con la fecha y hora al momento de que se guardan los datos 'timestamp'
             $table->timestamps();
