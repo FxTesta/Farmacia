@@ -28,11 +28,13 @@ class SettingController extends Controller
         $request->validate([
             'nrofactura' => 'required|regex:/^[0-9]{3}-[0-9]{3}$/',
             'timbrado' => 'required',
+            'ruc' => 'required',
         ]);
 
         Setting::create([
             'nrofactura' => $request->nrofactura,
             'timbrado' => $request->timbrado,
+            'ruc' => $request->ruc,
         ]);
 
         return redirect()->route('configuracion')->with('toast', 'Configuración Establecida');
@@ -53,11 +55,13 @@ class SettingController extends Controller
         request()->validate([
             'nrofactura' => ['required', 'regex:/^[0-9]{3}-[0-9]{3}$/'],
             'timbrado' =>['required'],
+            'ruc' =>['required'],
         ]);
 
         $configuracion->update([
             'nrofactura' => request('nrofactura'),
             'timbrado' => request('timbrado'),
+            'ruc' => request('ruc'),
             
         ]);
         return redirect()->route('configuracion')->with('toast', 'Configuracion Editada');

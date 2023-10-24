@@ -11,6 +11,7 @@ import { ArrowLeftIcon } from "@heroicons/vue/outline";
 const form = useForm({
     nrofactura: '',
     timbrado: '',
+    ruc: '',
 });
 
 const validarNumeroFactura = () => {
@@ -58,7 +59,7 @@ const submit = () => {
                                 <InputLabel for="nrofactura" value="Prefijo Factura" class="text-gray-600" />
 
                                 <TextInput placeholder="Ingrese con este formato: xxx-xxx" @input="validarNumeroFactura" id="nrofactura" type="text" class="mt-1 block w-full bg-gray-200 text-gray-600"
-                                    v-model="form.nrofactura" required autofocus autocomplete="nrofactura" />
+                                    v-model="form.nrofactura" required autofocus autocomplete="off" />
 
                                 <InputError class="mt-2" :message="form.errors.nrofactura" />
                             </div>
@@ -68,9 +69,18 @@ const submit = () => {
                                 <InputLabel for="timbrado" value="Timbrado" class="text-gray-600" />
 
                                 <TextInput id="timbrado" type="number" class="mt-1 block w-full bg-gray-200 text-gray-600"
-                                    v-model="form.timbrado" required autocomplete="timbrado" />
+                                    v-model="form.timbrado" required autocomplete="off" />
 
                                 <InputError class="mt-2" :message="form.errors.timbrado" />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel for="ruc" value="RUC" class="text-gray-600" />
+
+                                <TextInput id="ruc" type="text" class="mt-1 block w-full bg-gray-200 text-gray-600"
+                                    v-model="form.ruc" required autocomplete="off" />
+
+                                <InputError class="mt-2" :message="form.errors.ruc" />
                             </div>
 
                             <div class="flex items-center justify-end mt-6">

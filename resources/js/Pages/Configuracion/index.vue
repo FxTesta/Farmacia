@@ -46,6 +46,7 @@ const props = defineProps({
                                 <tr class="border-b border-slate-300 text-gray-700 text-left">
                                     <th>Numero de Factura</th>
                                     <th>Numero de Timbrado</th>
+                                    <th>RUC</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -53,6 +54,7 @@ const props = defineProps({
                                 <tr v-for="configuraciones in configuracion">
                                     <td class="text-gray-700 py-4">{{ configuraciones.nrofactura }}</td>
                                     <td class="text-gray-700 py-4">{{ configuraciones.timbrado }}</td>
+                                    <td class="text-gray-700 py-4">{{ configuraciones.ruc }}</td>
                                     <td class="py-4">
                                         <div class="inline-flex">
                                             <Link :href="`/editar-configuracion/${configuraciones.id}`" as="button"

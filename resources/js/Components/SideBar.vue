@@ -36,14 +36,14 @@ export default {
           href: '/venta',
           title: 'Ventas',
           icon: 'fa-sharp fa-solid fa-cart-shopping',
-          /*
+          
           child: [
             {
-              href: '/compra/listar',
-              title: 'Listar Compras',
+              href: '/venta/listar',
+              title: 'Listar Ventas',
               icon: 'fa fa-list'
             }
-          ]*/
+          ]
         },
         
         {

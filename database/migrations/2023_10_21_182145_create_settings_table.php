@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nrofactura');
             $table->integer('timbrado');
+            $table->string('ruc');
             $table->timestamps();
         });
     }

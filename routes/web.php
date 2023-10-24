@@ -110,10 +110,14 @@ Route::controller(CompraController::class)->middleware('auth')->group(function (
 Route::controller(VentaController::class)->middleware('auth')->group(function () {
 
     Route::get('/venta', 'registarVenta')->name('venta');
+    Route::get('/venta/listar', 'listarVentas')->name('listarventas');
     Route::get('/buscarproductoventa', 'buscarProducto')->name('buscarproductoventa');
     Route::get('/buscarcliente', 'buscarCliente')->name('buscarcliente');
     Route::get('/obtenerfactura', 'obtenerFactura')->name('obtenerfactura'); //obtiene el valor maximo de la factura
     Route::post('/guardarventa', 'store')->name('venta.store');
+    Route::get('/obtenerfacturaid', 'obtenerFacturaId')->name('obtenerfacturaid');
+
+    Route::get('/venta/listar/detalle/{detallefact}', 'detalleVenta')->name('detalleventa');
 
 
     //Route::get('/proveedores', 'buscarProveedor')->name('buscarproveedor');

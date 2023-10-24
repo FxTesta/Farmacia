@@ -100,6 +100,7 @@ class VentaController extends Controller
                 'pagacon' => 'nullable',
                 'cambio' => 'nullable',
                 'preciototal' => 'required',
+                'montoahorrado' => 'required',
             ]);
 
             //Se realiza carga de cabecera factura
@@ -123,6 +124,7 @@ class VentaController extends Controller
                 'pagacon' => $request->pagacon,
                 'cambio' => $request->cambio,
                 'preciototal' => $request->preciototal,
+                'montoahorrado' => $request->montoahorrado,
             ]);
 
             //OBTENER EL ID DE FACTURA VENTA CREADO ARRIBA, PARA EL CREATE DE ABAJO
@@ -143,7 +145,7 @@ class VentaController extends Controller
                     'total' => $producto['total'],
                 ]);
 
-                
+
                 $productos = Producto::where('id', $producto['productoid'])->first();
                 $productos->update([
                     'stock' => $productos->stock - $producto['cantidad'],
@@ -152,5 +154,44 @@ class VentaController extends Controller
 
             return redirect('/venta')->with('toast', 'Venta Realizada');
         }
+    }
+
+
+    public function listarVentas(Request $request)
+    {
+        
+        $lista = FacturaVenta::when($request->search, function($query, $search){
+            //filtra la busqueda por nombre proveedor o nrofactura
+            $query->where('cliente_nombre', 'LIKE', "%{$search}%" )->orWhere('nrofactura', 'LIKE', "{$search}%")->orWhere('fechafactura', 'LIKE', "{$search}%");
+        })
+        ->paginate(15)
+        ->withQueryString();
+
+        $filters = $request->only('search');
+        
+
+        return Inertia::render('Venta/ListarVenta',[
+            'lista' => $lista,
+            'filters' => $filters,
+        ]);
+    }
+
+    public function detalleVenta(FacturaVenta $detallefact)
+    {
+        $detallefact->load('detallefactura');
+        $config = Setting::all();
+        return Inertia::render('Venta/DetalleFactura',[
+          'detallefact' => $detallefact,         
+          'config' => $config,         
+        ]);
+       
+       
+    }
+
+    public function obtenerFacturaId()
+    {
+        $ultimoID = FacturaVenta::latest()->first()->id;
+
+        return response()->json($ultimoID); //retorna el último id factura venta
     }
 }

@@ -9,6 +9,7 @@ import { ref, computed, watch, onMounted } from "vue";
 import BuscarProducto from "@/Pages/Venta/BuscarProducto.vue";
 import BuscarCliente from "@/Pages/Venta/BuscarCliente.vue";
 import error from "@/Stores/error";
+import ConfirmarImpresion from "@/Pages/Venta/ConfirmarImpresion.vue";
 
 //función para buscar de la bd, recibe el query de busqueda y setOptions devuelve el resultado
 function loadProducto(query, setOptions) {
@@ -138,27 +139,27 @@ const productoEncontrado = (event) => {
 //variable reactiva donde se recibe el cliente
 let cliente = ref();
 
-let clienteid = computed(() => cliente.value?.value);  //variable contiene cliente id para guardar en la bd
+let clienteid = computed(() => cliente.value?.value); //variable contiene cliente id para guardar en la bd
 
 let clientenombre = computed(() => cliente.value?.label); //variable contiene cliente nombre para guardar en la bd
 
 //variable contiene el prefijo de factura guardado en "Configuración"
-let prefijofactura = computed(()=> {
-  if(props.configuracion.length > 0){
+let prefijofactura = computed(() => {
+  if (props.configuracion.length > 0) {
     return props.configuracion[0].nrofactura;
-  }else{
-    return 'asignar';
+  } else {
+    return "asignar";
   }
-}) 
+});
 
 //variable contiene el timbrado guardado en "Configuración"
-let timbrado = computed(()=> {
-  if(props.configuracion.length > 0){
+let timbrado = computed(() => {
+  if (props.configuracion.length > 0) {
     return props.configuracion[0].timbrado;
-  }else{
+  } else {
     return null;
   }
-})
+});
 
 let valorMaximo = ref(); //tiene los últimos 7 digitos de la última factura
 
@@ -183,7 +184,7 @@ let valorMaximo = ref(); //tiene los últimos 7 digitos de la última factura
 
 const fetchData = async () => {
   try {
-    const response = await fetch('http://127.0.0.1:8000/obtenerfactura');
+    const response = await fetch("http://127.0.0.1:8000/obtenerfactura");
     if (response.ok) {
       const data = await response.json();
       let longuitud = Object.keys(data).length;
@@ -191,39 +192,37 @@ const fetchData = async () => {
         valorMaximo.value = data.slice(-7);
       }
     } else {
-      console.error('Error al obtener el valor máximo');
+      console.error("Error al obtener el valor máximo");
     }
   } catch (error) {
-    console.error('Error de red:', error);
+    console.error("Error de red:", error);
   }
 };
 
 onMounted(fetchData);
 
-const asignarFacturaContinuacion = () =>{
-
-  if(valorMaximo.value) //si existe esta wea entonces suma +1 para la siguiente factura
-  {
+const asignarFacturaContinuacion = () => {
+  if (valorMaximo.value) {
+    //si existe esta wea entonces suma +1 para la siguiente factura
     const numero = parseInt(valorMaximo.value, 10); //el "10" es para indicar que es base decimal
-    const valorMaximoMasUno = ref((numero + 1).toString().padStart(valorMaximo.value.length, '0'));
+    const valorMaximoMasUno = ref(
+      (numero + 1).toString().padStart(valorMaximo.value.length, "0")
+    );
     return valorMaximoMasUno.value;
-//basicamente convertí en un entero para sumarle +1, después convierto en string again y relleno con el caracter "0" para poder concatenar con prefijofactura
-  }else{
-    return '0000001'; //si no existe "valorMaximo" quiere decir que es la primera factura entonces asigna eso.
+    //basicamente convertí en un entero para sumarle +1, después convierto en string again y relleno con el caracter "0" para poder concatenar con prefijofactura
+  } else {
+    return "0000001"; //si no existe "valorMaximo" quiere decir que es la primera factura entonces asigna eso.
   }
-
-}
-
-
+};
 
 //variable que contiene el resto de la factura, osea lo que se concatena con el prefijo
 let facturacontinuacion = computed(() => {
   return asignarFacturaContinuacion();
-}); 
+});
 
-
-
-let nrofactura = computed(() => `${prefijofactura.value}-${facturacontinuacion.value}`) //variable concatena prefijofactura + facturacontinuacion
+let nrofactura = computed(
+  () => `${prefijofactura.value}-${facturacontinuacion.value}`
+); //variable concatena prefijofactura + facturacontinuacion
 
 //array que va a contener el listado de los productos a ser vendidos
 const arrayProductos = ref([]);
@@ -297,6 +296,34 @@ const calcularSumaTotal = () => {
     0
   );
 };
+
+//calcula el total de la compra sin descuento
+const calcularPrecioPublico = () => {
+  return arrayProductos.value.reduce(
+    (total, producto) => total + (producto.preciopublico * producto.cantidad ),
+    0
+  );
+};
+
+//Variable que retorna "calcularPrecioPublico"
+let totalpreciopublico = computed(() => {
+  return calcularPrecioPublico();
+});
+
+let montoahorrado = computed (() =>  {
+  let totaldescuentonumerico = parseFloat(preciototal.value);
+  let totalpreciopubliconumerico = parseFloat(totalpreciopublico.value);
+
+  if(!isNaN(totaldescuentonumerico) && !isNaN(totalpreciopubliconumerico)){
+    return (totalpreciopubliconumerico - totaldescuentonumerico);
+  }else{
+    return 0;
+  }
+
+
+});
+
+
 
 //calcula sumatoria de gravadas 5%
 const calcularExenta = () => {
@@ -408,11 +435,11 @@ function addError(message) {
 let form = useForm({
   usuario: props.user.name,
   codigo: props.user.id,
-  formadepago: '',
+  formadepago: "",
   fechafactura: mindate(),
   clienteid: clienteid,
   clientenombre: clientenombre,
-  comprobante: '',
+  comprobante: "",
   nrofactura: nrofactura,
   timbrado: timbrado,
   exenta: exenta,
@@ -424,30 +451,33 @@ let form = useForm({
   pagacon: pagacon,
   cambio: cambio,
   preciototal: preciototal,
+  montoahorrado: montoahorrado,
   arrayProductos: arrayProductos.value, //array con la lista de productos comprados
 });
-
 
 //función que guarda la venta realizada en la base de datos
 function onSubmit() {
   // Verificar si arrayProductos es nulo o vacío
 
-  if(form.formadepago === ""){
+  if (form.formadepago === "") {
     addError("Seleccionar Forma de Pago");
   }
 
-
-  if(form.formadepago === 'Efectivo' && (pagacon.value < preciototal.value) && pagacon.value !==''){
+  if (
+    form.formadepago === "Efectivo" &&
+    pagacon.value < preciototal.value &&
+    pagacon.value !== ""
+  ) {
     addError("El pago no cubre la cuenta");
     return;
   }
 
-  if(form.formadepago === 'Efectivo' && !pagacon.value){
+  if (form.formadepago === "Efectivo" && !pagacon.value) {
     addError("Ingresar 'PAGA CON'");
     return;
   }
 
-  if( form.comprobante === "" ){
+  if (form.comprobante === "") {
     addError("Seleccionar Comprobante");
   }
 
@@ -472,6 +502,10 @@ function onSubmit() {
       form.comprobante = "";
       pagacon.value = null;
       fetchData();
+
+      const event = new CustomEvent("imprimir");
+      window.dispatchEvent(event);
+
     },
   });
 }
@@ -480,6 +514,7 @@ function onSubmit() {
 <template>
   <Head title="Ventas" />
   <Layout>
+    <ConfirmarImpresion/>
     <template #header>
       <h2 class="flex uppercase font-bold text-xl text-gray-800 leading-tight">
         Ventas
@@ -833,8 +868,7 @@ function onSubmit() {
                     class="block text-base font-medium text-gray-700 uppercase"
                     >Exentas:</span
                   >
-                  <span
-                    class="text-base text-slate-500 uppercase"
+                  <span class="text-base text-slate-500 uppercase"
                     >{{ formatearNumero(exenta) }}
                   </span>
                 </div>
@@ -844,8 +878,7 @@ function onSubmit() {
                     class="block text-base font-medium text-gray-700 uppercase"
                     >gravadas 5%:</span
                   >
-                  <span
-                    class="text-base text-slate-500 uppercase"
+                  <span class="text-base text-slate-500 uppercase"
                     >{{ formatearNumero(gravadascinco) }}
                   </span>
                 </div>
@@ -855,8 +888,7 @@ function onSubmit() {
                     class="block text-base font-medium text-gray-700 uppercase"
                     >gravadas 10%:</span
                   >
-                  <span
-                    class="text-base text-slate-500 uppercase"
+                  <span class="text-base text-slate-500 uppercase"
                     >{{ formatearNumero(gravadasdiez) }}
                   </span>
                 </div>
@@ -866,10 +898,9 @@ function onSubmit() {
                     class="block text-base font-medium text-gray-700 uppercase"
                     >iva 5%:</span
                   >
-                  <span
-                    class="text-base text-slate-500 uppercase"
-                    >{{ formatearNumero(ivacinco) }}</span
-                  >
+                  <span class="text-base text-slate-500 uppercase">{{
+                    formatearNumero(ivacinco)
+                  }}</span>
                 </div>
                 <div class="ml-2 inline-flex space-x-2">
                   <span
@@ -887,12 +918,21 @@ function onSubmit() {
                     class="block text-base font-medium text-gray-700 uppercase"
                     >iva total:</span
                   >
-                  <span
-                    class="text-base text-slate-500 uppercase"
-                    >{{ formatearNumero(ivatotal) }}</span
-                  >
+                  <span class="text-base text-slate-500 uppercase">{{
+                    formatearNumero(ivatotal)
+                  }}</span>
                 </div>
-<!--                 <div class="ml-2 pt-4 inline-flex space-x-2">
+                <div class="ml-2 inline-flex space-x-2">
+                  <span
+                    for="ahorrado"
+                    class="block text-base font-medium text-gray-700 uppercase"
+                    >ahorrado:</span
+                  >
+                  <span class="text-base text-slate-500 uppercase">{{
+                    formatearNumero(montoahorrado)
+                  }}</span>
+                </div>
+                <!--                 <div class="ml-2 pt-4 inline-flex space-x-2">
                   <input id="tarjeta" type="checkbox" />
                   <label
                     for="tarjeta"
@@ -916,6 +956,32 @@ function onSubmit() {
                   @input="validarPagacon"
                   placeholder="..."
                   class="w-[50%] h-8 rounded-md placeholder-slate-400 bg-white text-gray-600 border border-black"
+                />
+              </div>
+              <div class="ml-2 inline-flex space-x-2">
+                <span class="block text-xl font-medium text-gray-700 uppercase">
+                  cambio:
+                </span>
+                <span class="text-xl font-bold text-blue-500 uppercase"
+                  >{{ formatearNumero(cambio) }} Gs</span
+                >
+              </div>
+            </div>
+            <div v-else class="py-2 space-y-4">
+              <div class="ml-2 inline-flex space-x-2">
+                <label
+                  for="pagacon"
+                  class="block text-xl font-medium text-gray-700 uppercase"
+                  >Paga con:</label
+                >
+                <input
+                  disabled
+                  id="pagacon"
+                  type="number"
+                  v-model="pagacon"
+                  @input="validarPagacon"
+                  placeholder="..."
+                  class="w-[50%] h-8 rounded-md placeholder-slate-400 bg-slate-300 text-gray-600 border border-black"
                 />
               </div>
               <div class="ml-2 inline-flex space-x-2">

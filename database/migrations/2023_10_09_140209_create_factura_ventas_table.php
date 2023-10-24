@@ -30,6 +30,7 @@ return new class extends Migration
             $table->integer('ivatotal');
             $table->integer('pagacon')->nullable();
             $table->integer('cambio')->nullable();
+            $table->integer('montoahorrado');
             $table->integer('preciototal');
             $table->timestamp('hora_venta')->useCurrent();//campo se crea automaticamente con la fecha y hora al momento de que se guardan los datos 'timestamp'
             $table->timestamps();

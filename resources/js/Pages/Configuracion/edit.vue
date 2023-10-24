@@ -15,6 +15,7 @@ const props = defineProps({
 const form = useForm({
     nrofactura: props.configuracion.nrofactura,
     timbrado: props.configuracion.timbrado,
+    ruc: props.configuracion.ruc,
 });
 
 const validarNumeroFactura = () => {
@@ -77,6 +78,15 @@ const submit = () => {
                                     v-model="form.timbrado" required autocomplete="timbrado" />
 
                                 <InputError class="mt-2" :message="form.errors.timbrado" />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel for="ruc" value="RUC" class="text-gray-600" />
+
+                                <TextInput id="ruc" type="text" class="mt-1 block w-full bg-gray-200 text-gray-600"
+                                    v-model="form.ruc" required autocomplete="ruc" />
+
+                                <InputError class="mt-2" :message="form.errors.ruc" />
                             </div>
 
                             <div class="flex items-center justify-end mt-6">
