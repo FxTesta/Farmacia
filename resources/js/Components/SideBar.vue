@@ -67,9 +67,16 @@ export default {
         },
       
         {
-          href: '/productosfaltantes',
+          href: '#',
           title: 'Configuración',
           icon: 'fa-sharp fa-solid fa-gear',
+        
+          
+        },
+        {
+          href: '/productosfaltantes',
+          title: 'Prueba',
+          icon: 'fa-solid fa-bars',
         
           
         },

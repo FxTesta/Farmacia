@@ -63,8 +63,6 @@ Route::controller(ClienteController::class)->middleware('auth')->group(function 
 Route::controller(ProductoController::class)->middleware('auth')->group(function () {
    
     Route::get('/producto', 'index')->name('producto');
-    Route::get('/productosfaltantes', 'faltantes')->name('faltantes');
-  //  Route::get('/producto/pdf', 'pdf')->name('producto.pdf');
     Route::get('/crear-producto', 'create')->name('producto.create');
     Route::post('/producto', 'store')->name('producto.store');
     Route::get('/editar-producto/{producto_id}', 'edit')->name('producto.edit');
@@ -72,6 +70,9 @@ Route::controller(ProductoController::class)->middleware('auth')->group(function
     Route::put('/producto/{productos}', 'updatestock')->name('producto.updatestock');
     Route::delete('/producto/delete/{producto}', 'destroy')->name('producto.destroy');
 
+    Route::get('/orden', 'indexorden')->name('ordenes');
+    Route::get('/productosfaltantes', 'faltantes')->name('faltantes');
+    Route::put('/producto/{productos}', 'crearorden')->name('producto.crearorden');
 
 });
 

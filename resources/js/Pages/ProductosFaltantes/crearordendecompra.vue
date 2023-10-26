@@ -6,11 +6,10 @@ import {
   DialogPanel,
   DialogTitle,
 } from '@headlessui/vue';
-import { PlusIcon } from "@heroicons/vue/outline";
+import { PlusIcon,TrashIcon } from "@heroicons/vue/outline";
 import BuscarProveedor from "@/Pages/Compra/BuscarProveedor.vue"
 import { ref, onMounted } from 'vue';
-
-
+import axios from 'axios';
 
 
 const fechaActual = ref('');
@@ -48,10 +47,25 @@ function loadProveedor(query, setOptions) {
       );
     });
 }
+//recuperamos los productos seleccionados para la orden de compra
+const productos = ref([]);
 
-//variable retorna id que extrae de proveedor
+const obtenerProductos = () => {
+  axios.get('/orden')
+    .then(response => {
+      productos.value = response.data.productos;
+    })
+    .catch(error => {
+      console.error('Error al obtener productos:', error);
+    });
+};
+
+onMounted(() => {
+  obtenerProductos();
+});
 
 </script>
+
 <style>
 .div-izquierdo {
   float: left;
@@ -70,7 +84,7 @@ function loadProveedor(query, setOptions) {
 <template>
   <div>
     <button type="button" @click="openModal"
-      class="rounded-md bg-green-700  px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 ">
+      class="rounded-md bg-green-700 hover:bg-green-500 px-4 py-2 text-sm font-medium text-white ">
       Generar Orden de Compra
     </button>
   </div>
@@ -105,7 +119,7 @@ function loadProveedor(query, setOptions) {
                     Email:
                   </H2>
 
-                 
+
 
                   <H2 class="font-bold">
                     Telefono:
@@ -135,50 +149,43 @@ function loadProveedor(query, setOptions) {
                   <tr class="border-b border-slate-300 bg-red-700 text-white text-left">
                     <th class="px-2">Cantidad</th>
                     <th class="px-2">Codigo de barras</th>
-                    <th class="px-2">Descripcion</th>
+                    <th class="px-2">Estado</th>
                     <th class="px-2">Marca</th>
                     <th class="px-2">Laboratorio</th>
-                    <th class="px-2">Vencimiento</th>
                     <th class="px-2">Acción</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-400 divide-opacity-30">
-                  <!-- <tr v-for="productos in producto.data" :key="productos.id" >                                   
-                    
-                                        <td class="text-gray-700 py-4 px-2 ">{{productos.id}}</td>
-                                        <td class="text-gray-700 py-4 px-2">{{productos.categoria}}</td>
-                                        <td class="text-gray-700 py-4 px-2">{{productos.descripcion}}</td>
-                                        <td class="text-gray-700 py-4 px-2">{{productos.marca}}</td>
-                                        <td class="text-gray-700 py-4 px-2">{{productos.laboratorio}}</td>
-                                        <td class="text-gray-700 py-4 px-2">{{productos.vencimiento}}</td>
-                                        <td class="text-gray-700 py-4 px-2">{{productos.codigo}}</td>
-                                        <td class="text-gray-700 py-4 px-2">{{productos.stock}}</td>
-                                        <td class="text-gray-700 py-4 px-2">{{productos.stockmin}}</td>
-                                     
-                                </tr>
-                                <div v-if="producto.data.length <= 0" class="p-4">
-                                    <div class="absolute left-2/4 -translate-x-1/2"
-                                        >
-                                        <span class="font-serif text-xl text-slate-500 uppercase">no hay productos en stock minimo</span>
-                                    </div>
-                                </div>-->
-                  <tr>
-                    <td>
-                      <div class=" flex items-center  focus-within:text-white">
-                        <PlusIcon class="w-5 h-5  ml-3 pointer-events-none" />
-                        <button type="button"
-                          class=" pl-8 inline-flex justify-center rounded-md border border-transparent bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                          @click="closeModal">
-                          Añadir
-                        </button>
-
-                      </div>
-                    </td>
+                  <tr v-for="producto in productos" :key="producto.id">
+                    <td class="text-gray-700 py-4 px-2">{{ producto.cantidad }}</td>
+                    <td class="text-gray-700 py-4 px-2">{{ producto.codigo }}</td>
+                    <td class="text-gray-700 py-4 px-2">{{ producto.estado }}</td>
+                    <td class="text-gray-700 py-4 px-2">{{ producto.marca }}</td>
+                    <td class="text-gray-700 py-4 px-2">{{ producto.laboratorio }}</td>
+                    <td><TrashIcon class="w-6 h-6" /></td>
+                    <!--<div>
+                      <Delete :proveedor="proveedores" :key="proveedores.id" />
+                    </div>-->
                   </tr>
+
+
                 </tbody>
 
               </table>
 
+              <tr>
+                <td>
+                  <div class=" flex items-center  focus-within:text-white">
+
+                    <button type="button"
+                      class=" pl-8 inline-flex justify-center rounded-md border border-transparent bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      @click="closeModal">
+                      Confirmar Orden
+                    </button>
+
+                  </div>
+                </td>
+              </tr>
 
 
             </DialogPanel>

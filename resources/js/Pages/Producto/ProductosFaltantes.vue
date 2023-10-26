@@ -2,18 +2,23 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import SideBar from '@/Components/SideBar.vue';
-import {PencilIcon, SearchIcon} from "@heroicons/vue/outline";
-import Delete from '@/Pages/Producto/delete.vue';
+import {PlusCircleIcon, SearchIcon} from "@heroicons/vue/outline";
+//import Delete from '@/Pages/Producto/delete.vue';
 import { ref, watch } from "vue"; 
 import Pagination from '@/Components/Pagination.vue';
 import _ from 'lodash';
 import CrearOrden from '@/Pages/ProductosFaltantes/crearordendecompra.vue';
+import Cantidad from '@/Pages/ProductosFaltantes/cantidad.vue';
 
 const props = defineProps({
 producto: Object,
 filters: Object,
 });
-     
+ 
+
+
+
+
 let search = ref(props.filters.search);
 
 watch(search, _.debounce(function (value) {
@@ -30,7 +35,7 @@ watch(search, _.debounce(function (value) {
 
 export default {
  methods: {
-   generarPDF() {
+   GenerarOrdeen() {
       const url = '/auditoria';
         window.open(url, '_blank');
   },
@@ -96,7 +101,7 @@ export default {
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-400 divide-opacity-30">
-                                <tr v-for="productos in producto.data" :key="productos.id" :class="{'bg-green-500 text-white':productos.marca==='illum'}" >                                   
+                                <tr v-for="productos in producto.data" :key="productos.id" >                                   
                     
                                         <td  class="text-gray-700 py-4 px-2 ">{{productos.id}}</td>                                        
                                         <td  class="text-gray-700 py-4 px-2">{{productos.codigo}}</td>
@@ -107,7 +112,10 @@ export default {
                                         <td  class="text-gray-700 py-4 px-2">{{productos.stock}}</td>
                                         <td  class="text-gray-700 py-4 px-2">{{productos.stockmin}}</td>
                                         <td >
-                                            <input type="checkbox" v-model="productos.selected" />
+                                            <div>
+                                                <Cantidad :productos="productos" :key="productos.id"/>                                                    
+                                            </div>
+                                                
                                         </td>
                                      
                                 </tr>
