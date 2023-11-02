@@ -10,6 +10,7 @@ use App\Models\StockAudit;
 use Illuminate\Http\Request;
 use App\Models\OrdenDeCompra;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\ProductosFaltantes;
 use Illuminate\Support\Facades\DB;
 
 class ProductoController extends Controller
@@ -220,28 +221,47 @@ class ProductoController extends Controller
     }
 //mostrar los productos con stock minimo
     public function faltantes(Request $request)
-    {   
-         Producto::whereNull('stock') // si hay algun producto con stock nulo actualiza a cero
+    {      
+         // si hay algun producto con stock nulo actualiza a cero
+        Producto::whereNull('stock')
         ->update(['stock' => 0]);
 
-        $producto = Producto::when($request->search, function($query, $search){
+        //vaciamos la tabla para que no haya duplicado
+        ProductosFaltantes::truncate();
+
+       // obtenemos todos los productos faltantes
+        $producto= Producto::where(function($query) {
+            $query->where('stock', '<=', DB::raw('COALESCE(stockmin, 0)'));
+            $query->orWhereNull('stockmin');
+        });
+
+        //cargamos en la tabla los productos
+        $producto->each(function ($productos) {
+            ProductosFaltantes::create([                            
+                'codigo'=>$productos->codigo,
+                'marca'=>$productos->marca,
+                'laboratorio'=>$productos->laboratorio,
+                'estado'=>'Faltante',
+                'stock'=>$productos->stock,
+                'stockmin'=>$productos->stockmin,
+            ]);
+        });
+
+        //obtenemos los productos para visualizar y filtrar
+        $producto= ProductosFaltantes::when($request->search, function($query, $search){
             // filtra la busqueda por marca del producto o codigo de barras
             $query->where('marca', 'LIKE', "%{$search}%" )->orWhere('codigo', 'LIKE', "{$search}%")->orWhere('laboratorio', 'LIKE', "%{$search}%");
         })
-        ->where(function($query) {
-            $query->where('stock', '<=', DB::raw('COALESCE(stockmin, 0)'));
-            $query->orWhereNull('stockmin');
-        })
         ->paginate(15)
-        ->withQueryString();
-
+        ->withQueryString();     
+        
         $filters = $request->only('search');
-
         return Inertia::render('Producto/ProductosFaltantes',[
             'producto' => $producto,
             'filters' => $filters,
         ]);
     }
+    
 //cargar orden de productos faltantes
     public function crearorden(Producto $productos){
         $cantidad = request('stock');
@@ -263,5 +283,13 @@ class ProductoController extends Controller
     {
         $productos = OrdenDeCompra::all();
         return response()->json(['productos' => $productos]);
+    }
+
+    public function ordendestroy(OrdenDeCompra $producto)
+    {
+        $producto->delete();
+        //return redirect()->route('faltantes');
+        return redirect()->back();
+        //return $producto;
     }
 };

@@ -73,7 +73,7 @@ Route::controller(ProductoController::class)->middleware('auth')->group(function
     Route::get('/orden', 'indexorden')->name('ordenes');
     Route::get('/productosfaltantes', 'faltantes')->name('faltantes');
     Route::put('/producto/{productos}', 'crearorden')->name('producto.crearorden');
-
+    Route::delete('/producto/{producto}', 'ordendestroy')->name('orden.destroy');
 });
 
 

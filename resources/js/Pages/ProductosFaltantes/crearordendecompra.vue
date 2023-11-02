@@ -9,14 +9,9 @@ import {
 import { PlusIcon,TrashIcon } from "@heroicons/vue/outline";
 import BuscarProveedor from "@/Pages/Compra/BuscarProveedor.vue"
 import { ref, onMounted } from 'vue';
+import Delete from "@/Pages/ProductosFaltantes/delete.vue"
 import axios from 'axios';
 
-
-const fechaActual = ref('');
-
-onMounted(() => {
-  obtenerFechaActual();
-});
 
 const isOpen = ref(false)
 
@@ -26,7 +21,12 @@ function closeModal() {
 function openModal() {
   isOpen.value = true
 }
+//obtener fecha actual
+const fechaActual = ref('');
 
+onMounted(() => {
+  obtenerFechaActual();
+});
 const obtenerFechaActual = () => {
   const fecha = new Date();
   const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
@@ -47,6 +47,7 @@ function loadProveedor(query, setOptions) {
       );
     });
 }
+
 //recuperamos los productos seleccionados para la orden de compra
 const productos = ref([]);
 
@@ -132,9 +133,6 @@ onMounted(() => {
                   <H2 class="font-bold">
                     Orden#:
                   </H2>
-
-
-
                   <span class="font-bold">Fecha:
 
                     {{ fechaActual }}
@@ -162,15 +160,11 @@ onMounted(() => {
                     <td class="text-gray-700 py-4 px-2">{{ producto.estado }}</td>
                     <td class="text-gray-700 py-4 px-2">{{ producto.marca }}</td>
                     <td class="text-gray-700 py-4 px-2">{{ producto.laboratorio }}</td>
-                    <td><TrashIcon class="w-6 h-6" /></td>
-                    <!--<div>
-                      <Delete :proveedor="proveedores" :key="proveedores.id" />
-                    </div>-->
+                    <td>
+                      <Delete :producto="producto" :key="producto.id" />
+                    </td>
                   </tr>
-
-
                 </tbody>
-
               </table>
 
               <tr>
@@ -182,12 +176,16 @@ onMounted(() => {
                       @click="closeModal">
                       Confirmar Orden
                     </button>
-
+                    <button
+                  type="button"
+                  class="inline-flex rounded-md border border-gray-500 bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  @click="closeModal"
+                >
+                  Cancelar
+                </button>
                   </div>
                 </td>
               </tr>
-
-
             </DialogPanel>
           </TransitionChild>
         </div>

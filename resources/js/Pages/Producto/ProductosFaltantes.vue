@@ -89,12 +89,11 @@ export default {
                                 <tr class="border-b border-slate-300 text-gray-700 text-left">
                                     <th class="px-2">ID</th>                                    
                                     <th class="px-2">Codigo de barras</th>
-                                    <th class="px-2">Categoria</th>
                                     <th class="px-2">Marca</th>
                                     <th class="px-2">Laboratorio</th>
-                                    <th class="px-2">Vencimiento</th>
                                     <th class="px-2">Stock Actual</th>
                                     <th class="px-2">Stock Minimo</th>
+                                    <th class="px-2">Estado</th>
                                     <th class="px-2">Seleccionar</th>
                                 
                                     
@@ -105,12 +104,11 @@ export default {
                     
                                         <td  class="text-gray-700 py-4 px-2 ">{{productos.id}}</td>                                        
                                         <td  class="text-gray-700 py-4 px-2">{{productos.codigo}}</td>
-                                        <td  class="text-gray-700 py-4 px-2">{{productos.categoria}}</td>
                                         <td  class="text-gray-700 py-4 px-2">{{productos.marca}}</td>
                                         <td  class="text-gray-700 py-4 px-2">{{productos.laboratorio}}</td>
-                                        <td  class="text-gray-700 py-4 px-2">{{productos.vencimiento}}</td>
                                         <td  class="text-gray-700 py-4 px-2">{{productos.stock}}</td>
                                         <td  class="text-gray-700 py-4 px-2">{{productos.stockmin}}</td>
+                                        <td  class="text-white font-bold bg-red-500 rounded-xl grid place-content-center">{{productos.estado}}</td>
                                         <td >
                                             <div>
                                                 <Cantidad :productos="productos" :key="productos.id"/>                                                    
