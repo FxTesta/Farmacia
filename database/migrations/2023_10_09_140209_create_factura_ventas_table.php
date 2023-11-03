@@ -29,6 +29,7 @@ return new class extends Migration
             $table->integer('ivadiez');
             $table->integer('ivatotal');
             $table->integer('pagacon')->nullable();
+            $table->integer('nrotransaccion')->nullable();
             $table->integer('cambio')->nullable();
             $table->integer('montoahorrado');
             $table->integer('preciototal');

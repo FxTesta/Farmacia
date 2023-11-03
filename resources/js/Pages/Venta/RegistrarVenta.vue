@@ -437,6 +437,7 @@ let form = useForm({
   usuario: props.user.name,
   codigo: props.user.id,
   formadepago: "",
+  nrotransaccion: "",
   fechafactura: mindate(),
   clienteid: clienteid,
   clientenombre: clientenombre,
@@ -478,6 +479,14 @@ function onSubmit() {
     return;
   }
 
+  if (
+    (form.formadepago === "Tarjeta Debito" || form.formadepago === "Tarjeta Credito" )
+    && form.nrotransaccion === "")
+  {
+    addError("Ingrese Nro transacción de Tarjeta");
+    return;
+  }
+
   if (form.comprobante === "") {
     addError("Seleccionar Comprobante");
   }
@@ -501,6 +510,7 @@ function onSubmit() {
       cantidad.value = null;
       form.formadepago = "";
       form.comprobante = "";
+      form.nrotransaccion= "";
       pagacon.value = null;
       fetchData();
 
@@ -565,7 +575,7 @@ function onSubmit() {
                 <option>Tarjeta Credito</option>
               </select>
             </div>
-            <div class="space-x-1">
+<!--             <div class="space-x-1">
               <label for="fechafactura" class="font-medium text-sm"
                 >Fecha Factura:</label
               >
@@ -576,6 +586,18 @@ function onSubmit() {
                 name="fechafactura"
                 v-model="form.fechafactura"
                 class="bg-slate-200 text-slate-500 rounded-md w-[130px] h-[28px] p-1"
+              />
+            </div> -->
+            <div v-if="form.formadepago === 'Tarjeta Debito' || form.formadepago === 'Tarjeta Credito'" class="space-x-1">
+              <label for="nrofactura" class="font-medium text-sm"
+                >Nro Transaccion:</label
+              >
+              <input
+                type="number"
+                id="nrotransaccion"
+                name="nrotransaccion"
+                v-model="form.nrotransaccion"
+                class="rounded-md p-1 w-[140px] h-[28px] bg-white text-slate-500"
               />
             </div>
           </div>
