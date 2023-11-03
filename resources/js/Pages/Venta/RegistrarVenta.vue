@@ -31,6 +31,7 @@ function loadProducto(query, setOptions) {
             laboratorio: producto.laboratorio,
             descuento: producto.descuento,
             iva: producto.iva,
+            estante: producto.estante,
           };
         })
       );

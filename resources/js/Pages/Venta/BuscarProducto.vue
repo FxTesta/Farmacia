@@ -195,6 +195,7 @@ const unhighlightRow = () => {
                                    <th class="px-2">Droga</th>
                                    <th class="px-2">Descripcion</th>
                                    <th class="px-2">Receta</th>
+                                   <th class="px-2">Estante</th>
                                    <th class="px-2">Laboratorio</th>
                                    <th class="px-2">Vencimiento</th>
                                    <th class="px-2">Precio Venta</th>
@@ -215,6 +216,7 @@ const unhighlightRow = () => {
                                   <td class="px-2 py-3 uppercase">{{productos.droga}}</td>
                                   <td class="px-2 py-3 uppercase">{{productos.descripcion}}</td>
                                   <td class="px-2 py-3 uppercase">{{productos.venta}}</td>
+                                  <td class="px-2 py-3 uppercase">{{productos.estante}}</td>
                                   <td class="px-2 py-3 uppercase">{{productos.laboratorio}}</td>
                                   <td class="px-2 py-3">{{productos.vencimiento}}</td>
                                   <td class="px-2 py-3">{{productos.precioventa}}</td>
