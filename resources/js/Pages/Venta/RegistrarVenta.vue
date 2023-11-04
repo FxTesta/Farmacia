@@ -475,6 +475,11 @@ function onSubmit() {
     addError("Seleccionar Forma de Pago");
   }
 
+  if(!importemixto.value && form.formadepago === "Mixto"){
+    addError("Ingrese importe Efectivo");
+    return;
+  }
+
   if (
     form.formadepago === "Efectivo" &&
     pagacon.value < preciototal.value &&
