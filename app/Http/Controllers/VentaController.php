@@ -101,7 +101,9 @@ class VentaController extends Controller
                 'cambio' => 'nullable',
                 'preciototal' => 'required',
                 'montoahorrado' => 'required',
-                'nrotransaccion' => 'required',
+                'nrotransaccion' => 'nullable',
+                'importemixto' => 'nullable',
+                'tarjetamixto' => 'nullable',
             ]);
 
             //Se realiza carga de cabecera factura
@@ -127,6 +129,8 @@ class VentaController extends Controller
                 'preciototal' => $request->preciototal,
                 'montoahorrado' => $request->montoahorrado,
                 'nrotransaccion' => $request->nrotransaccion,
+                'importemixto' => $request->importemixto,
+                'tarjetamixto' => $request->tarjetamixto,
             ]);
 
             //OBTENER EL ID DE FACTURA VENTA CREADO ARRIBA, PARA EL CREATE DE ABAJO

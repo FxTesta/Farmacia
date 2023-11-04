@@ -301,7 +301,7 @@ const calcularSumaTotal = () => {
 //calcula el total de la compra sin descuento
 const calcularPrecioPublico = () => {
   return arrayProductos.value.reduce(
-    (total, producto) => total + (producto.preciopublico * producto.cantidad ),
+    (total, producto) => total + (producto.preciopublico * producto.cantidad),
     0
   );
 };
@@ -311,20 +311,16 @@ let totalpreciopublico = computed(() => {
   return calcularPrecioPublico();
 });
 
-let montoahorrado = computed (() =>  {
+let montoahorrado = computed(() => {
   let totaldescuentonumerico = parseFloat(preciototal.value);
   let totalpreciopubliconumerico = parseFloat(totalpreciopublico.value);
 
-  if(!isNaN(totaldescuentonumerico) && !isNaN(totalpreciopubliconumerico)){
-    return (totalpreciopubliconumerico - totaldescuentonumerico);
-  }else{
+  if (!isNaN(totaldescuentonumerico) && !isNaN(totalpreciopubliconumerico)) {
+    return totalpreciopubliconumerico - totaldescuentonumerico;
+  } else {
     return 0;
   }
-
-
 });
-
-
 
 //calcula sumatoria de gravadas 5%
 const calcularExenta = () => {
@@ -390,6 +386,18 @@ let preciototal = computed(() => {
   return calcularSumaTotal();
 });
 
+let importemixto = ref();
+
+const importeTarjeta = computed (() => {
+  let totalnumerico = parseFloat(preciototal.value);
+  let importenumerico = parseFloat(importemixto.value);
+  if(!isNaN(totalnumerico) && !isNaN(importenumerico)){
+    return totalnumerico - importenumerico;
+  }else{
+    return null
+  }
+})
+
 //valida cantidad que no sea un valor negativo
 const validarCantidad = () => {
   if (cantidad.value < 0) {
@@ -438,6 +446,8 @@ let form = useForm({
   codigo: props.user.id,
   formadepago: "",
   nrotransaccion: "",
+  importemixto: importemixto,
+  tarjetamixto: importeTarjeta,
   fechafactura: mindate(),
   clienteid: clienteid,
   clientenombre: clientenombre,
@@ -480,9 +490,11 @@ function onSubmit() {
   }
 
   if (
-    (form.formadepago === "Tarjeta Debito" || form.formadepago === "Tarjeta Credito" )
-    && form.nrotransaccion === "")
-  {
+    (form.formadepago === "Tarjeta Debito" ||
+      form.formadepago === "Tarjeta Credito" ||
+      form.formadepago === "Mixto") &&
+    form.nrotransaccion === ""
+  ) {
     addError("Ingrese Nro transacción de Tarjeta");
     return;
   }
@@ -508,24 +520,23 @@ function onSubmit() {
       cliente.value = null; //resetea la variable reactiva (let cliente = ref();) después de guardar los campos en la bd
       descuento.value = null;
       cantidad.value = null;
+      importemixto.value = null;
       form.formadepago = "";
       form.comprobante = "";
-      form.nrotransaccion= "";
+      form.nrotransaccion = "";
       pagacon.value = null;
       fetchData();
 
       const event = new CustomEvent("imprimir");
       window.dispatchEvent(event);
-
     },
   });
 }
-
 </script>
 <template>
   <Head title="Ventas" />
   <Layout>
-    <ConfirmarImpresion/>
+    <ConfirmarImpresion />
     <template #header>
       <h2 class="flex uppercase font-bold text-xl text-gray-800 leading-tight">
         Ventas
@@ -573,9 +584,10 @@ function onSubmit() {
                 <option>Efectivo</option>
                 <option>Tarjeta Debito</option>
                 <option>Tarjeta Credito</option>
+                <option>Mixto</option>
               </select>
             </div>
-<!--             <div class="space-x-1">
+            <!--             <div class="space-x-1">
               <label for="fechafactura" class="font-medium text-sm"
                 >Fecha Factura:</label
               >
@@ -588,8 +600,15 @@ function onSubmit() {
                 class="bg-slate-200 text-slate-500 rounded-md w-[130px] h-[28px] p-1"
               />
             </div> -->
-            <div v-if="form.formadepago === 'Tarjeta Debito' || form.formadepago === 'Tarjeta Credito'" class="space-x-1">
-              <label for="nrofactura" class="font-medium text-sm"
+            <div
+              v-if="
+                form.formadepago === 'Tarjeta Debito' ||
+                form.formadepago === 'Tarjeta Credito' ||
+                form.formadepago === 'Mixto'
+              "
+              class="space-x-1"
+            >
+              <label for="nrotransaccion" class="font-medium text-sm"
                 >Nro Transaccion:</label
               >
               <input
@@ -624,7 +643,22 @@ function onSubmit() {
                 <option>Ticket</option>
               </select>
             </div>
-            <div class="space-x-1">
+            <div
+              v-if="form.formadepago === 'Mixto'"
+              class="space-x-1"
+            >
+              <label for="importemixto" class="font-medium text-sm"
+                >Importe Efectivo:</label
+              >
+              <input
+                type="number"
+                id="importemixto"
+                name="importemixto"
+                v-model="importemixto"
+                class="rounded-md p-1 w-[100px] h-[28px] bg-white text-slate-500"
+              />
+            </div>
+            <!--  <div class="space-x-1">
               <label for="nrofactura" class="font-medium text-sm"
                 >Numero Factura:</label
               >
@@ -649,7 +683,7 @@ function onSubmit() {
                 v-model="form.timbrado"
                 class="rounded-md w-[100px] h-[28px] bg-slate-200 text-slate-500"
               />
-            </div>
+            </div> -->
           </div>
           <span class="mt-0 ml-2 uppercase font-bold text-lg">Producto</span>
           <div
@@ -885,7 +919,7 @@ function onSubmit() {
                     class="w-[30%] h-8 rounded-md placeholder-slate-400 bg-white text-gray-600 border border-black"
                   />
                 </div> -->
-                <div class="ml-2 inline-flex space-x-2">
+                <!-- <div class="ml-2 inline-flex space-x-2">
                   <span
                     for="exenta"
                     class="block text-base font-medium text-gray-700 uppercase"
@@ -944,7 +978,7 @@ function onSubmit() {
                   <span class="text-base text-slate-500 uppercase">{{
                     formatearNumero(ivatotal)
                   }}</span>
-                </div>
+                </div> -->
                 <div class="ml-2 inline-flex space-x-2">
                   <span
                     for="ahorrado"
@@ -953,7 +987,7 @@ function onSubmit() {
                   >
                   <span class="text-base text-slate-500 uppercase">{{
                     formatearNumero(montoahorrado)
-                  }}</span>
+                  }} Gs</span>
                 </div>
                 <!--                 <div class="ml-2 pt-4 inline-flex space-x-2">
                   <input id="tarjeta" type="checkbox" />
@@ -970,7 +1004,7 @@ function onSubmit() {
                 <label
                   for="pagacon"
                   class="block text-xl font-medium text-gray-700 uppercase"
-                  >Paga con:</label
+                  >Abono:</label
                 >
                 <input
                   id="pagacon"
@@ -995,7 +1029,7 @@ function onSubmit() {
                 <label
                   for="pagacon"
                   class="block text-xl font-medium text-gray-700 uppercase"
-                  >Paga con:</label
+                  >Abono:</label
                 >
                 <input
                   disabled
@@ -1011,7 +1045,8 @@ function onSubmit() {
                 <span class="block text-xl font-medium text-gray-700 uppercase">
                   cambio:
                 </span>
-                <span class="text-xl font-bold text-blue-500 uppercase"
+                <span
+                  class="line-through text-xl font-bold text-blue-500 uppercase"
                   >{{ formatearNumero(cambio) }} Gs</span
                 >
               </div>
