@@ -28,6 +28,8 @@ const form = useForm({
     estante: props.producto.estante,
     presentacion: props.producto.presentacion,
     descuento: props.producto.descuento,
+    iva: props.producto.iva,
+    droga: props.producto.droga,
 });
 
 const submit = () => {
@@ -100,6 +102,21 @@ const submit = () => {
                                     </select>
                                     <InputError class="mt-2" :message="form.errors.venta" />
                                 </div>
+                            </div>
+                            <div class="mt-4 ">
+                                <InputLabel  for="droga" value="Droga" class="text-gray-600"/>
+
+                                <TextInput
+                                    id="droga"
+                                   
+                                    type="text"
+                                    class="mt-1 w-full bg-gray-200 text-gray-600 rounded-lg"
+                                    v-model="form.droga"
+                                    autocomplete="droga"
+                                />
+                                
+                                <InputError class="mt-2" :message="form.errors.descripcion" />
+
                             </div>
 
                             <div class="mt-4">
@@ -285,7 +302,17 @@ const submit = () => {
                                     <InputError class="mt-2" :message="form.errors.stockmin" />
                                 </div>
                             </div>
+                            <div class="mt-4" >
+                                    <InputLabel for="iva" value="IVA" class="text-gray-600"/>
 
+                                <select id="iva" v-model="form.iva"   class=" w-30 bg-gray-200 text-gray-600 sm:rounded-lg">
+                                    <option disabled value="">Seleccione</option>
+                                    <option value="0">0%</option>
+                                    <option value="5">5%</option>
+                                    <option value="10">10%</option>
+                                </select>
+                                    <InputError class="mt-2" :message="form.errors.iva" />
+                            </div>   
 
                             <div class="flex items-center justify-end mt-6">
 

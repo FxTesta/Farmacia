@@ -68,7 +68,7 @@ class CompraController extends Controller
             //Se realiza carga de cabecera factura
             FacturaCompra::create([
 
-                'proveedores_id' => $request->proveedorid,
+                'proveedor_id' => $request->proveedorid,
                 'proveedor_nombre' => $request->proveedornombre,
                 'users_id' => $request->codigo,
                 'username' => $request->usuario,

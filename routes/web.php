@@ -13,6 +13,10 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\PruebacomboController;
 use App\Http\Controllers\StockAuditController;
 use App\Http\Controllers\ListaController;
+use App\Http\Controllers\PruebaController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\VentaController;
+
 //hola prueba
 /*
 |--------------------------------------------------------------------------
@@ -104,6 +108,40 @@ Route::controller(CompraController::class)->middleware('auth')->group(function (
     Route::get('/compra/listar/detalle/{detallefact}', 'detalles')->name('detalle');
 });
 
+//VENTAS
+Route::controller(VentaController::class)->middleware('auth')->group(function () {
+
+    Route::get('/venta', 'registarVenta')->name('venta');
+    Route::get('/venta/listar', 'listarVentas')->name('listarventas');
+    Route::get('/buscarproductoventa', 'buscarProducto')->name('buscarproductoventa');
+    Route::get('/buscarcliente', 'buscarCliente')->name('buscarcliente');
+    Route::get('/obtenerfactura', 'obtenerFactura')->name('obtenerfactura'); //obtiene el valor maximo de la factura
+    Route::post('/guardarventa', 'store')->name('venta.store');
+    Route::get('/obtenerfacturaid', 'obtenerFacturaId')->name('obtenerfacturaid');
+
+    Route::get('/venta/listar/detalle/{detallefact}', 'detalleVenta')->name('detalleventa');
+
+
+    //Route::get('/proveedores', 'buscarProveedor')->name('buscarproveedor');
+    //Route::get('/buscarproducto', 'buscarProducto')->name('buscarproducto');
+    //Route::post('/guardarcompra', 'store')->name('compra.store');
+
+    //Listar compras
+    //Route::get('/compra/listar', 'listarCompras')->name('listarcompras');
+
+    //Route::get('/compra/listar/detalle/{detallefact}', 'detalles')->name('detalle');
+});
+
+
+//CONFIGURACIONES (PARA PREFIJO DE FACTURA Y TIMBRADO)
+Route::controller(SettingController::class)->middleware('auth')->group(function () {
+
+    Route::get('/configuracion', 'index')->name('configuracion');
+    Route::get('/crear-configuracion', 'create')->name('configuracion.create');
+    Route::post('/configuracion', 'store')->name('configuracion.store');
+    Route::get('/editar-configuracion/{configuracion_id}', 'edit')->name('configuracion.edit');
+    Route::put('/editar-configuracion/{configuracion}', 'update')->name('configuracion.update');
+});
 
 
 //AUDITORIA
@@ -147,3 +185,21 @@ Route::get('/generar-pdf' , function () {
 //https://www.incanatoit.com/2016/11/codigo-sistema-compras-ventas-laravel-mysql-jquery-bootstrap.html
 
 //dominio:farmauno.rf.gd
+
+
+
+
+Route::controller(PruebaController::class)->middleware('auth')->group(function () {
+
+    Route::get('/prueba', 'index')->name('prueba');
+    //Route::get('/buscarproductoventa', 'buscarProducto')->name('buscarproductoventa');
+
+    //Route::get('/proveedores', 'buscarProveedor')->name('buscarproveedor');
+    //Route::get('/buscarproducto', 'buscarProducto')->name('buscarproducto');
+    //Route::post('/guardarcompra', 'store')->name('compra.store');
+
+    //Listar compras
+    //Route::get('/compra/listar', 'listarCompras')->name('listarcompras');
+
+    //Route::get('/compra/listar/detalle/{detallefact}', 'detalles')->name('detalle');
+});

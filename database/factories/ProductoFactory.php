@@ -54,6 +54,7 @@ class ProductoFactory extends Factory
             'descuento' => $this->faker->optional()->numberBetween(1, 100),
             'presentacion' => $this->faker->word,
             'estante' => $this->faker->word,
+            'iva' => $this->faker->randomElement([5, 10])
         ];
     }
 }

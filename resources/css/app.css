@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/*Se pueden agregar propiedades globales en @layer*/
+@layer base {
+
+  .font-shadow {
+    text-shadow:
+    -1px -1px 0 #000,
+     0   -1px 0 #000,
+     1px -1px 0 #000,
+     1px  0   0 #000,
+     1px  1px 0 #000,
+     0    1px 0 #000,
+    -1px  1px 0 #000,
+    -1px  0   0 #000;
+}
+.font-inter {
+  font-family: 'Inter', sans-serif;
+}
+
+}
+
+
 /* CAMBIO DE SCROLLBAR */
 /*
 ::-webkit-scrollbar {

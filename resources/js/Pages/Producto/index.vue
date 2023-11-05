@@ -39,13 +39,13 @@ export default {
 };
 </script>
 <template>
-    <Head title="Dashboard" />
+    <Head title="Productos" />
 
     <SideBar />
     <AuthenticatedLayout>
 
         <template #header>
-            <h2 class="flex uppercase font-bold text-xl text-gray-800 leading-tight">Producto</h2>
+            <h2 class="flex uppercase font-bold text-xl text-gray-800 leading-tight">Productos</h2>
         </template>
 
         <div class="py-12">
