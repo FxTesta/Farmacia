@@ -12,7 +12,37 @@ class ProductObserver
      */
     public function created(Producto $producto): void
     {
-        //
+        if ($producto->isDirty('stock') && $producto->stock <= 0 || ($producto->stockmin >= $producto->stock) || $producto->stock === null ) 
+        {
+
+            $productoFaltante = ProductosFaltantes::where('producto_id', $producto->id)->first();
+            
+            if (!$productoFaltante && $producto->stock === null ) 
+            {
+                ProductosFaltantes::create([
+                    'producto_id' => $producto->id,
+                    'codigo' => $producto->codigo,
+                    'marca' => $producto->marca,
+                    'laboratorio' => $producto->laboratorio,
+                    'estado' => 'Faltante',
+                    'stock' => 0,
+                    'stockmin' => $producto->stockmin,
+                ]);
+            }elseif($producto->stock <= $producto->stockmin){
+                ProductosFaltantes::create([
+                    'producto_id' => $producto->id,
+                    'codigo' => $producto->codigo,
+                    'marca' => $producto->marca,
+                    'laboratorio' => $producto->laboratorio,
+                    'estado' => 'Faltante',
+                    'stock' => $producto->stock,
+                    'stockmin' => $producto->stockmin,
+                ]);
+
+            }
+
+            
+        }
     }
 
     /**

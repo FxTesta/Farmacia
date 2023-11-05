@@ -227,31 +227,7 @@ class ProductoController extends Controller
     }
 //mostrar los productos con stock minimo
     public function faltantes(Request $request)
-    {      
-        // si hay algun producto con stock nulo actualiza a cero
-        Producto::whereNull('stock')
-        ->update(['stock' => 0]);
-
-        //vaciamos la tabla para que no haya duplicado
-        ProductosFaltantes::truncate();
-
-       // obtenemos todos los productos faltantes
-        $producto= Producto::where(function($query) {
-            $query->where('stock', '<=', DB::raw('COALESCE(stockmin, 0)'));
-            $query->orWhereNull('stockmin');
-        });
-
-        //cargamos en la tabla los productos
-        $producto->each(function ($productos) {
-            ProductosFaltantes::create([                            
-                'codigo'=>$productos->codigo,
-                'marca'=>$productos->marca,
-                'laboratorio'=>$productos->laboratorio,
-                'estado'=>'Faltante',
-                'stock'=>$productos->stock,
-                'stockmin'=>$productos->stockmin,
-            ]);
-        });
+    {     
 
         //obtenemos los productos para visualizar y filtrar
         $producto= ProductosFaltantes::when($request->search, function($query, $search){
