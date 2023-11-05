@@ -74,12 +74,17 @@ watch(search, _.debounce(function (value) {
                                     <td class="py-3">{{ factura_compras.preciototal }}</td>
                                     <td class="py-3">{{ factura_compras.fechafactura }}</td>
                                     <td class="py-4">
+                                        <div class="inline-flex space-x-2">
                                         <Link :href="`/compra/listar/detalle/${factura_compras.id}`" as="button"
                                                     class="text-white font-bold bg-cyan-500 hover:bg-cyan-600 rounded-xl grid place-content-center">
                                                 <button class="px-2 py-1">
                                                     Detalle
                                                 </button>
                                         </Link>
+                                        <div>
+                                           <!--  Nota Credito -->
+                                        </div>
+                                        </div>
                                     </td>
                                 </tr>
                                 <!--div se muestra en caso que no hayan registros-->

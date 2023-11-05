@@ -29,7 +29,10 @@ return new class extends Migration
             $table->integer('ivadiez');
             $table->integer('ivatotal');
             $table->integer('pagacon')->nullable();
+            $table->integer('nrotransaccion')->nullable();
             $table->integer('cambio')->nullable();
+            $table->integer('importemixto')->nullable();
+            $table->integer('tarjetamixto')->nullable();
             $table->integer('montoahorrado');
             $table->integer('preciototal');
             $table->timestamp('hora_venta')->useCurrent();//campo se crea automaticamente con la fecha y hora al momento de que se guardan los datos 'timestamp'
