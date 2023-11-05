@@ -49,10 +49,10 @@ class ProveedorControllerTest extends TestCase
         //creando nuevo proveedor
         $response3 = $this->post('/proveedor', [
             'id' => $nextId, // Aquí se utiliza el ID incrementado
-            'empresa' => 'empresa',
-            'name' => 'name',
+            'empresa' => 'lasca2',
+            'name' => 'juanpi',
             'ruc' => '4331464',
-            'dv'=> '1',
+            'dv'=> '3php',
             'direccion' => 'direccion',
             'barrio' => 'barrio',
             'callelateral' => 'callelateral',

@@ -63,6 +63,7 @@ Route::controller(ClienteController::class)->middleware('auth')->group(function 
 
     //LISTAR FACTURAS POR CLIENTE
     Route::get('/cliente/listar/{cliente}', 'facturaCliente')->name('factura.cliente');
+
 });
 
 
