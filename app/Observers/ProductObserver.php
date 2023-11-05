@@ -28,7 +28,7 @@ class ProductObserver
                     'stock' => 0,
                     'stockmin' => $producto->stockmin,
                 ]);
-            }elseif($producto->stock <= $producto->stockmin){
+            }elseif(($producto->stock <= $producto->stockmin) && !$productoFaltante){
                 ProductosFaltantes::create([
                     'producto_id' => $producto->id,
                     'codigo' => $producto->codigo,

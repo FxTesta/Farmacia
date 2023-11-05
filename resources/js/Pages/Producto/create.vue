@@ -169,7 +169,7 @@ function mindate(){
                                     <option>W - Cosméticos</option>
                                     <option>X - Alimentos y dietéticos</option>
                                 </select>
-                                <InputError class="mt-2" :message="form.errors.venta" />
+                                <InputError class="mt-2" :message="form.errors.categoria" />
                             </div>
                             
                             <div class="mt-4 ">
