@@ -12,13 +12,11 @@ class ProductObserver
      */
     public function created(Producto $producto): void
     {
-        if ($producto->isDirty('stock') && $producto->stock <= 0 || ($producto->stockmin >= $producto->stock) || $producto->stock === null ) 
-        {
+        if ($producto->isDirty('stock') && $producto->stock <= 0 || ($producto->stockmin >= $producto->stock) || $producto->stock === null) {
 
             $productoFaltante = ProductosFaltantes::where('producto_id', $producto->id)->first();
-            
-            if (!$productoFaltante && $producto->stock === null ) 
-            {
+
+            if (!$productoFaltante && $producto->stock === null) {
                 ProductosFaltantes::create([
                     'producto_id' => $producto->id,
                     'codigo' => $producto->codigo,
@@ -28,7 +26,7 @@ class ProductObserver
                     'stock' => 0,
                     'stockmin' => $producto->stockmin,
                 ]);
-            }elseif(($producto->stock <= $producto->stockmin) && !$productoFaltante){
+            } elseif (($producto->stock <= $producto->stockmin) && !$productoFaltante) {
                 ProductosFaltantes::create([
                     'producto_id' => $producto->id,
                     'codigo' => $producto->codigo,
@@ -38,10 +36,7 @@ class ProductObserver
                     'stock' => $producto->stock,
                     'stockmin' => $producto->stockmin,
                 ]);
-
             }
-
-            
         }
     }
 
@@ -50,13 +45,13 @@ class ProductObserver
      */
     public function updated(Producto $producto): void
     {
-        if ($producto->isDirty('stock') && $producto->stock <= 0 || ($producto->stockmin >= $producto->stock)) 
-        {
+
+        //Para venta
+        if ($producto->isDirty('stock') && $producto->stock <= 0 || ($producto->stockmin >= $producto->stock)) {
 
             $productoFaltante = ProductosFaltantes::where('producto_id', $producto->id)->first();
 
-            if (!$productoFaltante) 
-            {
+            if (!$productoFaltante) {
                 ProductosFaltantes::create([
                     'producto_id' => $producto->id,
                     'codigo' => $producto->codigo,
@@ -66,14 +61,20 @@ class ProductObserver
                     'stock' => $producto->stock,
                     'stockmin' => $producto->stockmin,
                 ]);
-            }else{
+            } else {
                 $productoFaltante->update([
                     'stock' => $producto->stock,
                     'stockmin' => $producto->stockmin,
                 ]);
             }
-        }
+        } elseif ($producto->isDirty('stock') && ($producto->stockmin < $producto->stock)) {
 
+            $productoFaltante = ProductosFaltantes::where('producto_id', $producto->id)->first();
+
+            if ($productoFaltante) {
+                $productoFaltante->delete();
+            }
+        }
     }
 
     /**

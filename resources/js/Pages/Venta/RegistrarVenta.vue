@@ -1022,7 +1022,7 @@ function onSubmit() {
               </div>
               <div class="ml-2 inline-flex space-x-2">
                 <span class="block text-xl font-medium text-gray-700 uppercase">
-                  cambio:
+                  vuelto:
                 </span>
                 <span class="text-xl font-bold text-blue-500 uppercase"
                   >{{ formatearNumero(cambio) }} Gs</span

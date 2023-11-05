@@ -105,7 +105,7 @@ onMounted(() => {
             enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
             leave-to="opacity-0 scale-95">
             <DialogPanel
-              class="w-full max-w-7xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+              class="ml-16 w-full max-w-7xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
 
               <div class="mt-2">
 
@@ -172,7 +172,7 @@ onMounted(() => {
 
               <tr>
                 <td>
-                  <div class=" flex items-center  focus-within:text-white">
+                  <div class=" flex items-center  focus-within:text-white space-x-2 mt-2">
 
                     <button type="button"
                       class=" pl-8 inline-flex justify-center rounded-md border border-transparent bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
