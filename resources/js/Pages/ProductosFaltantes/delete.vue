@@ -97,7 +97,8 @@ function openModal() {
 function remove(id){
 
   router.delete(route('orden.destroy',id))
-    
+  close()
 }
+
 
 </script>

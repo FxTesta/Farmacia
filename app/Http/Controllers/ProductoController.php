@@ -222,7 +222,7 @@ class ProductoController extends Controller
 //mostrar los productos con stock minimo
     public function faltantes(Request $request)
     {      
-         // si hay algun producto con stock nulo actualiza a cero
+        // si hay algun producto con stock nulo actualiza a cero
         Producto::whereNull('stock')
         ->update(['stock' => 0]);
 
@@ -288,8 +288,8 @@ class ProductoController extends Controller
     public function ordendestroy(OrdenDeCompra $producto)
     {
         $producto->delete();
-        //return redirect()->route('faltantes');
-        return redirect()->back();
+        return redirect()->route('faltantes');
+       // return redirect()->back();
         //return $producto;
     }
 };

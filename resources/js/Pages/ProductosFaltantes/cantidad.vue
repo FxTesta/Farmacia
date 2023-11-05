@@ -9,7 +9,7 @@ const props = defineProps({
 });
 
 const form = useForm({
-    stock: props.productos.stock
+    stock: "",
 });
 
 function onSubmit(closePopover) {

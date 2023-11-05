@@ -33,6 +33,7 @@ const obtenerFechaActual = () => {
   fechaActual.value = fecha.toLocaleDateString('es-ES', options);
 };
 
+let proveedor=ref();
 function loadProveedor(query, setOptions) {
   fetch("http://127.0.0.1:8000/proveedores?query=" + query)
     .then(response => response.json())
@@ -42,6 +43,8 @@ function loadProveedor(query, setOptions) {
           return {
             value: proveedores.id,
             label: proveedores.empresa,
+            telefono: proveedores.telefono,
+            email: proveedores.email,
           };
         })
       );
@@ -109,30 +112,30 @@ onMounted(() => {
               </div>
               <div>
                 <div class="div-izquierdo">
-                  <H2 class="font-bold">
+                  <h2 class="font-bold">
                     Detalles del proveedor:
                     <div class="flex space-x-2">
                       <BuscarProveedor placeholder="Buscar Proveedor..." :load-options="loadProveedor"
                         v-model="proveedor" />
                     </div>
-                  </H2>
-                  <H2 class="font-bold">
-                    Email:
-                  </H2>
+                  </h2>
+                  <h2 class="font-bold">
+                    Email:{{proveedor?.email}}
+                  </h2>
 
 
 
-                  <H2 class="font-bold">
-                    Telefono:
-                  </H2>
+                  <h2 class="font-bold">
+                    Telefono: {{proveedor?.telefono}}
+                  </h2>
                 </div>
                 <div class="div-derecho">
-                  <H2 class="font-bold">
+                  <h2 class="font-bold">
                     Detalle de la orden de compra:
-                  </H2>
-                  <H2 class="font-bold">
+                  </h2>
+                  <h2 class="font-bold">
                     Orden#:
-                  </H2>
+                  </h2>
                   <span class="font-bold">Fecha:
 
                     {{ fechaActual }}
