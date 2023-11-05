@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Producto;
+use App\Models\ProductosFaltantes;
 
 class ProductObserver
 {
@@ -19,7 +20,29 @@ class ProductObserver
      */
     public function updated(Producto $producto): void
     {
-        //
+        if ($producto->isDirty('stock') && $producto->stock === 0 || ($producto->stockmin >= $producto->stock)) {
+
+            $productoFaltante = ProductosFaltantes::where('producto_id', $producto->id)->first();
+
+            if (!$productoFaltante) 
+            {
+                ProductosFaltantes::create([
+                    'producto_id' => $producto->id,
+                    'codigo' => $producto->codigo,
+                    'marca' => $producto->marca,
+                    'laboratorio' => $producto->laboratorio,
+                    'estado' => 'Faltante',
+                    'stock' => $producto->stock,
+                    'stockmin' => $producto->stockmin,
+                ]);
+            }else{
+                $productoFaltante->update([
+                    'stock' => $producto->stock,
+                    'stockmin' => $producto->stockmin,
+                ]);
+            }
+        }
+
     }
 
     /**
