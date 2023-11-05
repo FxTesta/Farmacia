@@ -8,7 +8,7 @@ import {
 } from '@headlessui/vue';
 import { PlusIcon,TrashIcon } from "@heroicons/vue/outline";
 import BuscarProveedor from "@/Pages/Compra/BuscarProveedor.vue"
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch, onBeforeUnmount } from 'vue';
 import Delete from "@/Pages/ProductosFaltantes/delete.vue"
 import axios from 'axios';
 
@@ -52,20 +52,34 @@ function loadProveedor(query, setOptions) {
 }
 
 //recuperamos los productos seleccionados para la orden de compra
+
 const productos = ref([]);
 
-const obtenerProductos = () => {
-  axios.get('/orden')
-    .then(response => {
-      productos.value = response.data.productos;
-    })
-    .catch(error => {
-      console.error('Error al obtener productos:', error);
-    });
+const obtenerProductos = async () => {
+  try {
+    const response = await axios.get('/orden');
+    productos.value = response.data.productos;
+  } catch (error) {
+    console.error('Error al obtener productos:', error);
+  }
 };
 
-onMounted(() => {
-  obtenerProductos();
+// Llamar a obtenerProductos inicialmente
+obtenerProductos();
+
+// Observar cambios en la variable 'productos' para mantenerla actualizada
+const stop = watch(productos, async () => {
+  try {
+    const response = await axios.get('/orden');
+    productos.value = response.data.productos;
+  } catch (error) {
+    console.error('Error al obtener productos:', error);
+  }
+});
+
+// Limpiar la función watch cuando el componente se desmonte para evitar fugas de memoria
+onBeforeUnmount(() => {
+  stop();
 });
 
 </script>
@@ -108,7 +122,6 @@ onMounted(() => {
               class="ml-16 w-full max-w-7xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
 
               <div class="mt-2">
-
               </div>
               <div>
                 <div class="div-izquierdo">

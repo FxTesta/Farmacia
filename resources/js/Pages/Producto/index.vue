@@ -7,8 +7,6 @@ import Delete from '@/Pages/Producto/delete.vue';
 import { ref, watch } from "vue"; 
 import Pagination from '@/Components/Pagination.vue';
 import _ from 'lodash';
-import venta from './venta.vue';
-import buscar from './buscar.vue';
 
 const props = defineProps({
 producto: Object,
@@ -27,17 +25,6 @@ watch(search, _.debounce(function (value) {
 
 
 </script>
-<script>
-
-export default {
-  methods: {
-    generarPDF() {
-        const url = '/auditoria';
-        window.open(url, '_blank');
-    },
-  },
-};
-</script>
 <template>
     <Head title="Productos" />
 
@@ -54,8 +41,6 @@ export default {
                 <div class="-mt-10">
                     <div class="flex justify-end">
                        <div class="inline-flex space-x-2 mb-2 mt-2 mr-2">
-                        <button @click="generarPDF">Reporte Auditoria</button>
-                        <buscar/>
                             <div class="mt-1">
                                 <Link 
                                     :href="`/crear-producto/`"
@@ -133,9 +118,6 @@ export default {
                                             </Link>                                        
                                             <div>
                                                 <Delete :producto="productos" :key="productos.id"/>
-                                            </div>
-                                            <div>
-                                                <venta :productos="productos" :key="productos.id"/>                                                    
                                             </div>
                                         </div>
                                                     

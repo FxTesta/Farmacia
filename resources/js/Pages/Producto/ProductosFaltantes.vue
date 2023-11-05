@@ -69,6 +69,7 @@ export default {
                                     class="w-5 h-5 absolute ml-3 pointer-events-none"
                                 />
                                 <input
+                                    id="search"
                                     v-model="search"
                                     type="text"
                                     placeholder="Buscar Productos"
@@ -108,9 +109,13 @@ export default {
                                         <td  class="text-gray-700 py-4 px-2">{{productos.laboratorio}}</td>
                                         <td  class="text-gray-700 py-4 px-2">{{productos.stock}}</td>
                                         <td  class="text-gray-700 py-4 px-2">{{productos.stockmin}}</td>
-                                        <td  class="text-white font-bold bg-red-500 rounded-xl grid place-content-center">{{productos.estado}}</td>
+                                        <td  class="text-white py-4 px-2">
+                                            <div class="bg-red-500 rounded-md p-1 text-center">
+                                                {{productos.estado}}
+                                            </div>
+                                        </td>
                                         <td >
-                                            <div>
+                                            <div class="flex justify-center">
                                                 <Cantidad :productos="productos" :key="productos.id"/>                                                    
                                             </div>
                                                 

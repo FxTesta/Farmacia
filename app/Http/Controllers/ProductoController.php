@@ -137,39 +137,6 @@ class ProductoController extends Controller
         ]);
     }
 
-    public function updatestock(Producto $productos){
-        $cantidad = request('stock');
-        $user = auth()->user();
-        $userName = $user->name;    
-        date_default_timezone_set('America/Asuncion'); 
-        $hora = date('H:i:s');
-        $fecha = Carbon::now();
-        if(($productos->stock >= $cantidad ) and ($cantidad > 0)){
-            $productos->update([
-            'stock' => $productos->stock-$cantidad,
-            
-            ]);
-            
-           // $sprint1 = Sprint::where('project_id', $project->id)->get()->pluck('id');
-
-           StockAudit::create([
-                              
-                'usuario'=> $userName,
-                'id_articulo'=>$productos->id,
-                'codigo'=>$productos->codigo,
-                'articulo'=>$productos->marca,
-                'stockanterior'=>$productos->stock + $cantidad,
-                'stockactual'=>$productos->stock,
-                'hora'=>$hora,
-                'fecha'=>$fecha,
-            ]);
-
-
-            return redirect()->route('producto')->with('toast', 'Stock Actualizado');
-        }
-     
-
-    }
     public function update(Producto $producto)
     {
         request()->validate([
@@ -274,4 +241,40 @@ class ProductoController extends Controller
        // return redirect()->back();
         //return $producto;
     }
+
+    
+        /* public function updatestock(Producto $productos){
+        $cantidad = request('stock');
+        $user = auth()->user();
+        $userName = $user->name;    
+        date_default_timezone_set('America/Asuncion'); 
+        $hora = date('H:i:s');
+        $fecha = Carbon::now();
+        if(($productos->stock >= $cantidad ) and ($cantidad > 0)){
+            $productos->update([
+            'stock' => $productos->stock-$cantidad,
+            
+            ]);
+            
+           // $sprint1 = Sprint::where('project_id', $project->id)->get()->pluck('id');
+
+           StockAudit::create([
+                              
+                'usuario'=> $userName,
+                'id_articulo'=>$productos->id,
+                'codigo'=>$productos->codigo,
+                'articulo'=>$productos->marca,
+                'stockanterior'=>$productos->stock + $cantidad,
+                'stockactual'=>$productos->stock,
+                'hora'=>$hora,
+                'fecha'=>$fecha,
+            ]);
+
+
+            return redirect()->route('producto')->with('toast', 'Stock Actualizado');
+        }
+     
+
+    } */
 };
+

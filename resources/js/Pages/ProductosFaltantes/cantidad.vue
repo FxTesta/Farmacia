@@ -1,83 +1,113 @@
-
 <script setup>
-import { Head, useForm, Link } from '@inertiajs/vue3';
-import { Popover, PopoverButton, PopoverPanel, PopoverOverlay } from '@headlessui/vue';
-import {PlusCircleIcon} from "@heroicons/vue/outline";
+import { Head, useForm, Link } from "@inertiajs/vue3";
+import { ref, computed, watch, onMounted } from "vue";
+import {
+  TransitionRoot,
+  TransitionChild,
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+} from "@headlessui/vue";
+
+import { PlusCircleIcon } from "@heroicons/vue/outline";
+
+const isOpen = ref(false);
+
+function closeModal() {
+  isOpen.value = false;
+}
+function openModal() {
+  isOpen.value = true;
+}
 
 const props = defineProps({
-    productos: Object
+  productos: Object,
 });
 
 const form = useForm({
-    stock: "",
+  stock: "",
 });
 
-function onSubmit(closePopover) {
-    form.put(route('producto.crearorden',{productos: props.productos.id}),{
-        onSuccess: () => {
-            closePopover();
-        },
-    });
-    
+function onSubmit() {
+  form.put(route("producto.crearorden", { productos: props.productos.id }), {
+    onSuccess: () => {
+      isOpen.value = false;
+    },
+  });
 }
-
 </script>
 
 <template>
-    <Popover v-slot="{ open }" class="">
-                                <PopoverButton
-                                    :class="open ? 'bg-white/30 text-blue-600' : ''"
-                                    class="w-8 h-8 text-black hover:bg-black/30 rounded-md grid place-content-center"
-                                >
-                                <PlusCircleIcon class="w-7 h-7" />
-                                </PopoverButton>
-                                <PopoverOverlay class="z-10 fixed inset-0 bg-blue opacity-60" />
+  <button
+    type="button"
+    @click="openModal"
+    class="w-8 h-8 text-black hover:bg-black/30 rounded-md grid place-content-center"
+  >
+    <PlusCircleIcon class="w-7 h-7" />
+  </button>
+  <TransitionRoot appear :show="isOpen" as="template">
+    <Dialog as="div" @close="closeModal" class="relative z-10">
+      <TransitionChild
+        as="template"
+        enter="duration-300 ease-out"
+        enter-from="opacity-0"
+        enter-to="opacity-100"
+        leave="duration-200 ease-in"
+        leave-from="opacity-100"
+        leave-to="opacity-0"
+      >
+        <div class="fixed inset-0 bg-black bg-opacity-25" />
+      </TransitionChild>
 
-                                <transition
-                                    enter-active-class="transition duration-200 ease-out"
-                                    enter-from-class="translate-y-1 opacity-0"
-                                    enter-to-class="translate-y-0 opacity-100"
-                                    leave-active-class="transition duration-150 ease-in"
-                                    leave-from-class="translate-y-0 opacity-100"
-                                    leave-to-class="translate-y-1 opacity-0"
-                                >
-                                    <PopoverPanel
-                                    :focus="true"
-                                    v-slot="{close}"
-                                    class="absolute left-1/2 z-10 w-screen max-w-sm -translate-x-1/3 transform px-4 sm:px-0 "
-                                    >
-                                        <div
-                                            class="p-3 bg-cyan-100 border border-gray-100 overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
-                                        >
+      <div class="fixed inset-0 overflow-y-auto">
+        <div
+          class="flex min-h-full items-center justify-center p-4 text-center"
+        >
+          <TransitionChild
+            as="template"
+            enter="duration-300 ease-out"
+            enter-from="opacity-0 scale-95"
+            enter-to="opacity-100 scale-100"
+            leave="duration-200 ease-in"
+            leave-from="opacity-100 scale-100"
+            leave-to="opacity-0 scale-95"
+          >
+            <DialogPanel
+              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-cyan-100 p-6 text-left align-middle shadow-xl transition-all"
+            >
+              <DialogTitle
+                as="h3"
+                class="text-lg font-medium leading-6 text-gray-900"
+              >
+              Cantidad a solicitar
+            </DialogTitle>
 
-                                        <form @submit.prevent="onSubmit(close)">
-                                            <label class="block text-sm text-gray-800 mb-2 font-bold" 
-                                                for="stock">Cantidad a solicitar: </label>
-                                            
-                                            <div>
-                                                <input 
-                                                    name="stock"
-                                                    id="stock"
-                                                    type="number" 
-                                                    v-model="form.stock"
-                                                    class="border border-gray-300 placeholder-gray-400 rounded-md mt-1 block w-full bg-white text-black text-sm shadow-sm"                                                    
-                                                    placeholder="cantidad">
-                                                
-                                                    
-                                            </div>
-                                            
-                                            
-                                            <div class="flex justify-end mt-5">
-                                                <button 
-                                                    class="px-4 py-2 font-medium shadow-sm text-white rounded-md text-sm bg-green-700 hover:bg-green-500 focus:ring-1 focus:ring-offset-1 focus:ring-gray-200 focus:outline-none "
-                                                    >Agregar a la orden
-                                                </button>
-                                                
-                                            </div>
-                                        </form>
-                                        
-                                        </div>
-                                    </PopoverPanel>
-                                </transition>
-                            </Popover>
+              <div class="mt-4 space-x-3">
+                <form @submit.prevent="onSubmit(close)">
+                  <div>
+                    <input
+                      name="stock"
+                      id="stock"
+                      type="number"
+                      v-model="form.stock"
+                      class="border border-gray-300 placeholder-gray-400 rounded-md mt-1 block w-full bg-white text-black text-sm shadow-sm"
+                      placeholder="cantidad"
+                    />
+                  </div>
+
+                  <div class="flex justify-end mt-5">
+                    <button
+                      class="px-4 py-2 font-medium shadow-sm text-white rounded-md text-sm bg-green-700 hover:bg-green-500 focus:ring-1 focus:ring-offset-1 focus:ring-gray-200 focus:outline-none"
+                    >
+                      Agregar a la orden
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
+        </div>
+      </div>
+    </Dialog>
+  </TransitionRoot>
 </template>
