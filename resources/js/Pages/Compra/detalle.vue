@@ -101,7 +101,7 @@ const props = defineProps({
                                 </thead>
                                 <tbody class="divide-y divide-gray-400 divide-opacity-30">
                                     <tr v-for="factura_compras in detallefact.detallefactura">
-                                        <td class="text-gray-700 py-4"> {{ factura_compras.factura_compra_id }} </td>
+                                        <td class="text-gray-700 py-4"> {{ factura_compras.producto_id }} </td>
                                         <td class="text-gray-700 py-4">{{ factura_compras.codigo }}</td>
                                         <td class="text-gray-700 py-4">{{ factura_compras.marca }}</td>
                                         <td class="text-gray-700 py-4">{{ factura_compras.preciocompra }}</td>
