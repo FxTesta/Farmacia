@@ -20,7 +20,8 @@ class ProductObserver
      */
     public function updated(Producto $producto): void
     {
-        if ($producto->isDirty('stock') && $producto->stock === 0 || ($producto->stockmin >= $producto->stock)) {
+        if ($producto->isDirty('stock') && $producto->stock <= 0 || ($producto->stockmin >= $producto->stock)) 
+        {
 
             $productoFaltante = ProductosFaltantes::where('producto_id', $producto->id)->first();
 

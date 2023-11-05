@@ -191,6 +191,8 @@ class ProductoController extends Controller
             'descuento' => ['nullable'],
             'presentacion' => ['nullable'],
             'estante' => ['nullable'],
+            'iva' => ['required'],
+            'droga' => ['nullable'],
             
             
         ]);
@@ -213,6 +215,8 @@ class ProductoController extends Controller
             'descuento' => request('descuento'),
             'presentacion' => request('presentacion'),
             'estante' => request('estante'),
+            'iva' => request('iva'),
+            'droga' => request('droga'),
             
         ]);
         if($ven > $aler){
