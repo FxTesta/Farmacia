@@ -26,9 +26,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call(AdminSeeder::class);
 
-        /*
-        Producto::factory(30)->create();
-        Cliente::factory(30)->create();
-        Proveedor::factory(30)->create();*/
+        
+        /*Producto::factory(1000)->create();
+        Cliente::factory(1000)->create();
+        Proveedor::factory(1000)->create();*/
     }
 }
