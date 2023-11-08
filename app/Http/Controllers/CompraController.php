@@ -133,4 +133,15 @@ class CompraController extends Controller
        
        
     }
+
+
+    //Nota de credito
+    public function notaCredito()
+    {
+
+        return Inertia::render('Compra/NotaCredito/NotaCredito', [
+        ]);
+    }
+
+    
 }

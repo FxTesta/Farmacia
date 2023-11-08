@@ -10,16 +10,19 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {   //a
-        Schema::create('factura_compras', function (Blueprint $table) {
+    {
+        Schema::create('nota_creditos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('factura_id')->constrained('factura_compras')->onDelete('cascade');
+            $table->foreignId('detalle_factura_compra_id')->constrained('detalle_factura_compras')->onDelete('cascade');
             $table->foreignId('proveedor_id')->constrained('proveedores')->onDelete('cascade');
-            $table->string('proveedor_nombre');
             $table->foreignId('users_id')->constrained('users')->onDelete('cascade');
+            $table->string('nro_nota_credito')->unique();
+            $table->string('nrofactura');
             $table->string('username');
-            $table->bigInteger('nrofactura')->unique();
-            $table->date('fechafactura');
-            $table->integer('preciototal');
+            $table->string('proveedor_nombre');
+            $table->date('fecha');
+            $table->integer('preciototal');            
             $table->timestamps();
         });
     }
@@ -29,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('factura_compras');
+        Schema::dropIfExists('nota_creditos');
     }
 };

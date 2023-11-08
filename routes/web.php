@@ -106,6 +106,9 @@ Route::controller(CompraController::class)->middleware('auth')->group(function (
     Route::get('/compra/listar', 'listarCompras')->name('listarcompras');
 
     Route::get('/compra/listar/detalle/{detallefact}', 'detalles')->name('detalle');
+
+    //Nota de credito
+    Route::get('/nota-credito', 'notaCredito')->name('notacredito');
 });
 
 //VENTAS

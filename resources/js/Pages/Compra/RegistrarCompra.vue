@@ -302,19 +302,6 @@ const validateInput2 = () => {
       <div class="px-4 pt-4">
         <div class="bg-white shadow-sm sm:rounded-lg">
           <div>
-            <!--  <form @submit.prevent="">
-                            <Popover>
-                            <PopoverButton as="div" class="border w-fit border-blue-300 hover:bg-blue-500" >
-                                <button ref="primero" >botoncito pa</button>
-                                
-                            </PopoverButton>
-                            </Popover>-->
-            <!--<BuscarProducto ref="primero"/>
-                        <TextInput ref="inputField" @keyup.enter="focusNextInput(2)" type="text"/>
-                        <TextInput ref="inputField2" @keyup.enter="focusButton" type="text"/>
-                        <button ref="boton" @click="focusInput" >Hola</button>
-                        </form>-->
-
             <form @submit.prevent="onSubmit()">
               <div class="mt-2 ml-4 inline-flex space-x-2">
                 <div class="flex space-x-2">

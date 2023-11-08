@@ -16,7 +16,6 @@ const props = defineProps({
 let search = ref(props.filters.search);
 
 watch(search, _.debounce(function (value) {
-    console.log('disparado');
     router.get('/cliente', { search: value }, {
         preserveState: true,
         replace: true
