@@ -127,19 +127,21 @@ onBeforeUnmount(() => {
                 <div class="div-izquierdo">
                   <h2 class="font-bold">
                     Detalles del proveedor:
-                    <div class="flex space-x-2">
+                    <div class="flex space-x-2 ">
                       <BuscarProveedor placeholder="Buscar Proveedor..." :load-options="loadProveedor"
                         v-model="proveedor" />
                     </div>
                   </h2>
-                  <h2 class="font-bold">
-                    Email:{{proveedor?.email}}
+                  <h2 class="font-bold ">
+                    Email :
+                    <h1 class="text-red-500">{{proveedor?.email}}</h1>
                   </h2>
 
 
-
-                  <h2 class="font-bold">
-                    Telefono: {{proveedor?.telefono}}
+ 
+                  <h2 class="font-bold inline-flex">
+                    Telefono :
+                     <h1 class="text-red-500">{{proveedor?.telefono}}</h1>
                   </h2>
                 </div>
                 <div class="div-derecho">
@@ -149,11 +151,11 @@ onBeforeUnmount(() => {
                   <h2 class="font-bold">
                     Orden#:
                   </h2>
-                  <span class="font-bold">Fecha:
-
+                  <h2 class="font-bold inline-flex">Fecha : 
+                    <h1 class="text-red-500">
                     {{ fechaActual }}
-
-                  </span>
+                      </h1>
+                  </h2>
                 </div>
               </div>
 

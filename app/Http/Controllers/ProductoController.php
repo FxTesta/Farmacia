@@ -199,7 +199,10 @@ class ProductoController extends Controller
         //obtenemos los productos para visualizar y filtrar
         $producto= ProductosFaltantes::when($request->search, function($query, $search){
             // filtra la busqueda por marca del producto o codigo de barras
-            $query->where('marca', 'LIKE', "%{$search}%" )->orWhere('codigo', 'LIKE', "{$search}%")->orWhere('laboratorio', 'LIKE', "%{$search}%");
+            $query->where('marca', 'LIKE', "%{$search}%" )
+                  ->orWhere('codigo', 'LIKE', "{$search}%")
+                  ->orWhere('laboratorio', 'LIKE', "%{$search}%")
+                  ->orWhere('estado', 'LIKE', "%{$search}%");
         })
         ->paginate(15)
         ->withQueryString();     
@@ -220,8 +223,11 @@ class ProductoController extends Controller
                 'codigo'=> $productos->codigo,
                 'marca'=>$productos->marca,
                 'laboratorio'=>$productos->laboratorio,
-                'estado'=>'Pendiente',
+                'estado'=>'En Proceso',
                 'cantidad'=>$cantidad,
+        ]);
+        ProductosFaltantes::where('codigo', $productos->codigo)->update([
+            'estado' => 'En proceso'
         ]);
 
 
@@ -236,10 +242,17 @@ class ProductoController extends Controller
 
     public function ordendestroy(OrdenDeCompra $producto)
     {
+        $codigoProducto = $producto->codigo;
+
+        // Buscar el registro correspondiente en ProductosFaltantes y actualizar el campo 'estado'
+        $productoFaltante = ProductosFaltantes::where('codigo', $codigoProducto)->first();
+
+         // Verificar si se encontró el producto faltante
+        if ($productoFaltante) {
+            $productoFaltante->update(['estado' => 'Faltante']); // Actualiza el campo 'estado' 
+        }
         $producto->delete();
         return redirect()->route('faltantes');
-       // return redirect()->back();
-        //return $producto;
     }
 
     

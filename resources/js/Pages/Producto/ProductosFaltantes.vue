@@ -15,10 +15,6 @@ producto: Object,
 filters: Object,
 });
  
-
-
-
-
 let search = ref(props.filters.search);
 
 watch(search, _.debounce(function (value) {
@@ -110,12 +106,15 @@ export default {
                                         <td  class="text-gray-700 py-4 px-2">{{productos.stock}}</td>
                                         <td  class="text-gray-700 py-4 px-2">{{productos.stockmin}}</td>
                                         <td  class="text-white py-4 px-2">
-                                            <div class="bg-red-500 rounded-md p-1 text-center">
+                                            <div v-if="productos.estado=='Faltante'" class="bg-red-500 rounded-md p-1 text-center">
+                                                {{productos.estado}}
+                                            </div>
+                                            <div v-if="productos.estado=='En proceso'" class="bg-green-700 rounded-md p-1 text-center">
                                                 {{productos.estado}}
                                             </div>
                                         </td>
                                         <td >
-                                            <div class="flex justify-center">
+                                            <div v-if="productos.estado=='Faltante'" class="flex justify-center">
                                                 <Cantidad :productos="productos" :key="productos.id"/>                                                    
                                             </div>
                                                 
