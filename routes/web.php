@@ -71,13 +71,16 @@ Route::controller(ProductoController::class)->middleware('auth')->group(function
     Route::post('/producto', 'store')->name('producto.store');
     Route::get('/editar-producto/{producto_id}', 'edit')->name('producto.edit');
     Route::put('/editar-producto/{producto}', 'update')->name('producto.update');
-    Route::put('/producto/{productos}', 'updatestock')->name('producto.updatestock');
     Route::delete('/producto/delete/{producto}', 'destroy')->name('producto.destroy');
 
     Route::get('/orden', 'indexorden')->name('ordenes');
     Route::get('/productosfaltantes', 'faltantes')->name('faltantes');
     Route::put('/producto/{productos}', 'crearorden')->name('producto.crearorden');
     Route::delete('/producto/{producto}', 'ordendestroy')->name('orden.destroy');
+
+    //Crear ordencompra final
+    Route::post('/crear-ordencompra', 'crearOrdenCompraFinal')->name('create.ordencompra');
+
 });
 
 

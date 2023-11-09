@@ -13,12 +13,9 @@ import Cantidad from '@/Pages/ProductosFaltantes/cantidad.vue';
 const props = defineProps({
 producto: Object,
 filters: Object,
+user: Object,
 });
  
-
-
-
-
 let search = ref(props.filters.search);
 
 watch(search, _.debounce(function (value) {
@@ -44,7 +41,7 @@ export default {
 
 </script>
 <template>
-    <Head title="Dashboard" />
+    <Head title="Faltantes" />
 
     <SideBar />
     <AuthenticatedLayout>
@@ -59,7 +56,7 @@ export default {
                 <div class="-mt-10">
                     <div class="flex justify-end">
                        <div class="inline-flex space-x-2 mb-2 mt-2 mr-2">
-                       <CrearOrden/>
+                       <CrearOrden :user="props.user"/>
                      
                             
                             <div
@@ -110,12 +107,15 @@ export default {
                                         <td  class="text-gray-700 py-4 px-2">{{productos.stock}}</td>
                                         <td  class="text-gray-700 py-4 px-2">{{productos.stockmin}}</td>
                                         <td  class="text-white py-4 px-2">
-                                            <div class="bg-red-500 rounded-md p-1 text-center">
+                                            <div v-if="productos.estado=='Faltante'" class="bg-red-500 rounded-md p-1 text-center">
+                                                {{productos.estado}}
+                                            </div>
+                                            <div v-if="productos.estado=='En proceso'" class="bg-green-700 rounded-md p-1 text-center">
                                                 {{productos.estado}}
                                             </div>
                                         </td>
                                         <td >
-                                            <div class="flex justify-center">
+                                            <div v-if="productos.estado=='Faltante'" class="flex justify-center">
                                                 <Cantidad :productos="productos" :key="productos.id"/>                                                    
                                             </div>
                                                 
