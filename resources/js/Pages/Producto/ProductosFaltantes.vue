@@ -13,6 +13,7 @@ import Cantidad from '@/Pages/ProductosFaltantes/cantidad.vue';
 const props = defineProps({
 producto: Object,
 filters: Object,
+user: Object,
 });
  
 let search = ref(props.filters.search);
@@ -40,7 +41,7 @@ export default {
 
 </script>
 <template>
-    <Head title="Dashboard" />
+    <Head title="Faltantes" />
 
     <SideBar />
     <AuthenticatedLayout>
@@ -55,7 +56,7 @@ export default {
                 <div class="-mt-10">
                     <div class="flex justify-end">
                        <div class="inline-flex space-x-2 mb-2 mt-2 mr-2">
-                       <CrearOrden/>
+                       <CrearOrden :user="props.user"/>
                      
                             
                             <div

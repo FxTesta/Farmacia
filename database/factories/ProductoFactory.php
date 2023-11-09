@@ -43,7 +43,7 @@ class ProductoFactory extends Factory
             'marca' => $this->faker->word,
             'droga' => $this->faker->word,
             'venta' => $this->faker->randomElement(['Libre', 'Con receta']),
-            'laboratorio' => $this->faker->optional()->company,
+            'laboratorio' => $this->faker->company,
             'vencimiento' => $vencimiento,
             'alerta' => $alerta,
             'codigo' => $this->faker->unique()->numberBetween(1000000, 9999999),

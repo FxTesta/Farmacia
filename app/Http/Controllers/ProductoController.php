@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Inertia\Inertia;
 use App\Models\Producto;
 use App\Models\Categoria;
+use App\Models\OrdenCompraCabecera;
+use App\Models\OrdenCompraDetalle;
 use App\Models\StockAudit;
 use Illuminate\Http\Request;
 use App\Models\OrdenDeCompra;
@@ -15,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProductoController extends Controller
 {
-    
+
 
     public function index(Request $request)
     {
@@ -35,16 +37,16 @@ class ProductoController extends Controller
 
 
         //hola
-        $producto = Producto::when($request->search, function($query, $search){
+        $producto = Producto::when($request->search, function ($query, $search) {
             // filtra la busqueda por marca del producto o codigo de barras
-            $query->where('marca', 'LIKE', "%{$search}%" )->orWhere('codigo', 'LIKE', "{$search}%")->orWhere('droga', 'LIKE', "%{$search}%");
+            $query->where('marca', 'LIKE', "%{$search}%")->orWhere('codigo', 'LIKE', "{$search}%")->orWhere('droga', 'LIKE', "%{$search}%");
         })
-        ->paginate(15)
-        ->withQueryString();
+            ->paginate(15)
+            ->withQueryString();
 
         $filters = $request->only('search');
 
-        return Inertia::render('Producto/index',[
+        return Inertia::render('Producto/index', [
             'producto' => $producto,
             'filters' => $filters,
         ]);
@@ -52,7 +54,7 @@ class ProductoController extends Controller
 
 
     public function create()
-    {    
+    {
 
         //añadir categoría para que cargue
 
@@ -64,7 +66,7 @@ class ProductoController extends Controller
         ]);*/
 
 
-       return Inertia::render('Producto/create');
+        return Inertia::render('Producto/create');
     }
 
     public function store(Request $request)
@@ -80,7 +82,7 @@ class ProductoController extends Controller
             'vencimiento' => 'nullable',
             'alerta' => 'nullable|before_or_equal:vencimiento',
             'codigo' => 'required',
-            'codigo' => 'required|unique:'.Producto::class,
+            'codigo' => 'required|unique:' . Producto::class,
             'precioventa' => 'required',
             'preciocompra' => 'nullable',
             'stock' => 'nullable',
@@ -114,25 +116,24 @@ class ProductoController extends Controller
             'iva' => $request->iva,
             //'categorianombre' => $categorianombre->name,
         ]);
-        
+
 
         return redirect()->route('producto')->with('toast', 'Producto Creado');
-        
     }
 
-   
+
 
     public function destroy(Producto $producto)
     {
         $producto->delete();
         return redirect()->back()->with('error', 'Producto Eliminado');
     }
-    
+
     public function edit($producto_id)
     {
         $producto = Producto::find($producto_id);
 
-        return Inertia::render('Producto/edit',[
+        return Inertia::render('Producto/edit', [
             'producto' => $producto,
         ]);
     }
@@ -158,13 +159,13 @@ class ProductoController extends Controller
             'estante' => ['nullable'],
             'iva' => ['required'],
             'droga' => ['nullable'],
-            
-            
+
+
         ]);
         $ven = request('vencimiento');
         $aler = request('alerta');
         $producto->update([
-            
+
             'categoria' => request('categoria'),
             'descripcion' => request('descripcion'),
             'marca' => request('marca'),
@@ -182,49 +183,52 @@ class ProductoController extends Controller
             'estante' => request('estante'),
             'iva' => request('iva'),
             'droga' => request('droga'),
-            
+
         ]);
-        if($ven > $aler){
+        if ($ven > $aler) {
             $producto->update([
-             'alerta' => request('alerta'),
+                'alerta' => request('alerta'),
             ]);
             return redirect()->route('producto')->with('toast', 'Producto Editado');
-         };
-        
+        };
     }
-//mostrar los productos con stock minimo
+    //mostrar los productos con stock minimo
     public function faltantes(Request $request)
-    {     
+    {
+
+        $user = auth()->user();
 
         //obtenemos los productos para visualizar y filtrar
-        $producto= ProductosFaltantes::when($request->search, function($query, $search){
+        $producto = ProductosFaltantes::when($request->search, function ($query, $search) {
             // filtra la busqueda por marca del producto o codigo de barras
-            $query->where('marca', 'LIKE', "%{$search}%" )
-                  ->orWhere('codigo', 'LIKE', "{$search}%")
-                  ->orWhere('laboratorio', 'LIKE', "%{$search}%")
-                  ->orWhere('estado', 'LIKE', "%{$search}%");
+            $query->where('marca', 'LIKE', "%{$search}%")
+                ->orWhere('codigo', 'LIKE', "{$search}%")
+                ->orWhere('laboratorio', 'LIKE', "%{$search}%")
+                ->orWhere('estado', 'LIKE', "%{$search}%");
         })
-        ->paginate(15)
-        ->withQueryString();     
-        
+            ->paginate(15)
+            ->withQueryString();
+
         $filters = $request->only('search');
-        return Inertia::render('Producto/ProductosFaltantes',[
+        return Inertia::render('Producto/ProductosFaltantes', [
             'producto' => $producto,
             'filters' => $filters,
+            'user' => $user,
         ]);
     }
-    
-//cargar orden de productos faltantes
-    public function crearorden(Producto $productos){
+
+    //cargar orden de productos faltantes
+    public function crearorden(ProductosFaltantes $productos)
+    {
         $cantidad = request('stock');
-          
+
         OrdenDeCompra::create([
-                            
-                'codigo'=> $productos->codigo,
-                'marca'=>$productos->marca,
-                'laboratorio'=>$productos->laboratorio,
-                'estado'=>'En Proceso',
-                'cantidad'=>$cantidad,
+
+            'codigo' => $productos->codigo,
+            'marca' => $productos->marca,
+            'laboratorio' => $productos->laboratorio,
+            'estado' => 'En Proceso',
+            'cantidad' => $cantidad,
         ]);
         ProductosFaltantes::where('codigo', $productos->codigo)->update([
             'estado' => 'En proceso'
@@ -232,8 +236,8 @@ class ProductoController extends Controller
 
 
         return redirect()->route('faltantes');
-    }   
-    
+    }
+
     public function indexorden(Request $request)
     {
         $productos = OrdenDeCompra::all();
@@ -247,7 +251,7 @@ class ProductoController extends Controller
         // Buscar el registro correspondiente en ProductosFaltantes y actualizar el campo 'estado'
         $productoFaltante = ProductosFaltantes::where('codigo', $codigoProducto)->first();
 
-         // Verificar si se encontró el producto faltante
+        // Verificar si se encontró el producto faltante
         if ($productoFaltante) {
             $productoFaltante->update(['estado' => 'Faltante']); // Actualiza el campo 'estado' 
         }
@@ -255,8 +259,66 @@ class ProductoController extends Controller
         return redirect()->route('faltantes');
     }
 
-    
-        /* public function updatestock(Producto $productos){
+    //crea orden de compra para la vista de listar ordenes de compra
+    public function crearOrdenCompraFinal(Request $request)
+    {
+
+        // se obtiene el array donde se cargo la lista de productos comprados
+        $data = $request->input('producto');
+
+        //en caso de que "arrayProductos" sea nulo o vacio no se guarda nada en la BD
+        if (empty($data)) {
+            // El array está vacío o nulo o contiene un valor considerado vacío por empty()
+        } else {
+
+            //validación
+            $request->validate([
+                'usuario' => 'required',
+                'codigo' => 'required',
+                'proveedornombre' => 'required',
+                'proveedorid' => 'required',
+                'fecha' => 'required',
+            ]); 
+
+            $ultimoOrden = OrdenCompraCabecera::max('orden');
+            $nuevoOrden = $ultimoOrden + 1;
+
+            //Se realiza carga de cabecera factura
+            $orden = OrdenCompraCabecera::create([
+
+                'username' => $request->usuario,
+                'users_id' => $request->codigo,
+                'proveedornombre' => $request->proveedornombre,
+                'proveedor_id' => $request->proveedorid,
+                'fecha' => $request->fecha,
+                'orden' => $nuevoOrden,
+            ]);
+
+            //OBTENER EL ID DE FACTURA COMPRA CREADO ARRIBA, PARA EL CREATE DE ABAJO
+            $ordencompra = OrdenCompraCabecera::where('id', $orden->id)->first();
+
+            // Itera a través de los datos del array y crea un nuevo registro para cada producto
+             foreach ($data as $producto) {
+                OrdenCompraDetalle::create([
+                    'orden_compra_id' => $ordencompra->id, //envia el id de cabecera factura para asociar con detallefacturacomrpa
+                    'producto_id' => $producto['id'],
+                    'codigo' => $producto['codigo'],
+                    'marca' => $producto['marca'],
+                    'estado' => $producto['estado'],
+                    'cantidad' => $producto['cantidad'],
+                    'laboratorio' => $producto['laboratorio'],
+                ]);
+            }
+
+            OrdenDeCompra::truncate();
+
+            return redirect('/productosfaltantes')->with('toast', 'Orden Compra Registrada');
+
+        }
+    }
+
+
+    /* public function updatestock(Producto $productos){
         $cantidad = request('stock');
         $user = auth()->user();
         $userName = $user->name;    
@@ -290,4 +352,3 @@ class ProductoController extends Controller
 
     } */
 };
-
