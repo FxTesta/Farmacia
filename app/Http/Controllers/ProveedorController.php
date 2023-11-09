@@ -63,7 +63,8 @@ class ProveedorController extends Controller
         return redirect()->route('proveedor')->with('toast', 'Proveedor Creado');
         
     }
-
+//prueba aron
+    
     public function destroy(Proveedor $proveedor)
     {
         $proveedor->delete();
@@ -106,5 +107,27 @@ class ProveedorController extends Controller
         ]);
         return redirect()->route('proveedor')->with('toast', 'Proveedor Editado');
     }
-    
+
+    public function facturaProveedor(Proveedor $proveedor, Request $request)
+    {
+        $proveedor->load('facturacompra'); //carga la relación, sirve para obtener el id de proveedor en la url (router.get)
+
+        $facturaCompra = $proveedor->facturacompra(); // obtiene la relación entre proveedor y factura
+
+        $facturaCompra->when($request->search, function($query, $search){
+            //buscar por numero de factura o fecha
+            $query->where('nrofactura', 'LIKE', "{$search}%")->orWhere('fechafactura', 'LIKE', "{$search}%");;
+        }); //query de busqueda según la relación obtenida
+        
+        $facturaCompra = $facturaCompra->paginate(15)->withQueryString(); //se hace de esta forma por que $facturaCompra es una colección y no un objeto
+
+
+        $filters = $request->only('search');
+
+        return Inertia::render('Proveedor/listarFactura',[
+          'proveedor' => $proveedor,    
+          'filters' => $filters,
+          'facturaCompra' => $facturaCompra,
+        ]);       
+    }
 }

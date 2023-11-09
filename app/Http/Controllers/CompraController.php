@@ -113,7 +113,7 @@ class CompraController extends Controller
 
         $lista = FacturaCompra::when($request->search, function ($query, $search) {
             //filtra la busqueda por nombre proveedor o nrofactura
-            $query->where('proveedor_nombre', 'LIKE', "%{$search}%")->orWhere('nrofactura', 'LIKE', "{$search}%");
+            $query->where('proveedor_nombre', 'LIKE', "%{$search}%" )->orWhere('nrofactura', 'LIKE', "{$search}%")->orWhere('fechafactura', 'LIKE', "{$search}%");
         })
             ->paginate(15)
             ->withQueryString();
@@ -195,4 +195,25 @@ class CompraController extends Controller
 
         
     }
+
+    public function listarComprasProveedor(Request $request)
+    {
+        
+        $lista = FacturaCompra::when($request->search, function($query, $search){
+            //filtra la busqueda por nombre proveedor
+            $query->where('proveedor_nombre', 'LIKE', "%{$search}%" );
+        })
+        ->paginate(15)
+        ->withQueryString();
+
+        $filters = $request->only('search');
+        
+
+        return Inertia::render('Compra/ListarCompraProveedor',[
+            'lista' => $lista,
+            'filters' => $filters,
+        ]);
+    }
+
+
 }

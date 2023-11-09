@@ -23,6 +23,7 @@ class ClienteFactory extends Factory
             'callelateral' => $this->faker->streetName,
             'referencia' => $this->faker->sentence,
             'telefono' => $this->faker->numerify('##########'),
+            'estado' => $this->faker->streetName,
             'email' => $this->faker->unique()->safeEmail,
         ];
     }

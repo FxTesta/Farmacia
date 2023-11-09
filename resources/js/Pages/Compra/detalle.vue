@@ -4,6 +4,20 @@ import Layout from '@/Layouts/Layout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import TextInput from '@/Components/TextInput.vue';
 import InputLabel from '@/Components/InputLabel.vue';
+import { ref } from 'vue';
+
+
+/* 
+const formattedNroFactura = ref('');
+
+const formatNroFactura = (nroFactura) => {
+    const numericChars = nroFactura.replace(/\D/g, '');
+    const groups = numericChars.match(/^(\d{0,3})(\d{0,3})(\d{0,7})$/);
+    const nonEmptyGroups = groups.slice(1).filter(group => group !== undefined && group !== '');
+    return nonEmptyGroups.length > 0 ? nonEmptyGroups.join('-') : '';
+};
+ */
+
 
 const props = defineProps({
     detallefact: Object,
@@ -49,11 +63,10 @@ const props = defineProps({
 
                                 <div class="flex space-x-2">
                                     <InputLabel for="nrofactura" value="Nro Factura:" class="text-gray-600 mt-2 " />
-
-                                    <TextInput id="nrofactura" type="number" class="mt-1 w-40 h-8 bg-gray-200 text-gray-600"
-                                        v-model="props.detallefact.nrofactura" required autocomplete="nrofactura" />
+                                    <TextInput id="nrofactura" type="text" class="mt-1 w-40 h-8 bg-gray-200 text-gray-600"
+                                        v-model="props.detallefact.nrofactura" disabled required
+                                        autocomplete="nrofactura" />
                                 </div>
-
                                 <div class="flex space-x-2">
                                     <InputLabel for="fechafactura" value="Fecha Factura:" class="text-gray-600 mt-2 " />
 

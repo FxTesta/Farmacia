@@ -15,6 +15,7 @@ const props = defineProps({
 
 let search = ref(props.filters.search);
 
+
 watch(search, _.debounce(function (value) {
     console.log('disparado');
     router.get('/proveedor', { search: value }, {
@@ -91,6 +92,14 @@ watch(search, _.debounce(function (value) {
 
                                             <div>
                                                 <Delete :proveedor="proveedores" :key="proveedores.id" />
+                                            </div>
+                                            <div>
+                                                <Link :href="`/proveedor/listar/${proveedores.id}`" as="button"
+                                                    class="text-white font-bold bg-cyan-500 hover:bg-cyan-600 rounded-xl grid place-content-center">
+                                                <button class="px-2 py-1">
+                                                    facturas
+                                                </button>
+                                         </Link>
                                             </div>
                                         </div>
 

@@ -60,6 +60,10 @@ Route::controller(ClienteController::class)->middleware('auth')->group(function 
     Route::get('/editar-cliente/{cliente_id}', 'edit')->name('cliente.edit');
     Route::put('/editar-cliente/{cliente}', 'update')->name('cliente.update');
     Route::delete('/cliente/delete/{cliente}', 'destroy')->name('cliente.destroy');
+
+    //LISTAR FACTURAS POR CLIENTE
+    Route::get('/cliente/listar/{cliente}', 'facturaCliente')->name('factura.cliente');
+
 });
 
 
@@ -93,6 +97,10 @@ Route::controller(ProveedorController::class)->middleware('auth')->group(functio
     Route::put('/editar-proveedor/{proveedor}', 'update')->name('proveedor.update');
     Route::delete('/proveedor/delete/{proveedor}', 'destroy')->name('proveedor.destroy');
 
+    //listar facturas del proveedor
+    Route::get('/proveedor/listar/{proveedor}', 'facturaProveedor')->name('factura.proveedor');
+    
+
 });
 
 //COMPRAS
@@ -106,6 +114,7 @@ Route::controller(CompraController::class)->middleware('auth')->group(function (
 
     //Listar compras
     Route::get('/compra/listar', 'listarCompras')->name('listarcompras');
+    Route::get('/compra/listarProveedor', 'listarComprasProveedor')->name('listarcomprasproveedor');
 
     Route::get('/compra/listar/detalle/{detallefact}', 'detalles')->name('detalle');
 
@@ -133,13 +142,13 @@ Route::controller(VentaController::class)->middleware('auth')->group(function ()
     Route::get('/venta/listar/detalle/{detallefact}', 'detalleVenta')->name('detalleventa');
 
 
+    Route::get('/venta/listar', 'listarVentas')->name('listarventas');
+
     //Route::get('/proveedores', 'buscarProveedor')->name('buscarproveedor');
     //Route::get('/buscarproducto', 'buscarProducto')->name('buscarproducto');
     //Route::post('/guardarcompra', 'store')->name('compra.store');
 
     //Listar compras
-    //Route::get('/compra/listar', 'listarCompras')->name('listarcompras');
-
     //Route::get('/compra/listar/detalle/{detallefact}', 'detalles')->name('detalle');
 });
 

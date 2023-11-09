@@ -22,7 +22,9 @@ return new class extends Migration
             $table->string('callelateral')->nullable();
             $table->string('referencia')->nullable();
             $table->bigInteger('telefono');
+            $table->string('estado');
             $table->string('email')->unique()->nullable();
+            $table->string('descuento')->nullable();
             $table->timestamps();
         });
     }
