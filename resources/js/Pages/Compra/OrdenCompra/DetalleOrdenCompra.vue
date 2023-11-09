@@ -86,11 +86,17 @@ const props = defineProps({
                     </h2>
                   </div>
                 </div>
-                <div class="div-derecho">
+                <div class="div-derecho flex flex-col">
                   <h2 class="font-bold inline-flex space-x-2">
                     <span>Fecha:</span>
                     <h1 class="text-red-500">
                       {{ props.ordencompra.fecha }}
+                    </h1>
+                  </h2>
+                  <h2 class="font-bold inline-flex space-x-2">
+                    <span>#Orden:</span>
+                    <h1 class="text-red-500">
+                      {{ props.ordencompra.id }}
                     </h1>
                   </h2>
                 </div>
