@@ -221,6 +221,8 @@ function onSubmit() {
                   <tr
                     class="border-b border-slate-300 bg-red-700 text-white text-left"
                   >
+
+                    <th class="px-2">Id Producto</th>
                     <th class="px-2">Cantidad</th>
                     <th class="px-2">Codigo de barras</th>
                     <th class="px-2">Estado</th>
@@ -231,6 +233,9 @@ function onSubmit() {
                 </thead>
                 <tbody class="divide-y divide-gray-400 divide-opacity-30">
                   <tr v-for="producto in productos" :key="producto.id">
+                    <td class="text-gray-700 py-4 px-2">
+                      {{ producto.producto_id }}
+                    </td>
                     <td class="text-gray-700 py-4 px-2">
                       {{ producto.cantidad }}
                     </td>

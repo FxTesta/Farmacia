@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('orden_de_compras', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('producto_id')->constrained('productos')->onDelete('cascade');
             $table->bigInteger('codigo');
             $table->string('marca');
             $table->string('laboratorio');

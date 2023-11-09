@@ -19,7 +19,6 @@ user: Object,
 let search = ref(props.filters.search);
 
 watch(search, _.debounce(function (value) {
-    console.log('disparado');
     router.get('/productosfaltantes', { search: value}, {
         preserveState: true,
         replace: true
@@ -106,10 +105,10 @@ export default {
                                         <td  class="text-gray-700 py-4 px-2">{{productos.stock}}</td>
                                         <td  class="text-gray-700 py-4 px-2">{{productos.stockmin}}</td>
                                         <td  class="text-white py-4 px-2">
-                                            <div v-if="productos.estado=='Faltante'" class="bg-red-500 rounded-md p-1 text-center">
-                                                {{productos.estado}}
-                                            </div>
-                                            <div v-if="productos.estado=='En proceso'" class="bg-blue-700 rounded-md p-1 text-center">
+                                            <div
+                                            :class="{ 'bg-green-500 rounded-md p-1 text-center': productos.estado === 'Finalizado' , 
+                                            'bg-blue-500 rounded-md p-1 text-center': productos.estado === 'En proceso' ,
+                                            'bg-red-500 rounded-md p-1 text-center': productos.estado === 'Faltante' }">
                                                 {{productos.estado}}
                                             </div>
                                         </td>

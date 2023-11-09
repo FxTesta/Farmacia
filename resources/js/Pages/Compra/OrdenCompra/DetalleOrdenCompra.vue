@@ -6,7 +6,6 @@ import {
   DialogPanel,
 } from "@headlessui/vue";
 import { ref } from "vue";
-import Delete from "@/Pages/ProductosFaltantes/delete.vue";
 
 const isOpen = ref(false);
 
@@ -107,9 +106,9 @@ const props = defineProps({
                   <tr
                     class="border-b border-slate-300 bg-red-700 text-white text-left"
                   >
+                    <th class="px-2">ID producto</th>
                     <th class="px-2">Cantidad</th>
                     <th class="px-2">Codigo de barras</th>
-                    <th class="px-2">Estado</th>
                     <th class="px-2">Marca</th>
                     <th class="px-2">Laboratorio</th>
                     <!-- <th class="px-2">Acción</th> -->
@@ -118,13 +117,13 @@ const props = defineProps({
                 <tbody class="divide-y divide-gray-400 divide-opacity-30">
                   <tr v-for="producto in ordencompra.detalle_orden_compra" :key="producto.id">
                     <td class="text-gray-700 py-4 px-2">
+                      {{ producto.producto_id }}
+                    </td>
+                    <td class="text-gray-700 py-4 px-2">
                       {{ producto.cantidad }}
                     </td>
                     <td class="text-gray-700 py-4 px-2">
                       {{ producto.codigo }}
-                    </td>
-                    <td class="text-gray-700 py-4 px-2">
-                      {{ producto.estado }}
                     </td>
                     <td class="text-gray-700 py-4 px-2">
                       {{ producto.marca }}

@@ -114,6 +114,9 @@ Route::controller(CompraController::class)->middleware('auth')->group(function (
 
     //Orden de Compra
     Route::get('/compra/ordencompra', 'listarOrdenCompra')->name('listarordencompra');
+
+    //Orden de Compra Cambiar Estado
+    Route::put('/compra/ordencompra/{ordencompra}', 'cambiarEstado')->name('ordencompra.update');
 });
 
 //VENTAS

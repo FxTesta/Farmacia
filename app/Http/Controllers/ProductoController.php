@@ -224,6 +224,7 @@ class ProductoController extends Controller
 
         OrdenDeCompra::create([
 
+            'producto_id' => $productos->producto_id,
             'codigo' => $productos->codigo,
             'marca' => $productos->marca,
             'laboratorio' => $productos->laboratorio,
@@ -302,7 +303,7 @@ class ProductoController extends Controller
              foreach ($data as $producto) {
                 OrdenCompraDetalle::create([
                     'orden_compra_cabecera_id' => $ordencompra->id, //envia el id de cabecera factura para asociar con detallefacturacomrpa
-                    'producto_id' => $producto['id'],
+                    'producto_id' => $producto['producto_id'],
                     'codigo' => $producto['codigo'],
                     'marca' => $producto['marca'],
                     'cantidad' => $producto['cantidad'],

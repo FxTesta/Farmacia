@@ -6,6 +6,7 @@ import { SearchIcon, DocumentAddIcon } from "@heroicons/vue/outline";
 import { ref, watch } from "vue";
 import Pagination from '@/Components/Pagination.vue';
 import DetalleOrdenCompra from '@/Pages/Compra/OrdenCompra/DetalleOrdenCompra.vue';
+import CambiarEstado from './CambiarEstado.vue';
 
 import _ from 'lodash';
 
@@ -81,7 +82,13 @@ watch(search, _.debounce(function (value) {
                                     </td>
                                     <td class="py-3">{{ orden_compra.fecha }}</td>
                                     <td class="py-4">
-                                        <DetalleOrdenCompra :ordencompra="orden_compra"/>
+                                        <div class="inline-flex space-x-2 items-center">
+                                            <DetalleOrdenCompra :ordencompra="orden_compra"/>
+                                            <div v-if="orden_compra.estado !== 'Finalizado'">
+                                                <CambiarEstado :ordencompra="orden_compra"/>
+                                            </div>
+                                        </div>
+                                        
                                     </td>
                                 </tr>
                                 <!--div se muestra en caso que no hayan registros-->

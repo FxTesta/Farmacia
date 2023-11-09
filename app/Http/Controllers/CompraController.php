@@ -8,6 +8,7 @@ use App\Models\DetalleFacturaCompra;
 use App\Models\FacturaCompra;
 use App\Models\OrdenCompraCabecera;
 use App\Models\Producto;
+use App\Models\ProductosFaltantes;
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -146,11 +147,11 @@ class CompraController extends Controller
     }
 
     //ORDEN DE COMPRA
-    public function listarOrdenCompra( Request $request)
+    public function listarOrdenCompra(Request $request)
     {
 
         $ordencompra = OrdenCompraCabecera::when($request->search, function ($query, $search) {
-            
+
             $query->where('proveedornombre', 'LIKE', "%{$search}%")->orWhere('id', 'LIKE', "{$search}%")->orWhere('estado', 'LIKE', "{$search}%");
         })
             ->with('detalleOrdenCompra')
@@ -159,10 +160,39 @@ class CompraController extends Controller
 
         $filters = $request->only('search');
 
-         return Inertia::render('Compra/OrdenCompra/ListarOrdenCompra',[
-          'ordencompra' => $ordencompra,    
-          'filters' => $filters,
-        ]);  
+        return Inertia::render('Compra/OrdenCompra/ListarOrdenCompra', [
+            'ordencompra' => $ordencompra,
+            'filters' => $filters,
+        ]);
+    }
 
-    } 
+    //ORDEN DE COMPRA CAMBIAR ESTADO
+    public function cambiarEstado(OrdenCompraCabecera $ordencompra, Request $request)
+    {
+        request()->validate([
+            'estado' => ['required'],
+            'producto' => ['required'],
+        ]);
+
+        $ordencompra->update([
+            'estado' => request('estado'),
+        ]);
+
+        $data = $request->input('producto');
+
+        foreach ($data as $producto) {
+
+            $productos = ProductosFaltantes::where('producto_id', $producto['producto_id'])->first();
+
+            $productos->update([
+                'estado' => 'Finalizado',
+            ]); 
+            
+        }
+
+        return redirect('/compra/ordencompra')->with('toast', 'Orden compra Finalizada');
+
+
+        
+    }
 }
