@@ -12,12 +12,11 @@ class Proveedor extends Model
     protected $guarded = [];
     protected $table = 'proveedores';
 
-    /*
+    
     public function facturacompra(): HasMany
     {
         return $this->hasMany(FacturaCompra::class);
     }
-    */
 
 
 }

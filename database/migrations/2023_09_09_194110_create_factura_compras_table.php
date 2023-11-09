@@ -13,13 +13,13 @@ return new class extends Migration
     {   //a
         Schema::create('factura_compras', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('proveedores_id')->constrained('proveedores')->onDelete('cascade');
+            $table->foreignId('proveedor_id')->constrained('proveedores')->onDelete('cascade');
             $table->string('proveedor_nombre');
             $table->foreignId('users_id')->constrained('users')->onDelete('cascade');
             $table->string('username');
             $table->bigInteger('nrofactura')->unique();
             $table->date('fechafactura');
-            $table->integer('preciototal'); 
+            $table->integer('preciototal');
             $table->timestamps();
         });
     }

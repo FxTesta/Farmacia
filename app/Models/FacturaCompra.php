@@ -15,9 +15,11 @@ class FacturaCompra extends Model
     {
         return $this->hasMany(DetalleFacturaCompra::class);
     }
-    /*
-    public function proveedor(): HasOne
+
+    public function notaCreditoCompra(): HasMany
     {
-        return $this->hasOne(Proveedor::class);
-    }*/
+        return $this->hasMany(NotaCreditoCompra::class);
+    }
+
+
 }

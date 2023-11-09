@@ -2,7 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, router, Link } from '@inertiajs/vue3';
 import SideBar from '@/Components/SideBar.vue';
-import { SearchIcon, EyeIcon } from "@heroicons/vue/outline";
+import { SearchIcon, DocumentAddIcon } from "@heroicons/vue/outline";
 import { ref, watch } from "vue";
 import Pagination from '@/Components/Pagination.vue';
 
@@ -25,7 +25,7 @@ watch(search, _.debounce(function (value) {
 
 </script>
 <template>
-    <Head title="Dashboard" />
+    <Head title="Lista Compras" />
 
     <SideBar />
     <AuthenticatedLayout>
@@ -41,7 +41,13 @@ watch(search, _.debounce(function (value) {
                     <div class="flex justify-end">
                         <!-- <span class="pt-2 pr-6">hola</span>-->
                         <div class="inline-flex space-x-2 mb-2 mt-2 mr-2">
-
+<!--                             <div class="mt-1">
+                                <Link :href="`/nota-credito/`" as="button"
+                                    class="hover:bg-gray-300 ring-2 focus:ring-set-2 ring-cyan-400 rounded-full">
+                                <DocumentAddIcon class="h-6 w-6 inline mb-1 ml-2 rounded-full" />
+                                <a class="text-sm font-medium rounded-md mr-3"> Crear Nota Credito </a>
+                                </Link>
+                            </div> -->
                             <div class="relative flex items-center  focus-within:text-gray-400">
                                 <SearchIcon class="w-5 h-5 absolute ml-3 pointer-events-none" />
                                 <input id="searchcompra" v-model="search" type="text" placeholder="Buscar Compras"
@@ -74,17 +80,17 @@ watch(search, _.debounce(function (value) {
                                     <td class="py-3">{{ factura_compras.preciototal }}</td>
                                     <td class="py-3">{{ factura_compras.fechafactura }}</td>
                                     <td class="py-4">
+                                        <div class="inline-flex space-x-2">
                                         <Link :href="`/compra/listar/detalle/${factura_compras.id}`" as="button"
                                                     class="text-white font-bold bg-cyan-500 hover:bg-cyan-600 rounded-xl grid place-content-center">
                                                 <button class="px-2 py-1">
                                                     Detalle
                                                 </button>
                                         </Link>
-                                            class="text-white font-bold bg-cyan-500 hover:bg-cyan-600 rounded-xl grid place-content-center">
-                                        <button class="px-2 py-1">
-                                            Detalle
-                                        </button>
-                                        </Link>
+                                        <div>
+                                           <!--  Nota Credito -->
+                                        </div>
+                                        </div>
                                     </td>
                                 </tr>
                                 <!--div se muestra en caso que no hayan registros-->

@@ -6,10 +6,13 @@ use Inertia\Inertia;
 use App\Models\Compra;
 use App\Models\DetalleFacturaCompra;
 use App\Models\FacturaCompra;
+use App\Models\OrdenCompraCabecera;
 use App\Models\Producto;
+use App\Models\ProductosFaltantes;
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 class CompraController extends Controller
 {
     //vista para registrar compra
@@ -68,7 +71,7 @@ class CompraController extends Controller
             //Se realiza carga de cabecera factura
             FacturaCompra::create([
 
-                'proveedores_id' => $request->proveedorid,
+                'proveedor_id' => $request->proveedorid,
                 'proveedor_nombre' => $request->proveedornombre,
                 'users_id' => $request->codigo,
                 'username' => $request->usuario,
@@ -92,7 +95,7 @@ class CompraController extends Controller
                     'total' => $producto['total'],
                 ]);
 
-                
+
                 $productos = Producto::where('id', $producto['productoid'])->first();
                 $productos->update([
                     'stock' => $productos->stock + $producto['cantidad'],
@@ -107,18 +110,18 @@ class CompraController extends Controller
     //LISTAR COMPRAS
     public function listarCompras(Request $request)
     {
-        
-        $lista = FacturaCompra::when($request->search, function($query, $search){
+
+        $lista = FacturaCompra::when($request->search, function ($query, $search) {
             //filtra la busqueda por nombre proveedor o nrofactura
-            $query->where('proveedor_nombre', 'LIKE', "%{$search}%" )->orWhere('nrofactura', 'LIKE', "{$search}%");
+            $query->where('proveedor_nombre', 'LIKE', "%{$search}%" )->orWhere('nrofactura', 'LIKE', "{$search}%")->orWhere('fechafactura', 'LIKE', "{$search}%");
         })
-        ->paginate(15)
-        ->withQueryString();
+            ->paginate(15)
+            ->withQueryString();
 
         $filters = $request->only('search');
-        
 
-        return Inertia::render('Compra/ListarCompra',[
+
+        return Inertia::render('Compra/ListarCompra', [
             'lista' => $lista,
             'filters' => $filters,
         ]);
@@ -126,12 +129,71 @@ class CompraController extends Controller
 
     public function detalles(FacturaCompra $detallefact)
     {
-        $detallefact->load('detallefactura');    
-        return Inertia::render('Compra/detalle',[
-          'detallefact' => $detallefact,         
+        $detallefact->load('detallefactura');
+        return Inertia::render('Compra/detalle', [
+            'detallefact' => $detallefact,
         ]);
-       
-       
+    }
+
+
+    //Nota de credito
+    public function notaCredito()
+    {
+        $user = auth()->user();
+
+        return Inertia::render('Compra/NotaCredito/NotaCredito', [
+            'user' => $user,
+        ]);
+    }
+
+    //ORDEN DE COMPRA
+    public function listarOrdenCompra(Request $request)
+    {
+
+        $ordencompra = OrdenCompraCabecera::when($request->search, function ($query, $search) {
+
+            $query->where('proveedornombre', 'LIKE', "%{$search}%")->orWhere('id', 'LIKE', "{$search}%")->orWhere('estado', 'LIKE', "{$search}%");
+        })
+            ->with('detalleOrdenCompra')
+            ->paginate(15)
+            ->withQueryString();
+
+        $filters = $request->only('search');
+
+        return Inertia::render('Compra/OrdenCompra/ListarOrdenCompra', [
+            'ordencompra' => $ordencompra,
+            'filters' => $filters,
+        ]);
+    }
+
+    //ORDEN DE COMPRA CAMBIAR ESTADO
+    public function cambiarEstado(OrdenCompraCabecera $ordencompra, Request $request)
+    {
+        request()->validate([
+            'estado' => ['required'],
+            'producto' => ['required'],
+        ]);
+
+        $ordencompra->update([
+            'estado' => request('estado'),
+        ]);
+
+        $data = $request->input('producto');
+
+        foreach ($data as $producto) {
+
+            $productos = ProductosFaltantes::where('producto_id', $producto['producto_id'])->first();
+
+            $productos->update([
+                'estado' => 'Finalizado',
+            ]); 
+            
+        }
+
+        return redirect('/compra/ordencompra')->with('toast', 'Orden compra Finalizada');
+
+
+        
     }
 
     public function listarComprasProveedor(Request $request)

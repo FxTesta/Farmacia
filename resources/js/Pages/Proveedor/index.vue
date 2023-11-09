@@ -16,10 +16,13 @@ const props = defineProps({
 let search = ref(props.filters.search);
 
 
-function setProveedorBusqueda(proveedor) {
-    search.value = proveedor;
-    router.get('/compra/listarProveedor', { search: proveedor });
-}
+watch(search, _.debounce(function (value) {
+    console.log('disparado');
+    router.get('/proveedor', { search: value }, {
+        preserveState: true,
+        replace: true
+    });
+}, 300));
 
 </script>
 <template>
@@ -91,10 +94,12 @@ function setProveedorBusqueda(proveedor) {
                                                 <Delete :proveedor="proveedores" :key="proveedores.id" />
                                             </div>
                                             <div>
-
-                                                <button @click="setProveedorBusqueda(proveedores.empresa)" class="text-white font-bold bg-cyan-500 hover:bg-cyan-600 rounded-x1 grid place-content-center">
-                                                    Ver Facturas
+                                                <Link :href="`/proveedor/listar/${proveedores.id}`" as="button"
+                                                    class="text-white font-bold bg-cyan-500 hover:bg-cyan-600 rounded-xl grid place-content-center">
+                                                <button class="px-2 py-1">
+                                                    facturas
                                                 </button>
+                                         </Link>
                                             </div>
                                         </div>
 

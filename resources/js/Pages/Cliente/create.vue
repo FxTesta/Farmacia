@@ -20,9 +20,18 @@ const form = useForm({
     callelateral: '',
     referencia: '',
     telefono: '',
-    estado: 'Cliente Fiel',
+    estado: '',
+    descuento: 0,
     email: '',
 });
+
+const calcularDescuento = () => {
+    if (form.estado === 'Cliente Fiel') {
+        form.descuento = 20; // 20% de descuento para Cliente Fiel
+    } else {
+        form.descuento = 0; // Sin descuento para otros estados
+    }
+};
 
 //calcula digito verificador
 const calculateDV = () => {
@@ -155,11 +164,26 @@ const submit = () => {
 
                             <div class="mt-4">
                                 <InputLabel for="estado" value="Estado" class="text-gray-600" />
+                                <select id="estado" class="mt-1 block w-full bg-gray-200 text-gray-600"
+                                    v-model="form.estado" @change="calcularDescuento">
+                                    <option value="Cliente Fiel">Cliente Fiel</option>
+                                    <option value="Otro Estado">poco habitual</option>
+                                </select>
+                            </div>
 
-                                <TextInput id="estado" type="estado" class="mt-1 block w-full bg-gray-200 text-gray-600"
-                                    v-model="form.estado" autocomplete="Cliente Fiel" />
+                            <div class="mt-4">
+                                <InputLabel for="descuento" value="Descuento (%)" class="text-gray-600" />
+                                <TextInput id="descuento" type="text" class="mt-1 block w-full bg-gray-200 text-gray-600"
+                                    v-model="form.descuento" disabled />
+                            </div>
 
-                                <InputError class="mt-2" :message="form.errors.estado" />
+                            <div class="mt-4">
+                                <InputLabel for="email" value="Email (opcional)" class="text-gray-600" />
+
+                                <TextInput id="email" type="email" class="mt-1 block w-full bg-gray-200 text-gray-600"
+                                    v-model="form.email" autocomplete="email" />
+
+                                <InputError class="mt-2" :message="form.errors.email" />
                             </div>
 
                             <div class="flex items-center justify-end mt-6">

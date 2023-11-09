@@ -29,6 +29,24 @@ export default {
               href: '/compra/listar',
               title: 'Listar Compras',
               icon: 'fa fa-list'
+            },
+            {
+              href: '/compra/ordencompra',
+              title: 'Orden de compra', 
+              icon: 'fa fa-list'
+            }
+          ]
+        },
+        {
+          href: '/venta',
+          title: 'Ventas',
+          icon: 'fa-sharp fa-solid fa-cart-shopping',
+          
+          child: [
+            {
+              href: '/venta/listar',
+              title: 'Listar Ventas',
+              icon: 'fa fa-list'
             }
           ]
         },
@@ -42,7 +60,14 @@ export default {
         {
           href: '/producto',
           title: 'Productos',
-          icon: 'fa-sharp fa-solid fa-flask'
+          icon: 'fa-sharp fa-solid fa-flask',
+          child: [
+            {
+              href: '/productosfaltantes',
+              title: 'Productos Faltantes',
+              icon: 'fa-solid fa-bars'
+            }
+          ]
           
         },/*
 
@@ -67,7 +92,7 @@ export default {
         },
       
         {
-          href: '#',
+          href: '/configuracion',
           title: 'Configuración',
           icon: 'fa-sharp fa-solid fa-gear',
         

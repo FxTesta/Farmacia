@@ -16,7 +16,6 @@ const props = defineProps({
 let search = ref(props.filters.search);
 
 watch(search, _.debounce(function (value) {
-    console.log('disparado');
     router.get('/cliente', { search: value }, {
         preserveState: true,
         replace: true
@@ -64,27 +63,30 @@ watch(search, _.debounce(function (value) {
 
                         <table class="min-w-full">
                             <thead>
-                                <tr class="border-b border-slate-300 text-gray-700 text-left">
+                                <tr class="border-b border-slate-300 text-gray-700 text-center">
                                     <th>ID</th>
                                     <th>Nombre</th>
                                     <th>Cédula</th>
                                     <th>RUC</th>
                                     <th>DV</th>
                                     <th>Dirección</th>
+                                    <th>Descuento</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-400 divide-opacity-30">
                                 <tr v-for="clientes in cliente.data">
-                                    <td class="text-gray-700 py-4">{{ clientes.id }}</td>
-                                    <td class="text-gray-700 py-4">{{ clientes.name }}</td>
-                                    <td class="text-gray-700 py-4">{{ clientes.cedula }}</td>
-                                    <td class="text-gray-700 py-4">{{ clientes.ruc }}</td>
-                                    <td class="text-gray-700 py-4">{{ clientes.dv }}</td>
-                                    <td class="text-gray-700 py-4">{{ clientes.direccion }}</td>
-                                    <td class="py-4 inline-flex">{{ clientes.estado }}</td>
-                                    <td class="py-4">
+                                    <td class="text-gray-700 py-4 px-2">{{ clientes.id }}</td>
+                                    <td class="text-gray-700 py-4 px-2">{{ clientes.name }}</td>
+                                    <td class="text-gray-700 py-4 px-2">{{ clientes.cedula }}</td>
+                                    <td class="text-gray-700 py-4 px-2">{{ clientes.ruc }}</td>
+                                    <td class="text-gray-700 py-4 px-2">{{ clientes.dv }}</td>
+                                    <td class="text-gray-700 py-4 px-2">{{ clientes.direccion }}</td>
+                                    <td class="text-gray-700 py-4 px-2">{{ clientes.descuento }}</td>
+                                    <td class="py-4 inline-flex px-2">{{ clientes.estado }}</td>
+                                    <td class="py-4 px-2">
                                         <div class="inline-flex">
                                             <Link :href="`/editar-cliente/${clientes.id}`" as="button"
                                                 class="w-8 h-8 t hover:bg-black/30 rounded-md grid place-content-center">
@@ -93,6 +95,14 @@ watch(search, _.debounce(function (value) {
 
                                             <div>
                                                 <Delete :cliente="clientes" :key="clientes.id" />
+                                            </div>
+                                            <div>
+                                                <Link :href="`/cliente/listar/${clientes.id}`" as="button"
+                                                    class="text-white font-bold bg-cyan-500 hover:bg-cyan-600 rounded-xl grid place-content-center">
+                                                <button class="px-2 py-1">
+                                                    Historial
+                                                </button>
+                                                 </Link>
                                             </div>
                                         </div>
 
