@@ -4,15 +4,9 @@ import {
   TransitionChild,
   Dialog,
   DialogPanel,
-  DialogTitle,
 } from "@headlessui/vue";
-import { PlusIcon, TrashIcon } from "@heroicons/vue/outline";
-import { useForm } from "@inertiajs/vue3";
-import BuscarProveedor from "@/Pages/Compra/BuscarProveedor.vue";
-import { ref, onMounted, watch, onBeforeUnmount } from "vue";
+import { ref } from "vue";
 import Delete from "@/Pages/ProductosFaltantes/delete.vue";
-import axios from "axios";
-import { computed } from "vue";
 
 const isOpen = ref(false);
 
@@ -24,7 +18,7 @@ function openModal() {
 }
 
 const props = defineProps({
-  user: Object,
+  ordencompra: Object,
 });
 
 
@@ -74,23 +68,21 @@ const props = defineProps({
                 <div class="div-izquierdo mb-4 space-y-4">
                   <h2 class="font-bold">
                     Detalles del proveedor:
-                    <div class="flex space-x-2">
-                      <BuscarProveedor
-                        placeholder="Buscar Proveedor..."
-                        :load-options="loadProveedor"
-                        v-model="proveedor"
-                      />
-                    </div>
+                    {{  }}
                   </h2>
                   <div class="flex flex-col space-y-2">
                     <div class="font-bold inline-flex space-x-2">
+                      <span>Nombre:</span>
+                      <div class="text-red-500">{{ props.ordencompra.proveedornombre }}</div>
+                    </div>
+                    <div class="font-bold inline-flex space-x-2">
                       <span>Email:</span>
-                      <div class="text-red-500">{{ proveedor?.email }}</div>
+                      <div class="text-red-500">{{ props.ordencompra.proveedoremail  }}</div>
                     </div>
 
                     <h2 class="font-bold inline-flex space-x-2">
                       <span> Telefono: </span> 
-                      <h1 class="text-red-500">{{ proveedor?.telefono }}</h1>
+                      <h1 class="text-red-500">{{ props.ordencompra.proveedortelefono }}</h1>
                     </h2>
                   </div>
                 </div>
@@ -98,7 +90,7 @@ const props = defineProps({
                   <h2 class="font-bold inline-flex space-x-2">
                     <span>Fecha:</span>
                     <h1 class="text-red-500">
-                      {{ fechaActual }}
+                      {{ props.ordencompra.fecha }}
                     </h1>
                   </h2>
                 </div>
@@ -114,11 +106,11 @@ const props = defineProps({
                     <th class="px-2">Estado</th>
                     <th class="px-2">Marca</th>
                     <th class="px-2">Laboratorio</th>
-                    <th class="px-2">Acción</th>
+                    <!-- <th class="px-2">Acción</th> -->
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-400 divide-opacity-30">
-                  <tr v-for="producto in productos" :key="producto.id">
+                  <tr v-for="producto in ordencompra.detalle_orden_compra" :key="producto.id">
                     <td class="text-gray-700 py-4 px-2">
                       {{ producto.cantidad }}
                     </td>
@@ -134,36 +126,13 @@ const props = defineProps({
                     <td class="text-gray-700 py-4 px-2">
                       {{ producto.laboratorio }}
                     </td>
-                    <td>
+<!--                     <td>
                       <Delete :producto="producto" :key="producto.id" />
-                    </td>
+                    </td> -->
                   </tr>
                 </tbody>
               </table>
 
-              <tr>
-                <td>
-                  <div
-                    class="flex items-center focus-within:text-white space-x-2 mt-2"
-                  >
-                    <button
-                      type="submit"
-
-                      class="pl-8 inline-flex justify-center rounded-md border border-transparent bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      @click="onSubmit"
-                    >
-                      Confirmar Orden
-                    </button>
-                    <button
-                      type="button"
-                      class="inline-flex rounded-md border border-gray-500 bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      @click="closeModal"
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-                </td>
-              </tr>
             </DialogPanel>
           </TransitionChild>
         </div>

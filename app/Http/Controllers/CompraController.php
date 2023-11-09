@@ -145,24 +145,24 @@ class CompraController extends Controller
         ]);
     }
 
-
-    //LISTAR ORDENES DE COMPRAS
-    public function listarOrdenCompra(Request $request)
+    //ORDEN DE COMPRA
+    public function listarOrdenCompra( Request $request)
     {
 
         $ordencompra = OrdenCompraCabecera::when($request->search, function ($query, $search) {
-            //filtra la busqueda por nombre proveedor o nrofactura
-            $query->where('proveedor_nombre', 'LIKE', "%{$search}%")->orWhere('orden', 'LIKE', "{$search}%");
+            
+            $query->where('proveedornombre', 'LIKE', "%{$search}%")->orWhere('id', 'LIKE', "{$search}%")->orWhere('estado', 'LIKE', "{$search}%");
         })
+            ->with('detalleOrdenCompra')
             ->paginate(15)
             ->withQueryString();
 
         $filters = $request->only('search');
 
+         return Inertia::render('Compra/OrdenCompra/ListarOrdenCompra',[
+          'ordencompra' => $ordencompra,    
+          'filters' => $filters,
+        ]);  
 
-        return Inertia::render('Compra/OrdenCompra/ListarOrdenCompra', [
-            'ordencompra' => $ordencompra,
-            'filters' => $filters,
-        ]);
-    }
+    } 
 }

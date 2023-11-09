@@ -67,6 +67,15 @@ let proveedornombre = computed(() => {
   return proveedor.value === "" ? null : proveedor.value?.label;
 });
 
+let proveedoremail = computed(() => {
+  return proveedor.value === "" ? null : proveedor.value?.email;
+});
+
+//variable retorna id que extrae de proveedor
+let proveedortelefono = computed(() => {
+  return proveedor.value === "" ? null : proveedor.value?.telefono;
+});
+
 //recuperamos los productos seleccionados para la orden de compra
 const productos = ref([]);
 
@@ -113,6 +122,8 @@ let form = useForm({
   codigo: props.user.id,
   proveedornombre: proveedornombre,
   proveedorid: proveedorid,
+  proveedortelefono: proveedortelefono,
+  proveedoremail: proveedoremail,
   fecha: mindate(),
   producto: resultados,
 });

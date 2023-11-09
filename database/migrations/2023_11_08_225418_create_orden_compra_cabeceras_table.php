@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('username');
             $table->foreignId('proveedor_id')->constrained('proveedores')->onDelete('cascade');
             $table->string('proveedornombre');
+            $table->string('proveedoremail')->unique()->nullable();
+            $table->bigInteger('proveedortelefono')->nullable();
             $table->string('estado');
             $table->date('fecha');
             $table->timestamps();

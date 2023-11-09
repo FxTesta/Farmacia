@@ -277,6 +277,8 @@ class ProductoController extends Controller
                 'codigo' => 'required',
                 'proveedornombre' => 'required',
                 'proveedorid' => 'required',
+                'proveedoremail' => 'nullable',
+                'proveedortelefono' => 'nullable',
                 'fecha' => 'required',
             ]); 
 
@@ -286,6 +288,8 @@ class ProductoController extends Controller
                 'username' => $request->usuario,
                 'users_id' => $request->codigo,
                 'proveedornombre' => $request->proveedornombre,
+                'proveedoremail' => $request->proveedoremail,
+                'proveedortelefono' => $request->proveedortelefono,
                 'proveedor_id' => $request->proveedorid,
                 'estado' => 'En Proceso',
                 'fecha' => $request->fecha,
@@ -297,7 +301,7 @@ class ProductoController extends Controller
             // Itera a través de los datos del array y crea un nuevo registro para cada producto
              foreach ($data as $producto) {
                 OrdenCompraDetalle::create([
-                    'orden_compra_id' => $ordencompra->id, //envia el id de cabecera factura para asociar con detallefacturacomrpa
+                    'orden_compra_cabecera_id' => $ordencompra->id, //envia el id de cabecera factura para asociar con detallefacturacomrpa
                     'producto_id' => $producto['id'],
                     'codigo' => $producto['codigo'],
                     'marca' => $producto['marca'],

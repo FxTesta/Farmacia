@@ -14,6 +14,6 @@ class OrdenCompraCabecera extends Model
 
     public function detalleOrdenCompra(): HasMany
     {
-        return $this->hasMany(OrdenCompraCabeceraDetalle::class);
+        return $this->hasMany(OrdenCompraDetalle::class);
     }
 }
