@@ -2,7 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, router, Link } from '@inertiajs/vue3';
 import SideBar from '@/Components/SideBar.vue';
-import { SearchIcon, EyeIcon } from "@heroicons/vue/outline";
+import { SearchIcon, EyeIcon, ArrowLeftIcon } from "@heroicons/vue/outline";
 import { ref, watch } from "vue";
 import Pagination from '@/Components/Pagination.vue';
 

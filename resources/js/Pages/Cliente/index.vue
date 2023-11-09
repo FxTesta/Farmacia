@@ -63,7 +63,7 @@ watch(search, _.debounce(function (value) {
 
                         <table class="min-w-full">
                             <thead>
-                                <tr class="border-b border-slate-300 text-gray-700 text-left">
+                                <tr class="border-b border-slate-300 text-gray-700 text-center">
                                     <th>ID</th>
                                     <th>Nombre</th>
                                     <th>Cédula</th>
@@ -78,15 +78,15 @@ watch(search, _.debounce(function (value) {
                             </thead>
                             <tbody class="divide-y divide-gray-400 divide-opacity-30">
                                 <tr v-for="clientes in cliente.data">
-                                    <td class="text-gray-700 py-4">{{ clientes.id }}</td>
-                                    <td class="text-gray-700 py-4">{{ clientes.name }}</td>
-                                    <td class="text-gray-700 py-4">{{ clientes.cedula }}</td>
-                                    <td class="text-gray-700 py-4">{{ clientes.ruc }}</td>
-                                    <td class="text-gray-700 py-4">{{ clientes.dv }}</td>
-                                    <td class="text-gray-700 py-4">{{ clientes.direccion }}</td>
-                                    <td class="text-gray-700 py-4">{{ clientes.descuento }}</td>
-                                    <td class="py-4 inline-flex">{{ clientes.estado }}</td>
-                                    <td class="py-4">
+                                    <td class="text-gray-700 py-4 px-2">{{ clientes.id }}</td>
+                                    <td class="text-gray-700 py-4 px-2">{{ clientes.name }}</td>
+                                    <td class="text-gray-700 py-4 px-2">{{ clientes.cedula }}</td>
+                                    <td class="text-gray-700 py-4 px-2">{{ clientes.ruc }}</td>
+                                    <td class="text-gray-700 py-4 px-2">{{ clientes.dv }}</td>
+                                    <td class="text-gray-700 py-4 px-2">{{ clientes.direccion }}</td>
+                                    <td class="text-gray-700 py-4 px-2">{{ clientes.descuento }}</td>
+                                    <td class="py-4 inline-flex px-2">{{ clientes.estado }}</td>
+                                    <td class="py-4 px-2">
                                         <div class="inline-flex">
                                             <Link :href="`/editar-cliente/${clientes.id}`" as="button"
                                                 class="w-8 h-8 t hover:bg-black/30 rounded-md grid place-content-center">
