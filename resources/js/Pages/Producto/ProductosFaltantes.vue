@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import SideBar from '@/Components/SideBar.vue';
 import {PlusCircleIcon, SearchIcon} from "@heroicons/vue/outline";
 //import Delete from '@/Pages/Producto/delete.vue';
@@ -26,7 +26,6 @@ watch(search, _.debounce(function (value) {
     });
 }, 300));
 
-
 </script>
 <script>
 
@@ -51,13 +50,13 @@ export default {
         </template>
 
         <div class="py-12">
-
+            
             <div class="max-w-screen-2xl mx-auto sm:px-6  ml-16">
                 <div class="-mt-10">
                     <div class="flex justify-end">
                        <div class="inline-flex space-x-2 mb-2 mt-2 mr-2">
                        <CrearOrden :user="props.user"/>
-                     
+                        
                             
                             <div
                                 class="relative flex items-center  focus-within:text-gray-400"
@@ -110,7 +109,7 @@ export default {
                                             <div v-if="productos.estado=='Faltante'" class="bg-red-500 rounded-md p-1 text-center">
                                                 {{productos.estado}}
                                             </div>
-                                            <div v-if="productos.estado=='En proceso'" class="bg-green-700 rounded-md p-1 text-center">
+                                            <div v-if="productos.estado=='En proceso'" class="bg-blue-700 rounded-md p-1 text-center">
                                                 {{productos.estado}}
                                             </div>
                                         </td>

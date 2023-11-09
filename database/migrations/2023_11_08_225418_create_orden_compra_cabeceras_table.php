@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('username');
             $table->foreignId('proveedor_id')->constrained('proveedores')->onDelete('cascade');
             $table->string('proveedornombre');
-            $table->integer('orden');
+            $table->string('estado');
             $table->date('fecha');
             $table->timestamps();
         });

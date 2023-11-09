@@ -28,107 +28,6 @@ const props = defineProps({
 });
 
 
-//obtener fecha actual
-const fechaActual = ref("");
-
-onMounted(() => {
-  obtenerFechaActual();
-});
-const obtenerFechaActual = () => {
-  const fecha = new Date();
-  const options = { year: "numeric", month: "numeric", day: "numeric" };
-  fechaActual.value = fecha.toLocaleDateString("es-ES", options);
-};
-
-let proveedor = ref();
-function loadProveedor(query, setOptions) {
-  fetch("http://127.0.0.1:8000/proveedores?query=" + query)
-    .then((response) => response.json())
-    .then((results) => {
-      setOptions(
-        results.map((proveedores) => {
-          return {
-            value: proveedores.id,
-            label: proveedores.empresa,
-            telefono: proveedores.telefono,
-            email: proveedores.email,
-          };
-        })
-      );
-    });
-}
-
-let proveedorid = computed(() => {
-  return proveedor.value === "" ? null : proveedor.value?.value;
-});
-
-//variable retorna id que extrae de proveedor
-let proveedornombre = computed(() => {
-  return proveedor.value === "" ? null : proveedor.value?.label;
-});
-
-//recuperamos los productos seleccionados para la orden de compra
-const productos = ref([]);
-
-const resultados = computed(() => {
-  if (!productos.value) {
-    return null;
-  }
-  return [...productos.value];
-});
-
-const obtenerProductos = async () => {
-  try {
-    const response = await axios.get("/orden");
-    productos.value = response.data.productos;
-  } catch (error) {
-    console.error("Error al obtener productos:", error);
-  }
-};
-
-// Llamar a obtenerProductos inicialmente
-obtenerProductos();
-
-// Observar cambios en la variable 'productos' para mantenerla actualizada
-const stop = watch(productos, async () => {
-  try {
-    const response = await axios.get("/orden");
-    productos.value = response.data.productos;
-  } catch (error) {
-    console.error("Error al obtener productos:", error);
-  }
-});
-
-// Limpiar la función watch cuando el componente se desmonte para evitar fugas de memoria
-onBeforeUnmount(() => {
-  stop();
-});
-
-function mindate() {
-  return new Date().toISOString().split("T")[0];
-}
-
-let form = useForm({
-  usuario: props.user.name,
-  codigo: props.user.id,
-  proveedornombre: proveedornombre,
-  proveedorid: proveedorid,
-  fecha: mindate(),
-  producto: resultados,
-});
-
-
-function onSubmit() {
-
-  form.post(route("create.ordencompra"), {
-    onSuccess: () => {
-      productos.value.splice(0); //resetea el array después de guardar en la BD
-      proveedor.value = null; //resetea la variable reactiva (let proveedor = ref();) después de guardar los campos en la bd
-      closeModal();
-    },
-  });
-}
-
 </script>
 <template>
   <div>
@@ -137,7 +36,7 @@ function onSubmit() {
       @click="openModal"
       class="rounded-md bg-green-700 hover:bg-green-500 px-4 py-2 text-sm font-medium text-white"
     >
-      Generar Orden de Compra
+      Detalle
     </button>
   </div>
   <TransitionRoot appear :show="isOpen" as="template">

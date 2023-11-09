@@ -17,9 +17,8 @@ return new class extends Migration
             $table->foreignId('producto_id')->constrained('productos')->onDelete('cascade');
             $table->integer('cantidad');
             $table->bigInteger('codigo');
-            $table->string('estado');
             $table->string('marca');
-            $table->string('laboratorio');
+            $table->string('laboratorio')->nullable();
             $table->timestamps();
         });
     }

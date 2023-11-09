@@ -80,7 +80,6 @@ Route::controller(ProductoController::class)->middleware('auth')->group(function
 
     //Crear ordencompra final
     Route::post('/crear-ordencompra', 'crearOrdenCompraFinal')->name('create.ordencompra');
-
 });
 
 
@@ -112,6 +111,9 @@ Route::controller(CompraController::class)->middleware('auth')->group(function (
 
     //Nota de credito
     Route::get('/nota-credito', 'notaCredito')->name('notacredito');
+
+    //Orden de Compra
+    Route::get('/compra/ordencompra', 'listarOrdenCompra')->name('listarordencompra');
 });
 
 //VENTAS

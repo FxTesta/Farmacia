@@ -280,9 +280,6 @@ class ProductoController extends Controller
                 'fecha' => 'required',
             ]); 
 
-            $ultimoOrden = OrdenCompraCabecera::max('orden');
-            $nuevoOrden = $ultimoOrden + 1;
-
             //Se realiza carga de cabecera factura
             $orden = OrdenCompraCabecera::create([
 
@@ -290,8 +287,8 @@ class ProductoController extends Controller
                 'users_id' => $request->codigo,
                 'proveedornombre' => $request->proveedornombre,
                 'proveedor_id' => $request->proveedorid,
+                'estado' => 'En Proceso',
                 'fecha' => $request->fecha,
-                'orden' => $nuevoOrden,
             ]);
 
             //OBTENER EL ID DE FACTURA COMPRA CREADO ARRIBA, PARA EL CREATE DE ABAJO
@@ -304,7 +301,6 @@ class ProductoController extends Controller
                     'producto_id' => $producto['id'],
                     'codigo' => $producto['codigo'],
                     'marca' => $producto['marca'],
-                    'estado' => $producto['estado'],
                     'cantidad' => $producto['cantidad'],
                     'laboratorio' => $producto['laboratorio'],
                 ]);
@@ -316,8 +312,7 @@ class ProductoController extends Controller
 
         }
     }
-
-
+    
     /* public function updatestock(Producto $productos){
         $cantidad = request('stock');
         $user = auth()->user();
