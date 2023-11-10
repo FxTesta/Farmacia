@@ -16,7 +16,7 @@ const productoEncontrado = (event) => {
 
 //función para buscar de la bd, recibe el query de busqueda y setOptions devuelve el resultado
 function loadProducto(query, setOptions) {
-    fetch("http://127.0.0.1:8000/buscarproductoventa?query=" + query)
+    fetch("/buscarproductoventa?query=" + query)
         .then(response => response.json())
         .then(results => {
             setOptions(

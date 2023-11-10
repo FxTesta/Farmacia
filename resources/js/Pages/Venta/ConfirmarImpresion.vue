@@ -31,7 +31,7 @@ const facturaventaid = ref();
 
 const fetchData = async () => {
   try {
-    const response = await fetch("http://127.0.0.1:8000/obtenerfacturaid");
+    const response = await fetch("/obtenerfacturaid");
     if (response.ok) {
       const data = await response.json();
       facturaventaid.value = data;
@@ -45,7 +45,7 @@ const fetchData = async () => {
 
 function imprimirFactura() {
   fetchData().then(() => {
-    const url = "http://127.0.0.1:8000/venta/listar/detalle/" + facturaventaid.value;
+    const url = "/venta/listar/detalle/" + facturaventaid.value;
     window.open(url, "_blank");
     closeModal();
   });

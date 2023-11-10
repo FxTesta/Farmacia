@@ -42,7 +42,7 @@ const obtenerFechaActual = () => {
 
 let proveedor = ref();
 function loadProveedor(query, setOptions) {
-  fetch("http://127.0.0.1:8000/proveedores?query=" + query)
+  fetch("/proveedores?query=" + query)
     .then((response) => response.json())
     .then((results) => {
       setOptions(
