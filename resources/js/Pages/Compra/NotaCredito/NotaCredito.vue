@@ -134,8 +134,6 @@ const agregarProducto = () => {
     //después de agregar el producto envia un evento a "BuscarProducto" para enfocar nuevamente el boton para buscar Producto
     const event1 = new CustomEvent("enviar-ref");
     window.dispatchEvent(event1);
-  } else {
-    console.log("No entro");
   }
 };
 

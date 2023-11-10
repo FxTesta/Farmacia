@@ -276,7 +276,7 @@ const agregarProducto = () => {
     /*    const event1 = new CustomEvent('enviar-ref');
     window.dispatchEvent(event1); */
   } else {
-    console.log("No entro");
+    //console.log("No entro");
   }
 };
 

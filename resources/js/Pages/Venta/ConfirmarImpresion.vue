@@ -19,7 +19,6 @@ function openModal() {
 }
 
 const confirmaImpresion = (event) => {
-  console.log("entro en popover impresion");
   openModal();
 };
 
