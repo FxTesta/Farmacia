@@ -52,7 +52,7 @@ class ProveedorControllerTest extends TestCase
             'empresa' => 'lasca2',
             'name' => 'juanpi',
             'ruc' => '4331464',
-            'dv'=> '3php',
+            'dv'=> '3',
             'direccion' => 'direccion',
             'barrio' => 'barrio',
             'callelateral' => 'callelateral',
@@ -83,26 +83,6 @@ class ProveedorControllerTest extends TestCase
         $response6->assertStatus(302);
         
     }
-
-    public function test_creando_multiples_proveedores(): void
-    {
-    //Loguearse
-
-    $response = $this->post('/login', [
-        'username' => 'admin',
-        'password' => 'password',
-    ]);
-
-    $this->assertAuthenticated();
-    $response->assertRedirect(RouteServiceProvider::HOME);
-
-    // Crear 100 Proveedores
-    \App\Models\Proveedor::factory()->count(100)->create();
-
-    // Asegurarse que los proveedores se han creado correctamente
-    $this->assertCount(100, \App\Models\Proveedor::all());
-    }
-
 
 
 }

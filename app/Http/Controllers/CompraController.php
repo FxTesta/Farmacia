@@ -30,7 +30,7 @@ class CompraController extends Controller
         $query = $request->input('query');
 
         // Realiza la lógica de búsqueda utilizando el valor de $query
-        $proveedores = Proveedor::where('empresa', 'LIKE', "%$query%")->get();
+        $proveedores = Proveedor::where('empresa', 'LIKE', "$query%")->get();
 
         return response()->json($proveedores);
     }
@@ -40,7 +40,7 @@ class CompraController extends Controller
         $query = $request->input('query');
 
         // Realiza la lógica de búsqueda utilizando el valor de $query
-        $producto = Producto::where('marca', 'LIKE', "%$query%")->orWhere('codigo', 'LIKE', "{$query}%")->get();
+        $producto = Producto::where('marca', 'LIKE', "$query%")->orWhere('codigo', 'LIKE', "{$query}%")->get();
 
         return response()->json($producto);
     }

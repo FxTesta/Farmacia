@@ -61,6 +61,7 @@ watch(query, (q) => {
 
 );
 
+
 let filteredOptions = computed(() =>
   query.value === ''
     ? options.value

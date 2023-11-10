@@ -22,7 +22,7 @@ class ProveedorFactory extends Factory
             'callelateral' => $this->faker->optional()->word,  // Puedes cambiar 'word' por lo que corresponda
             'referencia' => $this->faker->optional()->word,  // Puedes cambiar 'word' por lo que corresponda
             'telefono' => $this->faker->numerify('##########'),
-            'email' => $this->faker->optional()->safeEmail,
+            'email' => $this->faker->unique()->safeEmail,
         ];
         
     }
