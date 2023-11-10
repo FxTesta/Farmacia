@@ -364,7 +364,7 @@ const validateInput2 = () => {
                       class="mt-1 w-40 h-8 bg-gray-200 text-gray-600"
                       v-model="form.nrofactura"
                       required
-                      autocomplete="nrofactura"
+                      autocomplete="off"
                     />
 
                     <!--<InputError class="mt-2" :message="form.errors.marca" />-->
