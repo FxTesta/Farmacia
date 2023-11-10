@@ -162,7 +162,7 @@ const agregarProducto = () => {
     const event1 = new CustomEvent("enviar-ref");
     window.dispatchEvent(event1);
   }
-
+};
 //elimina lo contenido en el array
 const eliminarProducto = (index) => {
   const productoEliminado = arrayProductos.value[index];
