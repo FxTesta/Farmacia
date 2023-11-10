@@ -27,7 +27,15 @@ class CompraController extends Controller
 
     public function buscarProveedor(Request $request)
     {
+
+        
+
         $query = $request->input('query');
+
+        if (!preg_match('/[a-zA-Z0-9]/', $query)) {
+            // Si no contiene ningún carácter alfabético o numérico, devolver respuesta vacía o un mensaje indicando que la búsqueda es inválida
+            return response()->json([]);
+        }
 
         // Realiza la lógica de búsqueda utilizando el valor de $query
         $proveedores = Proveedor::where('empresa', 'LIKE', "%$query%")->get();
@@ -38,6 +46,11 @@ class CompraController extends Controller
     public function buscarProducto(Request $request)
     {
         $query = $request->input('query');
+
+        if (!preg_match('/[a-zA-Z0-9]/', $query)) {
+            // Si no contiene ningún carácter alfabético o numérico, devolver respuesta vacía o un mensaje indicando que la búsqueda es inválida
+            return response()->json([]);
+        }
 
         // Realiza la lógica de búsqueda utilizando el valor de $query
         $producto = Producto::where('marca', 'LIKE', "%$query%")->orWhere('codigo', 'LIKE', "{$query}%")->get();
