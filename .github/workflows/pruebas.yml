@@ -3,8 +3,6 @@ name: Laravel CI
 on:
   push:
     branches: [ testa ]
-  pull_request:
-    branches: [ testa ]
 
 jobs:
   laravel-tests:
@@ -51,7 +49,7 @@ jobs:
       run: chmod -R 777 storage bootstrap/cache
 
     - name: Migrate
-      run: php artisan migrate
+      run: php artisan migrate:fresh --seed
 
     - name: Run Feature Tests
       run: vendor/bin/phpunit --testsuite Feature
