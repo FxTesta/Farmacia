@@ -31,8 +31,15 @@ jobs:
         ini-values: post_max_size=256M, max_execution_time=180
         tools: composer, phpunit
 
-    - name: Copy .env
-      run: cp .env
+    - name: Set up Environment
+      run: |
+        echo "APP_ENV=testing" >> $GITHUB_ENV
+        echo "DB_CONNECTION=mysql" >> $GITHUB_ENV
+        echo "DB_DATABASE=farmacia" >> $GITHUB_ENV
+        echo "DB_PORT=3306" >> $GITHUB_ENV
+        echo "DB_USERNAME=root" >> $GITHUB_ENV
+        echo "DB_PASSWORD=root" >> $GITHUB_ENV
+
 
     - name: Install Dependencies
       run: composer install --prefer-dist --no-interaction
@@ -51,4 +58,3 @@ jobs:
 
     - name: Run Unit Tests
       run: vendor/bin/phpunit --testsuite Unit
-
