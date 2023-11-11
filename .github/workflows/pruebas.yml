@@ -32,6 +32,7 @@ jobs:
     - name: Set up Environment
       run: |
         echo "APP_ENV=testing" >> $GITHUB_ENV
+        echo "APP_KEY=$(php artisan key:generate --show)" >> $GITHUB_ENV
         echo "DB_CONNECTION=mysql" >> $GITHUB_ENV
         echo "DB_DATABASE=farmacia" >> $GITHUB_ENV
         echo "DB_PORT=3306" >> $GITHUB_ENV
