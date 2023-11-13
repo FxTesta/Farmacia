@@ -14,7 +14,6 @@ let producto = ref();
 const productoEncontrado = (event) => {
 
     producto.value = event;
-    console.log(producto.value);
 }
 
 </script>

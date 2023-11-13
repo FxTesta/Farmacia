@@ -26,16 +26,16 @@ export default {
        // const fecha = new Date(this.fecha).toISOString().slice(0, 10);
        // const url = `auditoria?fecha=${fecha}`;
         //console.log(this.fecha);
-        console.log(fecha);
+        //console.log(fecha);
         //console.log(url);
         axios.post('auditoria', { valor: this.fecha })
         .then(response => {
           // Maneja la respuesta del backend si es necesario
-          console.log('Respuesta del servidor:', response.data);
+          //console.log('Respuesta del servidor:', response.data);
         })
         .catch(error => {
           // Maneja cualquier error que ocurra durante la solicitud
-          console.error('Error:', error);
+          //console.error('Error:', error);
         });
 
 

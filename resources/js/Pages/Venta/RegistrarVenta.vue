@@ -13,7 +13,7 @@ import ConfirmarImpresion from "@/Pages/Venta/ConfirmarImpresion.vue";
 
 //función para buscar de la bd, recibe el query de busqueda y setOptions devuelve el resultado
 function loadProducto(query, setOptions) {
-  fetch("http://127.0.0.1:8000/buscarproductoventa?query=" + query)
+  fetch("/buscarproductoventa?query=" + query)
     .then((response) => response.json())
     .then((results) => {
       setOptions(
@@ -39,7 +39,7 @@ function loadProducto(query, setOptions) {
 }
 
 function loadCliente(query, setOptions) {
-  fetch("http://127.0.0.1:8000/buscarcliente?query=" + query)
+  fetch("/buscarcliente?query=" + query)
     .then((response) => response.json())
     .then((results) => {
       setOptions(
@@ -166,7 +166,7 @@ let valorMaximo = ref(); //tiene los últimos 7 digitos de la última factura
 
 /* onMounted(async () => {
   try {
-    const response = await fetch('http://127.0.0.1:8000/obtenerfactura'); //obtengo el valor "max" de factura
+    const response = await fetch('/obtenerfactura'); //obtengo el valor "max" de factura
     if (response.ok) {
       const data = await response.json();
       let longuitud = Object.keys(data).length; //longuitud de valor recibido para checkear
@@ -185,7 +185,7 @@ let valorMaximo = ref(); //tiene los últimos 7 digitos de la última factura
 
 const fetchData = async () => {
   try {
-    const response = await fetch("http://127.0.0.1:8000/obtenerfactura");
+    const response = await fetch("/obtenerfactura");
     if (response.ok) {
       const data = await response.json();
       let longuitud = Object.keys(data).length;
@@ -276,7 +276,7 @@ const agregarProducto = () => {
     /*    const event1 = new CustomEvent('enviar-ref');
     window.dispatchEvent(event1); */
   } else {
-    console.log("No entro");
+    //console.log("No entro");
   }
 };
 

@@ -36,7 +36,7 @@ onMounted(() => {
 
 //funcion, busca el producto y retorna en un objeto con los campos deseados
 function loadProducto(query, setOptions) {
-    fetch("http://127.0.0.1:8000/buscarproducto?query=" + query)
+    fetch("/buscarproducto?query=" + query)
         .then(response => response.json())
         .then(results => {
             setOptions(

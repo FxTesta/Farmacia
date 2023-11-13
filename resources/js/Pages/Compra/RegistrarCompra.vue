@@ -105,7 +105,7 @@ let proveedornombre = computed(() => {
 
 //funcion que busca el proveedor y retorna los datos
 function loadProveedor(query, setOptions) {
-  fetch("http://127.0.0.1:8000/proveedores?query=" + query)
+  fetch("/proveedores?query=" + query)
     .then((response) => response.json())
     .then((results) => {
       setOptions(
@@ -161,11 +161,8 @@ const agregarProducto = () => {
     //después de agregar el producto envia un evento a "BuscarProducto" para enfocar nuevamente el boton para buscar Producto
     const event1 = new CustomEvent("enviar-ref");
     window.dispatchEvent(event1);
-  } else {
-    console.log("No entro");
   }
 };
-
 //elimina lo contenido en el array
 const eliminarProducto = (index) => {
   const productoEliminado = arrayProductos.value[index];
@@ -367,7 +364,7 @@ const validateInput2 = () => {
                       class="mt-1 w-40 h-8 bg-gray-200 text-gray-600"
                       v-model="form.nrofactura"
                       required
-                      autocomplete="nrofactura"
+                      autocomplete="off"
                     />
 
                     <!--<InputError class="mt-2" :message="form.errors.marca" />-->

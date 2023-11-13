@@ -17,7 +17,6 @@ let search = ref(props.filters.search);
 
 
 watch(search, _.debounce(function (value) {
-    console.log('disparado');
     router.get('/proveedor', { search: value }, {
         preserveState: true,
         replace: true
@@ -26,7 +25,7 @@ watch(search, _.debounce(function (value) {
 
 </script>
 <template>
-    <Head title="Dashboard" />
+    <Head title="Proveedores" />
 
     <SideBar />
     <AuthenticatedLayout>
@@ -64,26 +63,26 @@ watch(search, _.debounce(function (value) {
                         <table class="min-w-full">
                             <thead>
                                 <tr class="border-b border-slate-300 text-gray-700 text-left">
-                                    <th>ID</th>
-                                    <th>Empresa</th>
-                                    <th>RUC</th>
-                                    <th>DV</th>
-                                    <th>Nombre</th>
-                                    <th>Dirección</th>
-                                    <th>Contacto</th>
-                                    <th>Acciones</th>
+                                    <th class="px-3">ID</th>
+                                    <th class="px-3">Empresa</th>
+                                    <th class="px-3">RUC</th>
+                                    <th class="px-3">DV</th>
+                                    <th class="px-3">Nombre</th>
+                                    <th class="px-3">Dirección</th>
+                                    <th class="px-3">Contacto</th>
+                                    <th class="px-3">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-400 divide-opacity-30">
                                 <tr v-for="proveedores in proveedor.data">
-                                    <td class="text-gray-700 py-4">{{ proveedores.id }}</td>
-                                    <td class="text-gray-700 py-4">{{ proveedores.empresa }}</td>
-                                    <td class="text-gray-700 py-4">{{ proveedores.ruc }}</td>
-                                    <td class="text-gray-700 py-4">{{ proveedores.dv }}</td>
-                                    <td class="text-gray-700 py-4">{{ proveedores.name }}</td>
+                                    <td class="text-gray-700 py-4 px-3">{{ proveedores.id }}</td>
+                                    <td class="text-gray-700 py-4 px-3">{{ proveedores.empresa }}</td>
+                                    <td class="text-gray-700 py-4 px-3">{{ proveedores.ruc }}</td>
+                                    <td class="text-gray-700 py-4 px-3">{{ proveedores.dv }}</td>
+                                    <td class="text-gray-700 py-4 px-3">{{ proveedores.name }}</td>
                                     <td class="py-4 inline-flex">{{ proveedores.direccion }}</td>
-                                    <td class="text-gray-700 py-4">{{ proveedores.telefono }}</td>
-                                    <td class="py-4">
+                                    <td class="text-gray-700 py-4 px-3">{{ proveedores.telefono }}</td>
+                                    <td class="py-4 px-3">
                                         <div class="inline-flex">
                                             <Link :href="`/editar-proveedor/${proveedores.id}`" as="button"
                                                 class="w-8 h-8 t hover:bg-black/30 rounded-md grid place-content-center">

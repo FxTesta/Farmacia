@@ -21,7 +21,6 @@ filters: Object,
 let search = ref(props.filters.search);
 
 watch(search, _.throttle(function (value) {
-    console.log('buscando');
     router.get('/prueba', { search: value}, {
         preserveState: true,
         replace: true

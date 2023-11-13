@@ -24,9 +24,9 @@ const validarNumeroFactura = () => {
 
   if (!regex.test(form.nrofactura)) {
     // El formato no es válido, puedes mostrar un mensaje de error o tomar otra acción.
-    console.log('No es valido el formato')
+    
   }else{
-    console.log('Es valido')
+    //console.log('Es valido')
   }
 };
 

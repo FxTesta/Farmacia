@@ -22,7 +22,7 @@ const form = useForm({
     droga: '',
     venta: '',
     laboratorio: '',
-    vencimiento: '',
+    vencimiento: mindate(),
     alerta: '',
     codigo: '',
     precioventa: '',
@@ -42,6 +42,16 @@ const submit = () => {
 
 function mindate(){
 	return new Date().toISOString().split('T')[0]
+}
+
+function alerta(){
+    var date = new Date(form.vencimiento);
+    date.setDate(date.getDate() - 30);
+    return date.toISOString().split('T')[0];
+}
+
+let setAlerta = () => {
+    form.alerta = alerta();
 }
 
  
@@ -213,7 +223,8 @@ function mindate(){
                                 
                                     <div>
                                         <input    
-                                            :min="mindate()"                                             
+                                            :min="mindate()"
+                                            @change="setAlerta"                                           
                                             v-model="form.vencimiento"
                                             type="date"
                                             name="vencimiento"
@@ -228,7 +239,8 @@ function mindate(){
                                 <div >                                    
                                     <InputLabel for="alerta" value="Alerta de vencimiento:" class="text-gray-600"/>
                                     <div>
-                                        <input 
+                                        <input
+                                            disabled
                                             :min="mindate()"   
                                             v-model="form.alerta"
                                             type="date"

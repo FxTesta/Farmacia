@@ -17,7 +17,12 @@ class VentaController extends Controller
     {
         $user = auth()->user();
 
-        $configuracion = Setting::all();
+        $configuracion = Setting::where('id', 1)->first();
+
+        if(!$configuracion){
+
+            return redirect('/crear-configuracion')->with('error', 'Establezca primero la Configuracion');
+        }
 
         return Inertia::render('Venta/RegistrarVenta', [
             'user' => $user,
@@ -29,6 +34,12 @@ class VentaController extends Controller
     {
         $query = $request->input('query');
 
+        //Solución para que no obtenga resultados al presionar "Espacio"
+        if (!preg_match('/[a-zA-Z0-9]/', $query)) {
+            // Si no contiene ningún carácter alfabético o numérico, devolver respuesta vacía o un mensaje indicando que la búsqueda es inválida
+            return response()->json([]);
+        }
+
         // Realiza la lógica de búsqueda utilizando el valor de $query
         $producto = Producto::where('marca', 'LIKE', "%$query%")->orWhere('codigo', 'LIKE', "{$query}%")->orWhere('droga', 'LIKE', "%{$query}%")->get();
 
@@ -38,6 +49,11 @@ class VentaController extends Controller
     public function buscarCliente(Request $request)
     {
         $query = $request->input('query');
+
+        if (!preg_match('/[a-zA-Z0-9]/', $query)) {
+            // Si no contiene ningún carácter alfabético o numérico, devolver respuesta vacía o un mensaje indicando que la búsqueda es inválida
+            return response()->json([]);
+        }
 
         // Realiza la lógica de búsqueda utilizando el valor de $query
         $cliente = Cliente::where('name', 'LIKE', "%$query%")->orWhere('cedula', 'LIKE', "{$query}%")->get();
