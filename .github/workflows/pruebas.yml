@@ -18,6 +18,13 @@ jobs:
           - 3306:3306
 
     steps:
+    - name: Esperar a que MySQL esté listo
+      run: |
+        until nc -z ${{ steps.services.outputs.mysql }} 3306; do
+          echo 'Esperando a MySQL...'
+          sleep 1
+        done
+        
     - uses: actions/checkout@v2
 
     - name: Set up PHP
@@ -45,7 +52,7 @@ jobs:
       run: |
         echo "APP_KEY=$(php artisan key:generate --show)" >> .env
         echo "DB_CONNECTION=mysql" >> .env
-        echo "DB_HOST=127.0.0.1" >> .env
+        echo "DB_HOST=mysql" >> .env
         echo "DB_PORT=3306" >> .env
         echo "DB_DATABASE=pruebas" >> .env
         echo "DB_USERNAME=root" >> .env
