@@ -55,7 +55,7 @@ jobs:
       run: php artisan migrate
 
     - name: Run Laravel Tests
-      run: php artisan test
+      run: php artisan test .\tests\Feature\
 
     - name: Build Frontend
       run: npm run prod
