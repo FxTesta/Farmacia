@@ -11,9 +11,18 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
+
 class ClienteControllerTest extends TestCase
 {
-    //use RefreshDatabase;  // Refrescar la base de datos después de cada prueba
+    use RefreshDatabase;  // Refrescar la base de datos después de cada prueba
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(\Database\Seeders\AdminSeeder::class);
+        // para ejecutar todos los seeders
+        // $this->seed();
+    }
 
     public function test_creando_multiples_clientes(): void
     {

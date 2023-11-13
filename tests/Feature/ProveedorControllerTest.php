@@ -12,8 +12,16 @@ use Illuminate\Support\Facades\DB;
 
 class ProveedorControllerTest extends TestCase
 {
-    //use RefreshDatabase;
+    use RefreshDatabase;  // Refrescar la base de datos después de cada prueba
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(\Database\Seeders\AdminSeeder::class);
+        // para ejecutar todos los seeders
+        // $this->seed();
+    }
+    
     public function test_loguearse_y_probar_crud_proveedores(): void
     {
 
