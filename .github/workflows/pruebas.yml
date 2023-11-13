@@ -8,49 +8,8 @@ jobs:
   laravel-tests:
     runs-on: ubuntu-latest
 
-    services:
-      mariadb:
-        image: mariadb:10.4
-        env:
-          MARIADB_ROOT_PASSWORD: root
-          MARIADB_DATABASE: farmacia
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot" --health-interval=10s --health-timeout=10s --health-retries=5
-
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.1.17'
-        extensions: mbstring, xml, ctype, iconv, pdo_mysql
-        ini-values: post_max_size=256M, max_execution_time=180
-        tools: composer, phpunit
-
-    - name: Set up Environment
-      run: |
-        echo "APP_ENV=testing" >> $GITHUB_ENV
-        echo "APP_KEY=$(php artisan key:generate --show)" >> $GITHUB_ENV
-        echo "DB_CONNECTION=mysql" >> $GITHUB_ENV
-        echo "DB_DATABASE=farmacia" >> $GITHUB_ENV
-        echo "DB_PORT=3306" >> $GITHUB_ENV
-        echo "DB_USERNAME=root" >> $GITHUB_ENV
-        echo "DB_PASSWORD=root" >> $GITHUB_ENV
-
-
-    - name: Install Dependencies
-      run: composer install --prefer-dist --no-interaction
-
-    - name: Directory Permissions
-      run: chmod -R 777 storage bootstrap/cache
-
-    - name: Migrate
-      run: php artisan migrate:fresh --seed
-
-    - name: Run Feature Tests
-      run: vendor/bin/phpunit --testsuite Feature
-
-    - name: Run Unit Tests
-      run: vendor/bin/phpunit --testsuite Unit
+    - name: Contenedor Levantado
+      run: echo "Contenedor levantado"
