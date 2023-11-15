@@ -17,12 +17,7 @@ class VentaController extends Controller
     {
         $user = auth()->user();
 
-        $configuracion = Setting::where('id', 1)->first();
-
-        if(!$configuracion){
-
-            return redirect('/crear-configuracion')->with('error', 'Establezca primero la Configuracion');
-        }
+        $configuracion = Setting::all();
 
         return Inertia::render('Venta/RegistrarVenta', [
             'user' => $user,
