@@ -24,7 +24,7 @@ return new class extends Migration
             $table->bigInteger('telefono');
             $table->string('estado');
             $table->string('email')->unique()->nullable();
-            $table->string('descuento')->nullable();
+            $table->integer('descuento')->nullable();
             $table->timestamps();
         });
     }

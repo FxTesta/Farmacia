@@ -48,6 +48,7 @@ function loadCliente(query, setOptions) {
             value: cliente.id,
             label: cliente.name,
             cedula: cliente.cedula,
+            descuento: cliente.descuento,
           };
         })
       );
@@ -60,7 +61,7 @@ const props = defineProps({
 });
 
 //variable reactiva donde se recibe el producto
-let producto = ref();
+let producto = ref(null); // Se inicializa como null para que esté claro que puede no tener un producto
 
 //variable retorna codigo de barra que extrae de "producto"
 let productoid = computed(() => producto.value?.id);
@@ -77,72 +78,69 @@ let stock = computed(() => producto.value?.stock);
 //variable retorna iva que extrae de "producto"
 let iva = computed(() => producto.value?.iva);
 
-//variable retorna descuento que extrae de "producto"
-let descuento = ref();
+//variable retorna descuento que extrae de "producto", se inicializa con 0 para evitar NaN si es null
+let descuentoProducto = ref(0); 
 
 //variable retorna precioventa que extrae de "producto"
-let precioventa = ref();
+let precioventa = ref(0);
 
 //utilizo watch para la variable "precioventa" en vez de computed por que necesito que sea editable
-watch(
-  producto, // variable que quiero observar los cambios
+watch(producto, // variable que quiero observar los cambios
   (nuevoProducto) => {
-    if (nuevoProducto) {
-      precioventa.value = nuevoProducto.precioventa; //si cambia lo contenido en "producto" se actualiza "precioventa"
-      descuento.value = nuevoProducto.descuento; //si cambia lo contenido en "producto" se actualiza "descuento"
-    }
-  }
-);
-
-//variable que contiene el precio de venta ya con el descuento establecido
-let preciodescuento = computed(() => {
-  if (producto.value === null) {
-    return null;
-  }
-
-  //verifica si el producto tiene descuento
-  if (descuento.value) {
-    const precioNumerico = parseFloat(precioventa.value);
-    const descuentoNumerico = parseFloat(descuento.value);
-
-    if (!isNaN(precioNumerico) && !isNaN(descuentoNumerico)) {
-      const descuento = Math.round((descuentoNumerico / 100) * precioNumerico);
-      return precioNumerico - descuento;
-    } else {
-      return 0;
-    }
-  } else {
-    //si el producto no tiene descuento preciodescuento = precioventa
-    return precioventa.value;
-  }
+  precioventa.value = nuevoProducto ? nuevoProducto.precioventa : 0; //si cambia lo contenido en "producto" se actualiza "precioventa"
+  descuentoProducto.value = nuevoProducto ? nuevoProducto.descuento : 0; //si cambia lo contenido en "producto" se actualiza "descuento"
 });
 
-let cantidad = ref();
+let cliente = ref(null); // lo mismo que en let producto, se inicia con null para que esté claro que no puede tener un valor asignado
 
-//calcula el total en la selección de producto
+// Variables computadas que extraen valores de "cliente"
+let clienteid = computed(() => cliente.value?.value);
+
+let clientenombre = computed(() => cliente.value?.label);
+
+//, se inicializa con 0 para evitar NaN si es null
+let descuentoCliente = ref(0);
+
+watch(cliente, (nuevoCliente) => {
+  // Actualiza el descuento del cliente si hay un cambio en el cliente
+  descuentoCliente.value = nuevoCliente ? nuevoCliente.descuento : 0;
+});
+
+// Variable computada para el precio de venta con el mayor descuento aplicado
+let preciodescuento = computed(() => {
+  // Obtiene el mayor descuento entre producto y cliente
+  const descuentoMayor = Math.max(descuentoProducto.value, descuentoCliente.value);
+  const precioNumerico = parseFloat(precioventa.value);
+
+  // Aplica el descuento si es válido
+  if (!isNaN(precioNumerico) && descuentoMayor > 0) {
+    const descuentoCalculado = (descuentoMayor / 100) * precioNumerico;
+    return precioNumerico - descuentoCalculado;
+  }
+  
+  return precioNumerico; // Retorna el precio sin descuento si no hay descuento o si el producto es null
+});
+
+let cantidad = ref(1); // se inicializa cantidad en 1 para evitar que se multiplique por 0
+
+// Variable computada para el total del producto seleccionado
 const total = computed(() => {
   const precioNumerico = parseFloat(preciodescuento.value);
   const cantidadNumerica = parseFloat(cantidad.value);
 
-  // Verificar si los valores son numéricos antes de calcular el producto
+  // Multiplica el precio con descuento por la cantidad
   if (!isNaN(precioNumerico) && !isNaN(cantidadNumerica)) {
     return precioNumerico * cantidadNumerica;
-  } else {
-    return 0; // Otra opción sería retornar null o un mensaje de error
   }
+  
+  return 0; // Retorna 0 si los valores no son numéricos
 });
+
 
 //recibe el producto seleccionado en el buscado
 const productoEncontrado = (event) => {
   producto.value = event;
 };
-
-//variable reactiva donde se recibe el cliente
-let cliente = ref();
-
-let clienteid = computed(() => cliente.value?.value); //variable contiene cliente id para guardar en la bd
-
-let clientenombre = computed(() => cliente.value?.label); //variable contiene cliente nombre para guardar en la bd
 
 //variable contiene el prefijo de factura guardado en "Configuración"
 let prefijofactura = computed(() => {
