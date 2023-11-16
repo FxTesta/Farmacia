@@ -8,6 +8,8 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { ArrowLeftIcon } from "@heroicons/vue/outline";
 import { calcularDigitoVerificador } from '@/dv';
+import { watch } from 'vue';
+
 
 const props = defineProps({
     cliente: Object
@@ -27,6 +29,18 @@ const form = useForm({
     descuento: props.cliente.descuento,
     email: props.cliente.email,
 
+});
+
+const calcularDescuento = () => {
+    if (form.estado === 'Cliente Fiel') {
+        form.descuento = 10; // 10% de descuento para Cliente Fiel
+    } else {
+        form.descuento = 0; // Sin descuento para otros estados
+    }
+};
+
+watch(() => form.estado, (nuevoEstado) => {
+    calcularDescuento();
 });
 
 const calculateDV = () => {
@@ -147,21 +161,27 @@ const submit = () => {
                             </div>
 
                             <div class="mt-4">
-                                <InputLabel for="email" value="Email" class="text-gray-600" />
+                                <InputLabel for="estado" value="Estado" class="text-gray-600" />
+                                <select id="estado" class="mt-1 block w-full bg-gray-200 text-gray-600"
+                                    v-model="form.estado">
+                                    <option value="Cliente Fiel">Cliente Fiel</option>
+                                    <option value="Poco habitual">Poco habitual</option>
+                                </select>
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel for="descuento" value="Descuento (%)" class="text-gray-600" />
+                                <TextInput id="descuento" type="text" class="mt-1 block w-full bg-gray-200 text-gray-600"
+                                    v-model="form.descuento" disabled />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel for="email" value="Email (opcional)" class="text-gray-600" />
 
                                 <TextInput id="email" type="email" class="mt-1 block w-full bg-gray-200 text-gray-600"
                                     v-model="form.email" autocomplete="email" />
 
                                 <InputError class="mt-2" :message="form.errors.email" />
-                            </div>
-
-                            <div class="mt-4">
-                                <InputLabel for="estado" value="Estado" class="text-gray-600" />
-                                <select id="estado" class="mt-1 block w-full bg-gray-200 text-gray-600"
-                                    v-model="form.estado">
-                                    <option value="Cliente Fiel">Cliente Fiel</option>
-                                    <option value="Otro Estado">poco habitual</option>
-                                </select>
                             </div>
 
                             <div class="flex items-center justify-end mt-6">
