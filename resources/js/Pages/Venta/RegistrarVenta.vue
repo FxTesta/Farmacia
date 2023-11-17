@@ -121,6 +121,10 @@ let preciodescuento = computed(() => {
   return precioNumerico; // Retorna el precio sin descuento si no hay descuento o si el producto es null
 });
 
+const descuentoMayor = computed(() => {
+  return Math.max(descuentoProducto.value, descuentoCliente.value);
+});
+
 let cantidad = ref(1); // se inicializa cantidad en 1 para evitar que se multiplique por 0
 
 // Variable computada para el total del producto seleccionado
@@ -764,7 +768,7 @@ function onSubmit() {
                 <input
                   id="descuento"
                   type="number"
-                  v-model="descuento"
+                  v-model="descuentoMayor"
                   disabled
                   class="font-inter text-base rounded-md border border-black bg-gray-300 w-[50px] p-1"
                 />
