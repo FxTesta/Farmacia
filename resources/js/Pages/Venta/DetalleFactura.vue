@@ -7,6 +7,7 @@ import { onMounted } from "vue";
 const props = defineProps({
   detallefact: Object,
   config: Object,
+
 });
 
 const formatearNumero = (numero) => {
@@ -16,6 +17,7 @@ const formatearNumero = (numero) => {
 const imprimirFactura = () => {
   window.print();
 };
+
 
 </script>
 

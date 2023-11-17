@@ -11,6 +11,7 @@ import BuscarCliente from "@/Pages/Venta/BuscarCliente.vue";
 import error from "@/Stores/error";
 import ConfirmarImpresion from "@/Pages/Venta/ConfirmarImpresion.vue";
 
+
 //función para buscar de la bd, recibe el query de busqueda y setOptions devuelve el resultado
 function loadProducto(query, setOptions) {
   fetch("/buscarproductoventa?query=" + query)
@@ -121,7 +122,8 @@ let preciodescuento = computed(() => {
   return precioNumerico; // Retorna el precio sin descuento si no hay descuento o si el producto es null
 });
 
-const descuentoMayor = computed(() => {
+//asigna a la variable descuento el valor mayor
+const descuento = computed(() => {
   return Math.max(descuentoProducto.value, descuentoCliente.value);
 });
 
@@ -768,7 +770,7 @@ function onSubmit() {
                 <input
                   id="descuento"
                   type="number"
-                  v-model="descuentoMayor"
+                  v-model="descuento"
                   disabled
                   class="font-inter text-base rounded-md border border-black bg-gray-300 w-[50px] p-1"
                 />
