@@ -5,6 +5,7 @@ use Inertia\Inertia;
 use App\Models\StockAudit;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\CajaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\CompraController;
 use App\Http\Controllers\ProveedorController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\ListaController;
 use App\Http\Controllers\PruebaController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\VentaController;
+use App\Models\Caja;
 
 //hola prueba
 /*
@@ -50,6 +52,12 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
+//CAJA
+Route::controller(CajaController::class)->middleware('auth')->group(function () {
+    Route::get('/caja', 'index')->name('caja');
+    Route::post('/caja', 'store')->name('caja.store'); // Ruta para almacenar la acción de abrir caja
+    Route::post('/caja/close/{id}', 'close')->name('caja.close');
+});
 
 //CLIENTES
 Route::controller(ClienteController::class)->middleware('auth')->group(function () {

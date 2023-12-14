@@ -2,31 +2,54 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Caja;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class CajaController extends Controller
 {
 
-    
-    public function abrir(Request $request)
+    public function index(Request $request)
     {
-        $caja = new Caja([
-            'monto_apertura' => $request->monto_apertura,
-            'fecha_apertura' => now(),
+        $caja = Caja::all();
+        return Inertia::render('Caja/index',[
+            'caja' => $caja
         ]);
-        $caja->save();
-
-        return response()->json($caja, 200);
     }
 
-    public function cerrar(Request $request, $id)
+    public function store(Request $request)
     {
-        $caja = Caja::find($id);
-        $caja->monto_cierre = $request->monto_cierre;
-        $caja->fecha_cierre = now();
-        $caja->save();
+        $request->validate([
+            'monto' => 'required|numeric|min:0',
+        ]);
 
-        return response()->json($caja, 200);
+        Caja::create([
+            'monto' => $request->monto,
+            'users_id' => Auth::id(), 
+            'username' => Auth::user()->name, 
+            'fecha_apertura' => now(),
+            'estado' => 'Abierta', 
+            
+        ]);
+
+        return redirect()->route('caja')->with('toast', 'Caja abierta con éxito');
+      
     }
+
+    public function close(Request $request, $id)
+{
+    $caja = Caja::find($id);
+    if ($caja) {
+        $caja->update([
+            'fecha_cierre' => now(),
+            'estado' => 'Cerrada',
+        ]);
+
+        return redirect()->route('caja')->with('toast', 'Caja cerrada con éxito');
+    }
+
+    return redirect()->route('caja')->with('toast', 'Caja no encontrada');
+}
+
 }

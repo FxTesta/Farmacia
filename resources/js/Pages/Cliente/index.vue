@@ -23,8 +23,9 @@ watch(search, _.debounce(function (value) {
 }, 300));
 
 </script>
+
 <template>
-    <Head title="Dashboard" />
+    <Head title="Cleintes" />
 
     <SideBar />
     <AuthenticatedLayout>

@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('cajas', function (Blueprint $table) {
             $table->id();
-            $table->decimal('monto_apertura', 8, 2);
-            $table->decimal('monto_cierre', 8, 2)->nullable();
-            $table->timestamp('fecha_apertura')->useCurrent();
+            $table->integer('monto');
+            $table->foreignId('users_id')->constrained('users')->onDelete('cascade');
+            $table->string('username');
+            $table->timestamp('fecha_apertura')->nullable();
             $table->timestamp('fecha_cierre')->nullable();
+            $table->string('estado');
             $table->timestamps();
         });
     }

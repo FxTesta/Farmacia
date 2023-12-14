@@ -21,6 +21,13 @@ export default {
         },
 
         {
+          href: '/caja',
+          title: 'Cajas',
+          icon: 'fa-solid fa-cash-register'
+        },
+
+
+        {
           href: '/compra',
           title: 'Compras',
           icon: 'fa-sharp fa-solid fa-shop',
