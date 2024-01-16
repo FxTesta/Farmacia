@@ -60,7 +60,7 @@ Route::controller(CajaController::class)->middleware('auth')->group(function () 
 });
 
 //CLIENTES
-Route::controller(ClienteController::class)->middleware('auth')->group(function () {
+Route::controller(ClienteController::class)->middleware(['auth', 'caja.abierta'])->group(function () {
 
     Route::get('/cliente', 'index')->name('cliente');
     Route::get('/crear-cliente', 'create')->name('cliente.create');
@@ -76,7 +76,7 @@ Route::controller(ClienteController::class)->middleware('auth')->group(function 
 
 
 //Productos
-Route::controller(ProductoController::class)->middleware('auth')->group(function () {
+Route::controller(ProductoController::class)->middleware(['auth', 'caja.abierta'])->group(function () {
    
     Route::get('/producto', 'index')->name('producto');
     Route::get('/crear-producto', 'create')->name('producto.create');
@@ -96,7 +96,7 @@ Route::controller(ProductoController::class)->middleware('auth')->group(function
 
 
 //PROVEEDORES
-Route::controller(ProveedorController::class)->middleware('auth')->group(function () {
+Route::controller(ProveedorController::class)->middleware(['auth', 'caja.abierta'])->group(function () {
 
     Route::get('/proveedor', 'index')->name('proveedor');
     Route::get('/crear-proveedor', 'create')->name('proveedor.create');
@@ -112,7 +112,7 @@ Route::controller(ProveedorController::class)->middleware('auth')->group(functio
 });
 
 //COMPRAS
-Route::controller(CompraController::class)->middleware('auth')->group(function () {
+Route::controller(CompraController::class)->middleware(['auth', 'caja.abierta'])->group(function () {
 
     Route::get('/compra', 'registarCompra')->name('compra');
 
@@ -137,7 +137,7 @@ Route::controller(CompraController::class)->middleware('auth')->group(function (
 });
 
 //VENTAS
-Route::controller(VentaController::class)->middleware('auth')->group(function () {
+Route::controller(VentaController::class)->middleware(['auth', 'caja.abierta'])->group(function () {
 
     Route::get('/venta', 'registarVenta')->name('venta');
     Route::get('/venta/listar', 'listarVentas')->name('listarventas');
@@ -162,7 +162,7 @@ Route::controller(VentaController::class)->middleware('auth')->group(function ()
 
 
 //CONFIGURACIONES (PARA PREFIJO DE FACTURA Y TIMBRADO)
-Route::controller(SettingController::class)->middleware('auth')->group(function () {
+Route::controller(SettingController::class)->middleware(['auth', 'caja.abierta'])->group(function () {
 
     Route::get('/configuracion', 'index')->name('configuracion');
     Route::get('/crear-configuracion', 'create')->name('configuracion.create');

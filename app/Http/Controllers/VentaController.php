@@ -13,12 +13,6 @@ use Illuminate\Http\Request;
 
 class VentaController extends Controller
 {
-
-    public function __construct()
-    {
-        $this->middleware('caja.abierta');
-    }
-    
     public function registarVenta()
     {
         $user = auth()->user();
