@@ -21,7 +21,7 @@ class CajaAbiertaMiddleware
 
         if (!$cajaAbierta) {
             // Si la caja no está abierta, redirecciona a caja
-            return redirect()->route('caja'); // Ajusta esto con la ruta de tu página de apertura de caja
+            return redirect()->route('caja');
         }
 
         return $next($request);
