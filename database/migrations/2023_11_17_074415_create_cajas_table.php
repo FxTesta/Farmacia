@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('cajas', function (Blueprint $table) {
             $table->id();
             $table->integer('monto');
+            $table->integer('montoCierre');
             $table->foreignId('users_id')->constrained('users')->onDelete('cascade');
             $table->string('username');
             $table->timestamp('fecha_apertura')->nullable();

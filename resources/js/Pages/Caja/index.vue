@@ -120,7 +120,8 @@ async function closeCaja(cajaId) {
                                     <tr class="border-b border-slate-300 text-gray-700 text-center">
                                         <th class="px-4 py-2">ID</th>
                                         <th class="px-4 py-2">Usuario</th>
-                                        <th class="px-4 py-2">Monto</th>
+                                        <th class="px-4 py-2">Monto Apertura</th>
+                                        <th class="px-4 py-2">Monto Cierre</th>
                                         <th class="px-4 py-2">Fecha Apertura</th>
                                         <th class="px-4 py-2">Fecha Cierre</th>
                                         <th class="px-4 py-2">Estado</th>
@@ -132,6 +133,7 @@ async function closeCaja(cajaId) {
                                         <td class="border px-4 py-2">{{ cajas.id }}</td>
                                         <td class="border px-4 py-2">{{ cajas.username }}</td>
                                         <td class="border px-4 py-2">{{ cajas.monto }}</td>
+                                        <td class="border px-4 py-2">{{ cajas.montoCierre }}</td>
                                         <td class="border px-4 py-2">{{ cajas.fecha_apertura }}</td>
                                         <td class="border px-4 py-2">{{ cajas.fecha_cierre }}</td>
                                         <td class="border px-4 py-2">{{ cajas.estado }}</td>

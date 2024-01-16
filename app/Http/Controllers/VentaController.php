@@ -7,6 +7,7 @@ use App\Models\Cliente;
 use App\Models\DetalleFacturaVenta;
 use App\Models\Setting;
 use App\Models\Producto;
+use App\Models\Caja;
 use Brick\Math\BigInteger;
 use App\Models\FacturaVenta;
 use Illuminate\Http\Request;
@@ -167,10 +168,17 @@ class VentaController extends Controller
                 $productos->update([
                     'stock' => $productos->stock - $producto['cantidad'],
                 ]);
+
+                $caja = Caja::latest()->first(); // Obtener la última caja abierta
+                $caja->update([
+                    'montoCierre' => $caja->montoCierre +  $request->preciototal,
+                ]);
+
             }
 
             return redirect('/venta')->with('toast', 'Venta Realizada');
         }
+        
     }
 
 

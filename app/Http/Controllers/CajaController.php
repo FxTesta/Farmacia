@@ -24,8 +24,11 @@ class CajaController extends Controller
             'monto' => 'required|numeric|min:0',
         ]);
 
+        $montoApertura = $request->monto;
+
         Caja::create([
-            'monto' => $request->monto,
+            'monto' => $montoApertura,
+            'montoCierre' => $montoApertura,
             'users_id' => Auth::id(), 
             'username' => Auth::user()->name, 
             'fecha_apertura' => now(),
