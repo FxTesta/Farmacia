@@ -40,7 +40,7 @@ class CajaController extends Controller
     public function close(Request $request, $id)
 {
     $caja = Caja::find($id);
-    if ($caja) {
+    if ($caja && $caja->estado == 'Abierta') {
         $caja->update([
             'fecha_cierre' => now(),
             'estado' => 'Cerrada',
@@ -49,7 +49,7 @@ class CajaController extends Controller
         return redirect()->route('caja')->with('toast', 'Caja cerrada con éxito');
     }
 
-    return redirect()->route('caja')->with('toast', 'Caja no encontrada');
+    return redirect()->route('caja')->with('error', 'La caja ya está cerrada o no fue encontrada');
 }
 
 }

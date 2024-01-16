@@ -16,8 +16,10 @@ const form = useForm({
 
 function saveOpeningAmount() {
     form.post('/caja', {
-        onSuccess: () => {
+        onFinish: () => { 
             toggleModal();
+        },
+        onSuccess: () => {
             form.reset('monto');
         },
     });
