@@ -8,13 +8,20 @@ import Pagination from '@/Components/Pagination.vue';
 import _ from 'lodash';
 import { Dialog, TransitionRoot, DialogPanel, DialogOverlay } from '@headlessui/vue';
 
+const errorMensaje = ref('');
 
 const form = useForm({
   monto: null,
 });
 
-
 function saveOpeningAmount() {
+
+    if (form.monto < 0) {
+        errorMensaje.value = 'El monto no puede ser negativo';
+        toggleErrorDialog();
+        return;
+    }
+
     form.post('/caja', {
         onFinish: () => { 
             toggleModal();
@@ -87,6 +94,8 @@ async function closeCaja(cajaId) {
                                     <form @submit.prevent="saveOpeningAmount">
                                         <input id="monto" v-model="form.monto" type="number"
                                             class="block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" required>
+
+                                        <p v-if="errorMensaje" class="text-sm text-red-500 mt-2">{{ errorMensaje }}</p>    
 
                                         <div class="mt-4 flex justify-end space-x-3">
                                             <button type="button"
