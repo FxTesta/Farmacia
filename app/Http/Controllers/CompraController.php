@@ -10,6 +10,7 @@ use App\Models\OrdenCompraCabecera;
 use App\Models\Producto;
 use App\Models\ProductosFaltantes;
 use App\Models\Proveedor;
+use App\Models\Caja;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -112,6 +113,11 @@ class CompraController extends Controller
                 $productos = Producto::where('id', $producto['productoid'])->first();
                 $productos->update([
                     'stock' => $productos->stock + $producto['cantidad'],
+                ]);
+
+                $caja = Caja::latest()->first(); // Obtener la última caja abierta
+                $caja->update([
+                    'montoCierre' => $caja->montoCierre -  $request->total,
                 ]);
             }
 
